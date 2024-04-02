@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import Logo from "../logo.svg";
 
 export default function Root() {
   return (
@@ -6,7 +7,10 @@ export default function Root() {
       <header>
         <div className="h-16">
           <nav className="flex h-full items-center justify-between px-8 border-b-2 border-lime-500">
-            <h2 className="text-lg font-bold">SOIL</h2>
+            <h2 className="text-xl font-bold flex items-center justify-center">
+              <img src={Logo} alt="" className="mr-1" />
+              SOIL
+            </h2>
             <ul className="flex space-x-2">
               <li>
                 <Link
