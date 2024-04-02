@@ -35,7 +35,7 @@ export default function Root() {
           Fresh and Organic Foods for Australians!
         </span>
       </header>
-      <main className="flex-1">
+      <main className="flex-1 flex flex-col">
         <Outlet />
       </main>
       <footer className="bg-stone-600 text-white flex flex-col items-center py-4">
