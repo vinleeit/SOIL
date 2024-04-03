@@ -1,21 +1,25 @@
-import SoilButton from "./SoilButton";
+import SoilButton from "./SoilButton"
 import SoilLogo from "../components/SoilLogo"
-import { useState } from "react";
+import { useState } from "react"
 import Menu from "../assets/menu.svg"
+import { useNavigate } from "react-router-dom"
 
 
 export default function SoilHeader() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isBackgroundVisible, setIsBackgroundVisible] = useState(false);
+    const navigate = useNavigate()
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [isBackgroundVisible, setIsBackgroundVisible] = useState(false)
 
     function toggleMenu(state: boolean) {
         if (!state) {
-            setTimeout(() => setIsBackgroundVisible(false), 200);
+            setTimeout(() => setIsBackgroundVisible(false), 200)
         } else {
-            setIsBackgroundVisible(true);
+            setIsBackgroundVisible(true)
         }
-        setIsMenuOpen(state);
+        setIsMenuOpen(state)
     }
+
+    const login = () => navigate("/login")
 
     return (
         <header>
@@ -29,7 +33,7 @@ export default function SoilHeader() {
                             </SoilButton>
                         </li>
                         <li>
-                            <SoilButton>
+                            <SoilButton onClick={login}>
                                 Login
                             </SoilButton>
                         </li>
@@ -61,7 +65,7 @@ export default function SoilHeader() {
                         </ul>
                         <ul className="space-y-3">
                             <li >
-                                <SoilButton fullWidth>
+                                <SoilButton fullWidth onClick={login}>
                                     Login
                                 </SoilButton>
                             </li>
