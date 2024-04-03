@@ -6,6 +6,7 @@ import Root from "./routes/Root";
 import Error from "./routes/Error";
 import Login from "./routes/auth/Login";
 import Register from "./routes/auth/Register ";
+import Profile from "./routes/auth/Profile";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
       },
     ],
   },
