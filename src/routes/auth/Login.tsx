@@ -1,5 +1,7 @@
 import { FormEvent, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import bcyrpt from "bcryptjs-react";
+import { User } from "../../types/User";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -7,6 +9,7 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
   const successDialog = useRef<HTMLDialogElement | null>(null);
+  const navigate = useNavigate();
 
   function performLogin(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -28,10 +31,19 @@ export default function Login() {
       setEmailError("");
     }
 
-    // TODO: Perform actual login
-    // TODO: Redirect to profile page
     if (success) {
-      successDialog.current?.showModal();
+      const userString = localStorage.getItem("users");
+      const users: User[] = userString ? JSON.parse(userString) : [];
+
+      const matchedUser = users.find((e) => e.email === email);
+      if (matchedUser) {
+        if (bcyrpt.compareSync(password, matchedUser.password)) {
+          successDialog.current?.showModal();
+          localStorage.setItem("currentUser", JSON.stringify(matchedUser));
+          return;
+        }
+      }
+      setEmailError("Invalid email or password");
     }
   }
 
@@ -93,7 +105,7 @@ export default function Login() {
           </p>
           <button
             className="text-center w-1/2 bg-lime-500 text-stone-700 py-2 rounded-md"
-            onClick={() => successDialog.current?.close()}
+            onClick={() => navigate("/profile")}
           >
             Continue
           </button>
