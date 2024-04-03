@@ -9,6 +9,7 @@ export default function Login() {
   const successDialog = useRef<HTMLDialogElement | null>(null);
 
   function performLogin(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
     let success = true;
     if (password.length === 0) {
       setPasswordError("Password must not be empty");
@@ -32,17 +33,18 @@ export default function Login() {
     if (success) {
       successDialog.current?.showModal();
     }
-    event.preventDefault();
   }
 
   return (
     <section className="grow flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold mb-2">Login to Your Account</h1>
-      <p className="max-w-96 text-center">
+      <h1 className="text-2xl md:text-3xl font-bold mb-2 text-center">
+        Login to Your Account
+      </h1>
+      <p className="max-w-80 md:max-w-96 text-center">
         Unlock your personalized account and enjoy a seamless online experience.
       </p>
-      <div className="w-1/2 flex items-center space-x-2 mt-8">
-        <form className="w-1/2 space-y-2" onSubmit={performLogin}>
+      <div className="w-2/3 md:1/2 flex flex-col md:flex-row items-center space-x-2 mt-8">
+        <form className="w-full md:1/2 space-y-2" onSubmit={performLogin}>
           <input
             type="text"
             className="w-full rounded focus:border-lime-400 border-gray-300 focus:ring focus:ring-lime-400 focus:ring-opacity-45"
@@ -67,9 +69,9 @@ export default function Login() {
           </p>
         </form>
         <div className="w-24 text-center">
-          <span className="text-4xl">/</span>
+          <span className="text-4xl hidden md:block">/</span>
         </div>
-        <div className="w-1/2 flex flex-col items-center justify-center">
+        <div className="w-full md:1/2 flex flex-col items-center justify-center">
           <Link
             to={"/register"}
             className="w-full mt-3 border border-lime-400 py-3 rounded hover:bg-lime-100 text-center"
