@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import SoilButton from "../components/SoilButton";
+import { useNavigate } from 'react-router-dom';
 
 export default function Error() {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-stone-500">
       <div className="bg-stone-100 rounded-md w-96 h-72 flex flex-col justify-center items-center">
@@ -11,12 +13,9 @@ export default function Error() {
           <br />
           on some other place...
         </p>
-        <Link
-          to={"/"}
-          className="px-3 py-2 bg-black text-white rounded-md hover:bg-stone-700"
-        >
+        <SoilButton colour="secondary" onClick={() => navigate('/')}>
           Go Home
-        </Link>
+        </SoilButton>
       </div>
     </div>
   );
