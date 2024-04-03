@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Login() {
@@ -6,24 +6,34 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
+  const successDialog = useRef<HTMLDialogElement | null>(null);
 
-  useEffect(() => {
+  function performLogin(event: FormEvent<HTMLFormElement>): void {
+    let success = true;
     if (password.length === 0) {
       setPasswordError("Password must not be empty");
+      success = false;
     } else {
       setPasswordError("");
     }
-  }, [password]);
 
-  useEffect(() => {
     if (email.length === 0) {
       setEmailError("Email must not be empty");
+      success = false;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       setEmailError("Email is invalid");
+      success = false;
     } else {
       setEmailError("");
     }
-  }, [email]);
+
+    // TODO: Perform actual login
+    // TODO: Redirect to profile page
+    if (success) {
+      successDialog.current?.showModal();
+    }
+    event.preventDefault();
+  }
 
   return (
     <section className="grow flex flex-col items-center justify-center">
@@ -32,7 +42,7 @@ export default function Login() {
         Unlock your personalized account and enjoy a seamless online experience.
       </p>
       <div className="w-1/2 flex items-center space-x-2 mt-8">
-        <form className="w-1/2 space-y-2">
+        <form className="w-1/2 space-y-2" onSubmit={performLogin}>
           <input
             type="text"
             className="w-full rounded focus:border-lime-400 border-gray-300 focus:ring focus:ring-lime-400 focus:ring-opacity-45"
@@ -68,6 +78,25 @@ export default function Login() {
           </Link>
         </div>
       </div>
+      <dialog
+        id="successDialog"
+        open={false}
+        className="backdrop:bg-stone-400 backdrop:opacity-60 rounded"
+        ref={successDialog}
+      >
+        <div className="bg-stone-100 w-96 h-64 flex flex-col items-center justify-center  border-t-8 border-lime-500 ">
+          <h2 className="text-2xl font-bold text-stone-700">Login Success</h2>
+          <p className="mb-8 mt-1 px-20 text-center">
+            Enjoy the brand new organic shopping experience
+          </p>
+          <button
+            className="text-center w-1/2 bg-lime-500 text-stone-700 py-2 rounded-md"
+            onClick={() => successDialog.current?.close()}
+          >
+            Continue
+          </button>
+        </div>
+      </dialog>
     </section>
   );
 }
