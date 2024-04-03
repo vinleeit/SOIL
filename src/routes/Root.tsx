@@ -22,7 +22,7 @@ export default function Root() {
               </li>
               <li>
                 <Link
-                  to={"/"}
+                  to={"/login"}
                   className="px-3 py-2 bg-lime-400 hover:bg-lime-300 border-lime-400 border rounded-md"
                 >
                   Login
