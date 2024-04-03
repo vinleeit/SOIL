@@ -9,6 +9,19 @@ type ButtonProp = {
     disabled?: boolean,
 }
 
+/**
+ * Abstraction of button used throughout the web application.
+ * 
+ * Parameters:
+ * - onClick: button action.
+ * - colour (primary|secondary): primary is green and secondary is black.
+ * - outlined: set the button to outlined type (border without background colour).
+ * - fullwidth: set button to fullwidth.
+ * - disabled: disable button action and set gray colour.
+ * 
+ * @param properties of a button 
+ * @returns 
+ */
 export default function SoilButton({
     children,
     onClick,
