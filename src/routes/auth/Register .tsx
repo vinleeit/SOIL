@@ -2,6 +2,8 @@ import { FormEvent, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs-react";
 import { User } from "../../types/User";
+import SoilAlertDialog from "../../components/SoilAlertDialog";
+import SoilButton from "../../components/SoilButton";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -109,9 +111,9 @@ export default function Register() {
         <p className="text-center w-full py-1 text-xs">
           By creating an account in you agree to terms and condition of use.
         </p>
-        <button className="uppercase w-full mt-3 bg-lime-400 py-3 rounded hover:bg-lime-300">
-          Create Account
-        </button>
+        <SoilButton fullWidth>
+          CREATE ACCOUNT
+        </SoilButton>
         <Link
           to={"/login"}
           className="text-sm text-lime-700 underline text-center block"
@@ -119,27 +121,13 @@ export default function Register() {
           Already have an account?
         </Link>
       </form>
-      <dialog
-        id="successDialog"
-        open={false}
-        className="backdrop:bg-stone-400 backdrop:opacity-60 rounded"
+      <SoilAlertDialog
+        id={"successDialog"}
         ref={successDialog}
-      >
-        <div className="bg-stone-100 w-96 h-64 flex flex-col items-center justify-center  border-t-8 border-lime-500 ">
-          <h2 className="text-2xl font-bold text-stone-700 capitalize">
-            Welcome {name}!
-          </h2>
-          <p className="mb-8 mt-1 px-20 text-center">
-            Your account has been created
-          </p>
-          <button
-            className="text-center w-1/2 bg-lime-500 text-stone-700 py-2 rounded-md hover:bg-lime-400"
-            onClick={() => navigate("/profile")}
-          >
-            Continue
-          </button>
-        </div>
-      </dialog>
+        title={`Welcome ${name}!`}
+        description="Your account has been created"
+        buttonLabel="Continue"
+        onClick={() => navigate("/profile")} />
     </section>
   );
 }

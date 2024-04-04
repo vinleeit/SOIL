@@ -1,7 +1,9 @@
 import { FormEvent, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import bcyrpt from "bcryptjs-react";
 import { User } from "../../types/User";
+import SoilAlertDialog from "../../components/SoilAlertDialog";
+import SoilButton from "../../components/SoilButton";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -73,9 +75,9 @@ export default function Login() {
             value={password}
           />
           {passwordError && <p className="text-red-400">{passwordError}</p>}
-          <button className="w-full mt-3 bg-lime-400 py-3 rounded hover:bg-lime-300">
+          <SoilButton fullWidth>
             LOGIN
-          </button>
+          </SoilButton>
           <p className="text-center w-full py-1 text-xs">
             By logging in you agree to terms and condition of use.
           </p>
@@ -84,33 +86,18 @@ export default function Login() {
           <span className="text-4xl hidden md:block">/</span>
         </div>
         <div className="w-full md:1/2 flex flex-col items-center justify-center">
-          <Link
-            to={"/register"}
-            className="w-full mt-3 border border-lime-400 py-3 rounded hover:bg-lime-100 text-center"
-          >
+          <SoilButton fullWidth outlined onClick={() => { navigate("/register") }}>
             CREATE ACCOUNT
-          </Link>
+          </SoilButton>
         </div>
       </div>
-      <dialog
-        id="successDialog"
-        open={false}
-        className="backdrop:bg-stone-400 backdrop:opacity-60 rounded"
+      <SoilAlertDialog
+        id={"successDialog"}
         ref={successDialog}
-      >
-        <div className="bg-stone-100 w-96 h-64 flex flex-col items-center justify-center  border-t-8 border-lime-500 ">
-          <h2 className="text-2xl font-bold text-stone-700">Login Success</h2>
-          <p className="mb-8 mt-1 px-20 text-center">
-            Enjoy the brand new organic shopping experience
-          </p>
-          <button
-            className="text-center w-1/2 bg-lime-500 text-stone-700 py-2 rounded-md"
-            onClick={() => navigate("/profile")}
-          >
-            Continue
-          </button>
-        </div>
-      </dialog>
+        title={"Login Success"}
+        description="Enjoy the brand new organic shopping experience"
+        buttonLabel="Continue"
+        onClick={() => navigate("/profile")} />
     </section>
   );
 }
