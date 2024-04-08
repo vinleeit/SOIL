@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs-react";
 import { User } from "../../types/User";
 import SoilAlertDialog from "../../components/SoilAlertDialog";
 import SoilButton from "../../components/SoilButton";
+import SoilTextField from "../../components/SoilTextField";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -84,30 +85,27 @@ export default function Register() {
         healthy!
       </p>
       <form className="w-80 space-y-2 mt-8" onSubmit={performRegister}>
-        <input
+        <SoilTextField
           type="text"
-          className="w-full rounded focus:border-lime-400 border-gray-300 focus:ring focus:ring-lime-400 focus:ring-opacity-45"
+          value={name}
           placeholder="Name"
           onChange={(e) => setName(e.target.value)}
-          value={name}
+          errMsg={nameError}
         />
-        {nameError && <p className="text-red-400">{nameError}</p>}
-        <input
+        <SoilTextField
           type="text"
-          className="w-full rounded focus:border-lime-400 border-gray-300 focus:ring focus:ring-lime-400 focus:ring-opacity-45"
+          value={email}
           placeholder="Email"
           onChange={(e) => setEmail(e.target.value)}
-          value={email}
+          errMsg={emailError}
         />
-        {emailError && <p className="text-red-400">{emailError}</p>}
-        <input
+        <SoilTextField
           type="password"
-          className="w-full rounded focus:border-lime-400 border-gray-300 focus:ring focus:ring-lime-400 focus:ring-opacity-45"
+          value={password}
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
-          value={password}
+          errMsg={passwordError}
         />
-        {passwordError && <p className="text-red-400">{passwordError}</p>}
         <p className="text-center w-full py-1 text-xs">
           By creating an account in you agree to terms and condition of use.
         </p>
