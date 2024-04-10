@@ -1,10 +1,9 @@
 import { FormEvent, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import bcyrpt from "bcryptjs-react";
-import { User } from "../../types/User";
 import SoilAlertDialog from "../../components/SoilAlertDialog";
 import SoilButton from "../../components/SoilButton";
 import SoilTextField from "../../components/SoilTextField";
+import { login } from "../../utils/auth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -35,16 +34,9 @@ export default function Login() {
     }
 
     if (success) {
-      const userString = localStorage.getItem("users");
-      const users: User[] = userString ? JSON.parse(userString) : [];
-
-      const matchedUser = users.find((e) => e.email === email);
-      if (matchedUser) {
-        if (bcyrpt.compareSync(password, matchedUser.password)) {
-          successDialog.current?.showModal();
-          localStorage.setItem("currentUser", JSON.stringify(matchedUser));
-          return;
-        }
+      if (login(email, password)) {
+        successDialog.current?.showModal();
+        return;
       }
       setEmailError("Invalid email or password");
     }
@@ -74,9 +66,7 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             errMsg={passwordError}
           />
-          <SoilButton fullWidth>
-            LOGIN
-          </SoilButton>
+          <SoilButton fullWidth>LOGIN</SoilButton>
           <p className="text-center w-full py-1 text-xs">
             By logging in you agree to terms and condition of use.
           </p>
@@ -85,7 +75,13 @@ export default function Login() {
           <span className="text-4xl hidden md:block">/</span>
         </div>
         <div className="w-full md:1/2 flex flex-col items-center justify-center">
-          <SoilButton fullWidth outlined onClick={() => { navigate("/register") }}>
+          <SoilButton
+            fullWidth
+            outlined
+            onClick={() => {
+              navigate("/register");
+            }}
+          >
             CREATE ACCOUNT
           </SoilButton>
         </div>
@@ -96,7 +92,8 @@ export default function Login() {
         title={"Login Success"}
         description="Enjoy the brand new organic shopping experience"
         buttonLabel="Continue"
-        onClick={() => navigate("/profile")} />
+        onClick={() => navigate("/profile")}
+      />
     </section>
   );
 }
