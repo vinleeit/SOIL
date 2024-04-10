@@ -28,7 +28,7 @@ export default function SoilProductCard(
                 <img
                     src={product.photoUrl}
                     alt=""
-                    className="max-h-64" />
+                    className="h-64" />
             </div>
             <div className="p-5 space-y-3">
                 <div className="space-y-1">
