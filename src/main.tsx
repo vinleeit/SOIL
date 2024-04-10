@@ -5,9 +5,10 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Root from "./routes/Root";
 import Error from "./routes/Error";
 import Login from "./routes/auth/Login";
-import Register from "./routes/auth/Register ";
 import Profile from "./routes/auth/Profile";
 import AuthProvider from "./context/AuthContext";
+import PageWithAuthorization from "./routes/auth/PageWithAuthorization";
+import Register from "./routes/auth/Register ";
 
 const router = createBrowserRouter([
   {
@@ -17,15 +18,27 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <PageWithAuthorization destination="/profile">
+            <Login />
+          </PageWithAuthorization>
+        ),
       },
       {
         path: "/register",
-        element: <Register />,
+        element: (
+          <PageWithAuthorization destination="/profile">
+            <Register />
+          </PageWithAuthorization>
+        ),
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          <PageWithAuthorization destination="/login" authorized>
+            <Profile />
+          </PageWithAuthorization>
+        ),
       },
     ],
   },
