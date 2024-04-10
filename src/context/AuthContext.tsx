@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { User } from "../types/User";
 import bcrypt from "bcryptjs-react";
 
@@ -17,6 +17,14 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const userString = localStorage.getItem("currentUser");
+    if (userString) {
+      const user: User = JSON.parse(userString);
+      setUser(user);
+    }
+  }, []);
 
   function saveUser(user: User) {
     localStorage.setItem("currentUser", JSON.stringify(user));
