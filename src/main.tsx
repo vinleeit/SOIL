@@ -7,6 +7,7 @@ import Error from "./routes/Error";
 import Login from "./routes/auth/Login";
 import Register from "./routes/auth/Register ";
 import Profile from "./routes/auth/Profile";
+import Dashboard from "./routes/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <Error />,
     children: [
+      {
+        path: "/",
+        element: <Dashboard />
+      },
       {
         path: "/login",
         element: <Login />,
