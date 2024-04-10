@@ -1,9 +1,9 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SoilAlertDialog from "../../components/SoilAlertDialog";
 import SoilButton from "../../components/SoilButton";
 import SoilTextField from "../../components/SoilTextField";
-import { login } from "../../utils/auth";
+import { AuthContext, AuthContextValue } from "../../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,6 +12,7 @@ export default function Login() {
   const [emailError, setEmailError] = useState("");
   const successDialog = useRef<HTMLDialogElement | null>(null);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext) as AuthContextValue;
 
   function performLogin(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();

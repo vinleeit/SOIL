@@ -1,9 +1,9 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SoilAlertDialog from "../../components/SoilAlertDialog";
 import SoilButton from "../../components/SoilButton";
 import SoilTextField from "../../components/SoilTextField";
-import { register } from "../../utils/auth";
+import { AuthContext, AuthContextValue } from "../../context/AuthContext";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -14,6 +14,7 @@ export default function Register() {
   const [nameError, setNameError] = useState("");
   const successDialog = useRef<HTMLDialogElement | null>(null);
   const navigate = useNavigate();
+  const { register } = useContext(AuthContext) as AuthContextValue;
 
   function performRegister(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();

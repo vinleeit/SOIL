@@ -1,9 +1,8 @@
-import { User } from "../../types/User";
+import { useContext } from "react";
+import { AuthContext, AuthContextValue } from "../../context/AuthContext";
 
 export default function Profile() {
-  const currentUser: User = JSON.parse(
-    localStorage.getItem("currentUser") as string,
-  );
+  const { user: currentUser } = useContext(AuthContext) as AuthContextValue;
 
   return (
     <div className="grow flex items-center justify-center">
@@ -12,16 +11,16 @@ export default function Profile() {
         <dl className="mt-4 flex space-y-5 leading-4 flex-col">
           <div>
             <dt className="font-bold text-sm">Name</dt>
-            <dd className="capitalize">{currentUser.name}</dd>
+            <dd className="capitalize">{currentUser!.name}</dd>
           </div>
           <div>
             <dt className="font-bold text-sm">Email Address</dt>
-            <dd className="lowercase">{currentUser.email}</dd>
+            <dd className="lowercase">{currentUser!.email}</dd>
           </div>
           <div>
             <dt className="font-bold text-sm">Joining Date</dt>
             <dd className="lowercase">
-              {new Date(currentUser.joinDate).toJSON().split("T")[0]}
+              {new Date(currentUser!.joinDate).toJSON().split("T")[0]}
             </dd>
           </div>
         </dl>
