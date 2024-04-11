@@ -2,14 +2,15 @@ import React from "react"
 import SoilButton from "../components/SoilButton"
 import SoilProductCard from "../components/SoilProductCard"
 import { GetProducts } from "../shared/services/ProductService"
+import SoilTipsCard from "../components/SoilTipsCard"
 
 export default function Dashboard() {
     var products = GetProducts()
     return (
-        <div className="flex justify-center">
-            <div className="py-10 px-10 lg:px-0 lg:w-2/3 space-y-10">
+        <div className="flex justify-center px-10 py-20">
+            <div className="lg:w-2/3 space-y-16">
                 <section className="space-y-6" >
-                    <p className="text-3xl">Special Deals</p>
+                    <p className="text-3xl">This Week's Special Deals</p>
                     <div className="gap-5 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4">
                         {products
                             .filter(product => product.isSpecial)
@@ -25,12 +26,19 @@ export default function Dashboard() {
                                         isSpecial={product.isSpecial} />
                                 </React.Fragment>)}
                     </div>
-                    <div className="flex flex-col items-center space-y-3">
+                    <div className="flex flex-col items-center space-y-3 pt-3">
                         <p>Do you want to see more special products?</p>
                         <SoilButton outlined>
                             See More {">>"}
                         </SoilButton>
                     </div>
+                </section>
+                <section>
+                    <SoilTipsCard
+                        title="Don't Squeeze 'em!"
+                        description="Overcrowded plants rarely thrive, and lack of air flow can cause fungal problems or invite pest attack"
+                        action={""}
+                    />
                 </section>
                 <section className="space-y-6" >
                     <p className="text-3xl">Our Products</p>
