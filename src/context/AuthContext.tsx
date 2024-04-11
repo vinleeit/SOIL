@@ -45,7 +45,10 @@ export default function AuthProvider({
     return false;
   };
 
-  const logout = () => setUser(null);
+  const logout = () => {
+    localStorage.setItem("currentUser", "");
+    return setUser(null);
+  };
 
   const register = (email: string, name: string, password: string) => {
     const usersString = localStorage.getItem("users");
