@@ -31,6 +31,7 @@ export default function AuthProvider({
   }
 
   const login = (email: string, password: string) => {
+    email = email.toLowerCase();
     const userString = localStorage.getItem("users");
     const users: User[] = userString ? JSON.parse(userString) : [];
 
@@ -51,6 +52,8 @@ export default function AuthProvider({
   };
 
   const register = (email: string, name: string, password: string) => {
+    email = email.toLowerCase();
+    name = name.toLowerCase();
     const usersString = localStorage.getItem("users");
     let users: User[] = [];
     if (usersString) {
