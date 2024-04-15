@@ -9,6 +9,7 @@ import Profile from "./routes/auth/Profile";
 import AuthProvider from "./context/AuthContext";
 import PageWithAuthorization from "./routes/auth/PageWithAuthorization";
 import Register from "./routes/auth/Register ";
+import EditProfile from "./routes/auth/EditProfile";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,14 @@ const router = createBrowserRouter([
         element: (
           <PageWithAuthorization destination="/login" authorized>
             <Profile />
+          </PageWithAuthorization>
+        ),
+      },
+      {
+        path: "/profile/edit",
+        element: (
+          <PageWithAuthorization destination="/login" authorized>
+            <EditProfile></EditProfile>
           </PageWithAuthorization>
         ),
       },

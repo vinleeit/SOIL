@@ -7,10 +7,11 @@ export interface AuthContextValue {
   login: (email: string, password: string) => boolean;
   logout: () => void;
   register: (email: string, name: string, password: string) => boolean;
+  deleteUser: () => void;
+  updateUser: (currentEmail: string, email: string, name: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
-
 export default function AuthProvider({
   children,
 }: {
@@ -26,14 +27,40 @@ export default function AuthProvider({
     }
   }, []);
 
+  function getUsersFromLocalStorage(): User[] {
+    const usersString = localStorage.getItem("users");
+    const users: User[] = usersString ? JSON.parse(usersString) : [];
+    return users;
+  }
+
+  function deleteUser() {
+    const deletedUser = user?.email;
+    logout();
+    let users = getUsersFromLocalStorage();
+    users = users.filter((u) => u.email != deletedUser);
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+
   function saveUser(user: User) {
     localStorage.setItem("currentUser", JSON.stringify(user));
   }
 
+  function updateUser(currentEmail: string, email: string, name: string) {
+    let users = getUsersFromLocalStorage();
+    const current = users.find((u) => u.email == currentEmail) as User;
+    console.log(current);
+    users = users.filter((u) => u.email != currentEmail);
+    current.email = email;
+    current.name = name;
+    users.push(current);
+    saveUser(current);
+    setUser(current);
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+
   const login = (email: string, password: string) => {
     email = email.toLowerCase();
-    const userString = localStorage.getItem("users");
-    const users: User[] = userString ? JSON.parse(userString) : [];
+    const users = getUsersFromLocalStorage();
 
     const matchedUser = users.find((e) => e.email === email);
     if (matchedUser) {
@@ -82,6 +109,8 @@ export default function AuthProvider({
         login,
         logout,
         register,
+        deleteUser,
+        updateUser,
       }}
     >
       {children}
