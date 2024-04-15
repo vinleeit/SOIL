@@ -5,8 +5,11 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Root from "./routes/Root";
 import Error from "./routes/Error";
 import Login from "./routes/auth/Login";
+import Profile from "./routes/auth/Profile";  
+import AuthProvider from "./context/AuthContext";
+import PageWithAuthorization from "./routes/auth/PageWithAuthorization";
 import Register from "./routes/auth/Register ";
-import Profile from "./routes/auth/Profile";
+import EditProfile from "./routes/auth/EditProfile";
 import Dashboard from "./routes/Dashboard";
 
 const router = createBrowserRouter([
@@ -21,15 +24,35 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <PageWithAuthorization destination="/profile">
+            <Login />
+          </PageWithAuthorization>
+        ),
       },
       {
         path: "/register",
-        element: <Register />,
+        element: (
+          <PageWithAuthorization destination="/profile">
+            <Register />
+          </PageWithAuthorization>
+        ),
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          <PageWithAuthorization destination="/login" authorized>
+            <Profile />
+          </PageWithAuthorization>
+        ),
+      },
+      {
+        path: "/profile/edit",
+        element: (
+          <PageWithAuthorization destination="/login" authorized>
+            <EditProfile></EditProfile>
+          </PageWithAuthorization>
+        ),
       },
     ],
   },
@@ -37,6 +60,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>,
 );
