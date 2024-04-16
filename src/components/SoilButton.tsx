@@ -3,7 +3,7 @@ import React from "react"
 type ButtonProp = {
     children?: React.ReactNode,
     onClick?: React.MouseEventHandler<HTMLButtonElement>,
-    colour?: "primary" | "secondary",
+    colour?: "primary" | "secondary" | "error",
     outlined?: boolean,
     fullWidth?: boolean,
     disabled?: boolean,
@@ -40,13 +40,17 @@ export default function SoilButton({
                         ? "text-gray-400 border-gray-400"
                         : ((colour == "primary")
                             ? "bg-transparent border-lime-400 hover:bg-lime-100"
-                            : "bg-transparent border-black hover:bg-stone-200"))
+                            : ((colour == "secondary")
+                                ? "bg-transparent border-black hover:bg-stone-200"
+                                : "bg-transparent border-red-600 hover:bg-red-100")))
                     : (disabled
                         ? "text-white bg-gray-400"
                         : ((colour == "primary")
                             ? "bg-lime-400 hover:bg-lime-300"
-                            : "text-white bg-black hover:bg-stone-700"))}
-                py-2  border rounded-md`
+                            : ((colour == "secondary")
+                                ? "text-white bg-black hover:bg-stone-700"
+                                : "text-white bg-red-500 hover:bg-red-400")))}
+                py-2  border rounded-md relative`
             }
         >
             {children}

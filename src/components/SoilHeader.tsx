@@ -2,7 +2,9 @@ import React, { useState } from "react"
 import SoilButton from "./SoilButton"
 import SoilLogo from "../components/SoilLogo"
 import Menu from "../assets/menu.svg"
+import Cart from "../assets/cart.svg"
 import { useLocation, useNavigate } from "react-router-dom"
+import { useShoppingCart } from "./ShoppingCartProvider"
 
 
 export default function SoilHeader() {
@@ -34,6 +36,9 @@ export default function SoilHeader() {
     }
 
     const login = () => navigate("/login")
+    const shoppingCart = () => navigate("/cart")
+
+    var shoppingCartContext = useShoppingCart()
 
     return (
         <header>
@@ -47,12 +52,28 @@ export default function SoilHeader() {
                             </SoilButton>
                         </li>
                         <li>
-                            <SoilButton onClick={login}>
+                            <SoilButton onClick={shoppingCart}>
+                                <span className="absolute -right-2 -top-1 bg-red-500 rounded-full h-6 w-6 text-center text-white">
+                                    {shoppingCartContext.cartQuantity}
+                                </span>
+                                <img src={Cart} alt="" className="" />
+                            </SoilButton>
+                        </li>
+                        <li>
+                            <SoilButton onClick={login} colour="secondary">
                                 Login
                             </SoilButton>
                         </li>
                     </ul>
-                    <ul className="md:hidden">
+                    <ul className="flex space-x-2 md:hidden">
+                        <li>
+                            <SoilButton onClick={shoppingCart}>
+                                <span className="absolute -right-2 -top-1 bg-red-500 rounded-full h-6 w-6 text-center text-white">
+                                    {shoppingCartContext.cartQuantity}
+                                </span>
+                                <img src={Cart} alt="" className="" />
+                            </SoilButton>
+                        </li>
                         <li>
                             <SoilButton outlined onClick={() => toggleMenu(!isMenuOpen)} >
                                 <img src={Menu} alt="" />
