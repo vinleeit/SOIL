@@ -41,14 +41,14 @@ export default function SoilButton({
                         : ((colour == "primary")
                             ? "bg-transparent border-lime-400 hover:bg-lime-100"
                             : ((colour == "secondary")
-                                ? "bg-transparent border-black hover:bg-stone-200"
+                                ? "bg-transparent border-stone-800 hover:bg-stone-200"
                                 : "bg-transparent border-red-600 hover:bg-red-100")))
                     : (disabled
                         ? "text-white bg-gray-400"
                         : ((colour == "primary")
                             ? "bg-lime-400 hover:bg-lime-300"
                             : ((colour == "secondary")
-                                ? "text-white bg-black hover:bg-stone-700"
+                                ? "text-white bg-stone-800 hover:bg-stone-700"
                                 : "text-white bg-red-500 hover:bg-red-400")))}
                 py-2  border rounded-md relative`
             }

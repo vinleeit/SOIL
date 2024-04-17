@@ -1,9 +1,9 @@
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import bcyrpt from "bcryptjs-react";
-import { User } from "../../types/User";
 import SoilAlertDialog from "../../components/SoilAlertDialog";
 import SoilButton from "../../components/SoilButton";
+import SoilTextField from "../../components/SoilTextField";
+import { AuthContext, AuthContextValue } from "../../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,6 +12,7 @@ export default function Login() {
   const [emailError, setEmailError] = useState("");
   const successDialog = useRef<HTMLDialogElement | null>(null);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext) as AuthContextValue;
 
   function performLogin(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -34,16 +35,9 @@ export default function Login() {
     }
 
     if (success) {
-      const userString = localStorage.getItem("users");
-      const users: User[] = userString ? JSON.parse(userString) : [];
-
-      const matchedUser = users.find((e) => e.email === email);
-      if (matchedUser) {
-        if (bcyrpt.compareSync(password, matchedUser.password)) {
-          successDialog.current?.showModal();
-          localStorage.setItem("currentUser", JSON.stringify(matchedUser));
-          return;
-        }
+      if (login(email, password)) {
+        successDialog.current?.showModal();
+        return;
       }
       setEmailError("Invalid email or password");
     }
@@ -59,25 +53,21 @@ export default function Login() {
       </p>
       <div className="w-2/3 md:1/2 flex flex-col md:flex-row items-center space-x-2 mt-8">
         <form className="w-full md:1/2 space-y-2" onSubmit={performLogin}>
-          <input
+          <SoilTextField
             type="text"
-            className="w-full rounded focus:border-lime-400 border-gray-300 focus:ring focus:ring-lime-400 focus:ring-opacity-45"
+            value={email}
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
-            value={email}
+            errMsg={emailError}
           />
-          {emailError && <p className="text-red-400">{emailError}</p>}
-          <input
+          <SoilTextField
             type="password"
-            className="w-full rounded focus:border-lime-400 border-gray-300 focus:ring focus:ring-lime-400 focus:ring-opacity-45"
+            value={password}
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
-            value={password}
+            errMsg={passwordError}
           />
-          {passwordError && <p className="text-red-400">{passwordError}</p>}
-          <SoilButton fullWidth>
-            LOGIN
-          </SoilButton>
+          <SoilButton fullWidth>LOGIN</SoilButton>
           <p className="text-center w-full py-1 text-xs">
             By logging in you agree to terms and condition of use.
           </p>
@@ -86,7 +76,13 @@ export default function Login() {
           <span className="text-4xl hidden md:block">/</span>
         </div>
         <div className="w-full md:1/2 flex flex-col items-center justify-center">
-          <SoilButton fullWidth outlined onClick={() => { navigate("/register") }}>
+          <SoilButton
+            fullWidth
+            outlined
+            onClick={() => {
+              navigate("/register");
+            }}
+          >
             CREATE ACCOUNT
           </SoilButton>
         </div>
@@ -97,7 +93,8 @@ export default function Login() {
         title={"Login Success"}
         description="Enjoy the brand new organic shopping experience"
         buttonLabel="Continue"
-        onClick={() => navigate("/profile")} />
+        onClick={() => navigate("/profile")}
+      />
     </section>
   );
 }
