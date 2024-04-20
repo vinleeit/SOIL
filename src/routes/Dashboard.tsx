@@ -2,9 +2,11 @@ import React from "react"
 import SoilButton from "../components/SoilButton"
 import SoilProductCard from "../components/SoilProductCard"
 import { GetProducts } from "../shared/services/ProductService"
-import SoilTipsCard from "../components/SoilTipsCard"
+import SoilTipCard from "../components/SoilTipCard"
+import GetTodayTip from "../shared/services/TipService"
 
 export default function Dashboard() {
+    var tip = GetTodayTip()
     var products = GetProducts()
     return (
         <div className="flex justify-center px-10 py-20">
@@ -34,9 +36,9 @@ export default function Dashboard() {
                     </div>
                 </section>
                 <section>
-                    <SoilTipsCard
-                        title="Don't Squeeze 'em!"
-                        description="Overcrowded plants rarely thrive, and lack of air flow can cause fungal problems or invite pest attack"
+                    <SoilTipCard
+                        title={tip.title}
+                        description={tip.content}
                         action={""}
                     />
                 </section>
