@@ -5,6 +5,7 @@ type TextFieldProp = {
     onChange?: React.ChangeEventHandler<HTMLInputElement>,
     value?: string,
     errMsg?: string,
+    disabled?: boolean,
 }
 
 export default function SoilTextField({
@@ -14,6 +15,7 @@ export default function SoilTextField({
     onChange,
     value,
     errMsg,
+    disabled,
 }: TextFieldProp) {
     return (
         <div className="flex flex-col w-full">
@@ -24,6 +26,7 @@ export default function SoilTextField({
                 placeholder={placeholder}
                 onChange={onChange}
                 value={value}
+                disabled={disabled}
             />
             {errMsg && <p className="ml-1 mt-0.5 text-red-400 text-sm">{errMsg}</p>}
         </div>

@@ -1,10 +1,15 @@
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useShoppingCart } from "../components/ShoppingCartProvider"
 import SoilButton from "../components/SoilButton"
 import SoilTextField from "../components/SoilTextField"
 import { FormEvent, useState } from "react";
 
 export default function Checkout() {
+    var { cartItems, totalPrice, reset } = useShoppingCart()
+    if (cartItems.length == 0) {
+        return <Navigate to={"/"} />
+    }
+
     const navigate = useNavigate()
     const [name, setName] = useState("")
     const [nameError, setNameError] = useState("")
@@ -30,7 +35,6 @@ export default function Checkout() {
     const [cardExpiryError, setCardExpiryError] = useState("")
     const [cvc, setCvc] = useState("")
     const [cvcError, setCvcError] = useState("")
-    var { cartItems, totalPrice, reset } = useShoppingCart()
 
     function isValidCreditCardNumber(cardNumber: string): boolean {
         var nums = [0, ...cardNumber.split("").map(e => Number.parseInt(e))]
@@ -148,8 +152,7 @@ export default function Checkout() {
         }
 
         if (isValid) {
-            reset()
-            navigate('summary', {
+            navigate('/summary', {
                 state: {
                     name: name,
                     phoneNumber: phoneNumber,
@@ -162,8 +165,10 @@ export default function Checkout() {
                     postcode: postcode,
                     cardNumber: cardNumber,
                     items: cartItems,
+                    totalPrice: totalPrice,
                 }
             })
+            reset()
         }
     }
 
@@ -178,7 +183,7 @@ export default function Checkout() {
                     {
                         cartItems.map((e) => {
                             return (
-                                <div className="flex flex-col lg:flex-row w-full p-5 rounded-md border justify-between">
+                                <div key={e.product.id} className="flex flex-col lg:flex-row w-full p-5 rounded-md border justify-between">
                                     <p>{e.product.title}</p>
                                     <div className="flex justify-between lg:space-x-8">
                                         <p>${e.product.price} x {e.quantity}</p>

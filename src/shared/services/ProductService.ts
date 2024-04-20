@@ -200,6 +200,5 @@ export function GetProducts(): Product[] {
         )
         return products
     }
-    console.log("HIII")
     return JSON.parse(productsJson)
 }

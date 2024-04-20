@@ -13,6 +13,7 @@ import EditProfile from "./routes/auth/EditProfile";
 import Dashboard from "./routes/Dashboard";
 import ShoppingCart from "./routes/ShoppingCart";
 import Checkout from "./routes/Checkout";
+import Summary from "./routes/Summary";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
       {
         path: "/checkout",
         element: <Checkout />
+      },
+      {
+        path: "/summary",
+        element: <Summary />
       },
     ],
   },
