@@ -76,11 +76,10 @@ export default function ShoppingCart() {
                             )
                         })
                 }
-                {/* TODO: Implement */}
                 <div className="flex float p-5 shadow-md border-t-2 rounded-md bg-white justify-between lg:justify-end items-center space-x-5">
-                    <p className="font-bold">Total: {totalPrice.toFixed(2)}</p>
+                    <p className="font-bold">Total: ${totalPrice.toFixed(2)}</p>
                     <SoilButton disabled={cartItems.length == 0} onClick={cartItems.length == 0 ? undefined : () => {
-
+                        navigate("/checkout")
                     }}>
                         Checkout
                     </SoilButton>

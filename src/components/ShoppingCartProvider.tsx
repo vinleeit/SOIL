@@ -19,6 +19,7 @@ type ShoppingCartHookProp = {
     addItem: (product: Product) => void
     reduceItem: (product: Product) => boolean
     deleteItem: (product: Product) => boolean
+    reset: () => void
 }
 
 
@@ -74,6 +75,10 @@ export function useShoppingCart(): ShoppingCartHookProp {
         return false
     }
 
+    function reset() {
+        setShoppingCart({})
+    }
+
     return {
         cartItems: cartItems,
         cartQuantity: cartQuantity,
@@ -82,6 +87,7 @@ export function useShoppingCart(): ShoppingCartHookProp {
         addItem: addItem,
         reduceItem: reduceItem,
         deleteItem: deleteItem,
+        reset: reset,
     }
 }
 

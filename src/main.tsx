@@ -12,6 +12,7 @@ import Register from "./routes/auth/Register ";
 import EditProfile from "./routes/auth/EditProfile";
 import Dashboard from "./routes/Dashboard";
 import ShoppingCart from "./routes/ShoppingCart";
+import Checkout from "./routes/Checkout";
 
 const router = createBrowserRouter([
   {
@@ -58,7 +59,11 @@ const router = createBrowserRouter([
       {
         path: "/cart",
         element: <ShoppingCart />
-      }
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />
+      },
     ],
   },
 ]);
