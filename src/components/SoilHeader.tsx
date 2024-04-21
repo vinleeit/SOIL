@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react"
-import SoilButton from "./SoilButton"
-import SoilLogo from "../components/SoilLogo"
-import Menu from "../assets/menu.svg"
-import Cart from "../assets/cart.svg"
-import { useLocation, useNavigate } from "react-router-dom"
-import { useShoppingCart } from "./ShoppingCartProvider"
+import React, { useContext, useState } from "react";
+import SoilButton from "./SoilButton";
+import SoilLogo from "../components/SoilLogo";
+import Menu from "../assets/menu.svg";
+import Cart from "../assets/cart.svg";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useShoppingCart } from "./ShoppingCartProvider";
 import { AuthContext, AuthContextValue } from "../context/AuthContext";
 
 export default function SoilHeader() {
@@ -23,14 +23,14 @@ export default function SoilHeader() {
     }
   }, [location]);
 
-  const login = () => navigate("/login")
-  const shoppingCart = () => navigate("/cart")
+  const login = () => navigate("/login");
+  const shoppingCart = () => navigate("/cart");
   const doLogout = () => {
     logout();
     navigate("/");
   };
 
-  var shoppingCartContext = useShoppingCart()
+  const shoppingCartContext = useShoppingCart();
 
   /**
    * Toggle the menu opend/closed.
@@ -51,9 +51,6 @@ export default function SoilHeader() {
         <nav className="flex h-full items-center justify-between px-8 border-b-2 border-lime-500">
           <SoilLogo />
           <ul className="space-x-2 hidden md:flex">
-            <li>
-              <SoilButton outlined>Special Deals</SoilButton>
-            </li>
             {user && (
               <li>
                 <SoilButton outlined onClick={() => navigate("/profile")}>
@@ -72,7 +69,9 @@ export default function SoilHeader() {
             <li>
               {user ? (
                 <div>
-                  <SoilButton colour="secondary" onClick={doLogout}>Logout</SoilButton>
+                  <SoilButton colour="secondary" onClick={doLogout}>
+                    Logout
+                  </SoilButton>
                 </div>
               ) : (
                 <SoilButton onClick={login}>Login</SoilButton>
@@ -107,14 +106,7 @@ export default function SoilHeader() {
           className={`relative w-full p-12 bg-white mx-auto flex-col flex transition-transform duration-200 ease-in-out ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
         >
           <SoilLogo size="medium" vertical onClick={() => toggleMenu(false)} />
-          <div className="flex flex-col h-full justify-between">
-            <ul className="my-7 space-y-3">
-              <li>
-                <SoilButton outlined fullWidth>
-                  Special Deals
-                </SoilButton>
-              </li>
-            </ul>
+          <div className="flex flex-col h-full justify-end">
             <ul className="space-y-3">
               {user && (
                 <li>
@@ -154,4 +146,3 @@ export default function SoilHeader() {
     </header>
   );
 }
-
