@@ -182,7 +182,7 @@ export default function Checkout() {
         className="flex flex-col grow lg:w-2/3 px-10 py-20 lg:mx-auto space-y-8"
       >
         <p className="text-3xl">Checkout</p>
-        <div className="flex flex-col shadow-md rounded-md p-3 lg:p-5 space-y-5">
+        <div className="flex flex-col shadow-md rounded-lg border p-3 lg:p-5 space-y-5">
           <p className="text-2xl">Items</p>
           {cartItems.map((e) => {
             return (
@@ -208,7 +208,7 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div className="flex flex-col shadow-md rounded-md p-3 lg:p-5 space-y-5">
+        <div className="flex flex-col border shadow-md rounded-md p-3 lg:p-5 space-y-5">
           <p className="text-2xl">Basic Details</p>
           <div className="flex flex-col space-y-2">
             <SoilTextField
@@ -240,7 +240,7 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div className="flex flex-col shadow-md rounded-md p-3 lg:p-5 space-y-5">
+        <div className="flex flex-col border shadow-md rounded-md p-3 lg:p-5 space-y-5">
           <p className="text-2xl">Shipping</p>
           <div className="flex flex-col space-y-2">
             <SoilTextField
@@ -299,7 +299,7 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div className="flex flex-col shadow-md rounded-md p-3 lg:p-5 space-y-5">
+        <div className="flex flex-col border shadow-md rounded-md p-3 lg:p-5 space-y-5">
           <p className="text-2xl">Payment</p>
           <div className="flex flex-col space-y-2">
             <SoilTextField
