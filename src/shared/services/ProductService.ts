@@ -11,7 +11,7 @@ let products: Product[] = [
         reviews: [],
         photoUrl: "https://cdn11.bigcommerce.com/s-kkzirv2h8i/images/stencil/1280x1280/products/12664/9985/barleycup-organic-100g__48365.1712295948.jpg?c=1",
         sources: ["https://mosesandco.com.au/barley-cup-organic-instant-barley-beverage-100g/"],
-        isSpecial: true,
+        isSpecial: false,
     },
     {
         id: 2,
@@ -230,7 +230,6 @@ export function GetProducts(): Product[] {
             expiryTimestamp: currentDate.setDate(currentDate.getDate() + daysToNextWeek),
         }
         localStorage.setItem("specialConfig", JSON.stringify(specialConfig))
-        products.forEach((e) => e.isSpecial = false)
         isStoreProduct = true
     } else {
         specialConfig = JSON.parse(specialConfigJson)
@@ -240,21 +239,22 @@ export function GetProducts(): Product[] {
                 expiryTimestamp: currentDate.setDate(currentDate.getDate() + daysToNextWeek),
             }
             localStorage.setItem("specialConfig", JSON.stringify(specialConfig))
-            products.forEach((e) => e.isSpecial = false)
             isStoreProduct = true
         }
-    }
-    const numOfItems = 4
-    for (let i = 0; i < numOfItems; i++) {
-        let randomNumber = Math.sin(specialConfig.seedTimestamp + i)
-        if (randomNumber < 0) {
-            randomNumber = 1 + randomNumber
-        }
-        products[Math.floor(randomNumber * products.length)].isSpecial = true
     }
 
     // Update the product in the database depending on the condition
     if (isStoreProduct) {
+        const numOfItems = 4
+        products.forEach((e) => e.isSpecial = false)
+        for (let i = 0; i < numOfItems; i++) {
+            let randomNumber = Math.sin(specialConfig.seedTimestamp + i)
+            if (randomNumber < 0) {
+                randomNumber = 1 + randomNumber
+            }
+            products[Math.floor(randomNumber * products.length)].isSpecial = true
+        }
+
         localStorage.setItem(
             "product",
             JSON.stringify(products),

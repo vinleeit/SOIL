@@ -18,7 +18,6 @@ export default function Dashboard() {
           <div className="gap-5 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4">
             {products
               .filter((product) => product.isSpecial)
-              .slice(0, 4)
               .map((product) => (
                 <React.Fragment key={product.id}>
                   <SoilProductCard
