@@ -17,7 +17,6 @@ export default function Checkout() {
   const [address1, setAddress1] = useState("");
   const [address1Error, setAddress1Error] = useState("");
   const [address2, setAddress2] = useState("");
-  const [address2Error, _] = useState("");
   const [city, setCity] = useState("");
   const [cityError, setCityError] = useState("");
   const [state, setState] = useState("");
@@ -255,7 +254,6 @@ export default function Checkout() {
               label="Address 2"
               placeholder="Address 2"
               onChange={(e) => setAddress2(e.target.value)}
-              errMsg={address2Error}
             ></SoilTextField>
             <div className="flex flex-col lg:flex-row lg:space-x-2 space-y-2 lg:space-y-0">
               <div className="flex space-x-2 grow">
@@ -352,4 +350,3 @@ export default function Checkout() {
     </section>
   );
 }
-
