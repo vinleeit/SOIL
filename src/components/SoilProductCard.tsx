@@ -79,25 +79,15 @@ export default function SoilProductCard({
               </SoilButton>
             </div>
           )}
-          <div className="flex w-full space-x-3">
-            <div
-              className={`flex w-full ${itemInCardQuantity <= 0 ? "justify-center" : "justify-end"}`}
-            >
-              <Link to={""} className="text-lime-600">
-                Details
+          {itemInCardQuantity > 0 ? (
+            <div className="flex w-full justify-center">
+              <Link to={""} onClick={onDeleteItem} className="text-red-600">
+                Remove
               </Link>
             </div>
-            {itemInCardQuantity > 0 ? <span>|</span> : <></>}
-            {itemInCardQuantity > 0 ? (
-              <div className="flex w-full justify-start">
-                <Link to={""} onClick={onDeleteItem} className="text-red-600">
-                  Remove
-                </Link>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
