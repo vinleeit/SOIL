@@ -14,6 +14,7 @@ import Dashboard from "./routes/Dashboard";
 import ShoppingCart from "./routes/ShoppingCart";
 import Checkout from "./routes/Checkout";
 import Summary from "./routes/Summary";
+import ChangePassword from "./routes/auth/ChangePassword";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,14 @@ const router = createBrowserRouter([
         element: (
           <PageWithAuthorization destination="/login" authorized>
             <EditProfile></EditProfile>
+          </PageWithAuthorization>
+        ),
+      },
+      {
+        path: "/profile/change-password",
+        element: (
+          <PageWithAuthorization destination="/login" authorized>
+            <ChangePassword />
           </PageWithAuthorization>
         ),
       },
