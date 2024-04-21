@@ -17,7 +17,7 @@ export default function Dashboard() {
           <SoilTipCard
             title={tip.title}
             description={tip.content}
-            action={""}
+            action={tip.source}
           />
         </section>
         <ProductsSection />
