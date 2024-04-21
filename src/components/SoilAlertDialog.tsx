@@ -10,6 +10,9 @@ type DialogProp = {
     onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined,
 }
 
+/**
+ * An alert dialog used to display important information.
+ */
 const SoilAlertDialog = React.forwardRef<HTMLDialogElement, DialogProp>(({
     id,
     title = "Alert Dialog",

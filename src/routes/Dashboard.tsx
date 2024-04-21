@@ -4,7 +4,8 @@ import { GetProducts } from "../shared/services/ProductService";
 import SoilTipCard from "../components/SoilTipCard";
 import GetTodayTip from "../shared/services/TipService";
 import { useShoppingCart } from "../components/ShoppingCartProvider";
-import { GetProductPrice } from "../models/Product";
+import { GetProductPrice } from "../types/Product";
+import { Review } from "../types/Review";
 
 export default function Dashboard() {
   const tip = GetTodayTip();
@@ -42,7 +43,7 @@ function ProductsSection() {
                 price={product.price}
                 averageRating={
                   product.reviews.reduce(
-                    (sum, review) => sum + review.rating,
+                    (sum: number, review: Review) => sum + review.rating,
                     0,
                   ) / product.reviews.length
                 }
@@ -81,7 +82,7 @@ function WeeklySpecialDealsSection() {
                 discountedPrice={GetProductPrice(product)}
                 averageRating={
                   product.reviews.reduce(
-                    (sum, review) => sum + review.rating,
+                    (sum: number, review: Review) => sum + review.rating,
                     0,
                   ) / product.reviews.length
                 }

@@ -8,6 +8,11 @@ type TextFieldProp = {
     disabled?: boolean,
 }
 
+/**
+ * Text field with label and error prompt.
+ * @param param0 
+ * @returns 
+ */
 export default function SoilTextField({
     type = "text",
     label,

@@ -17,6 +17,11 @@ type ProductCardProp = {
   onDeleteItem?: React.MouseEventHandler<HTMLAnchorElement>;
 };
 
+/**
+ * A card to display product informtion
+ * @param param0 
+ * @returns 
+ */
 export default function SoilProductCard({
   title,
   price,

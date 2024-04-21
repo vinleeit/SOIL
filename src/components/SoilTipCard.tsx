@@ -7,6 +7,11 @@ type SoilTipsCardProp = {
     action: To,
 }
 
+/**
+ * A card component used to show the daily tip.
+ * @param param0 
+ * @returns 
+ */
 export default function SoilTipCard({
     title,
     description,

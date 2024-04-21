@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { CartItem } from "../models/CartItem";
+import { CartItem } from "../types/CartItem";
 import SoilButton from "./SoilButton";
-import { GetProductPrice, Product } from "../models/Product";
+import { GetProductPrice, Product } from "../types/Product";
 import Trash from "../assets/trash.svg";
 
 type SoilCartCardProp = {

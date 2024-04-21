@@ -1,4 +1,8 @@
-export default function SoilBadge() {
+/**
+ * Badge used only to label product special
+ * @returns 
+ */
+export default function SoilSpecialBadge() {
     return (
         <span className="
         bg-red-100 

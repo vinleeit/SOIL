@@ -3,6 +3,11 @@ type CheckoutSectionProp = {
     title: string,
 }
 
+/**
+ * A section used in checkout page and summary page, for avoiding duplication.
+ * @param param0 
+ * @returns 
+ */
 export default function CheckoutSection({
     children,
     title

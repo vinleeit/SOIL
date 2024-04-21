@@ -1,9 +1,9 @@
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import SoilButton from "../components/SoilButton";
 import SoilTextField from "../components/SoilTextField";
-import { CartItem } from "../models/CartItem";
+import { CartItem } from "../types/CartItem";
 import CheckoutSection from "../components/CheckoutSection";
-import { GetProductPrice } from "../models/Product";
+import { GetProductPrice } from "../types/Product";
 
 export default function Checkout() {
   const navigate = useNavigate();

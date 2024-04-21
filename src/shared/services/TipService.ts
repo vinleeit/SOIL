@@ -4,6 +4,9 @@ type Tip = {
     source: string
 }
 
+/**
+ * Hard coded tips
+ */
 const tips: Tip[] = [
     {
         title: "Rich soil, quality grow",
@@ -47,6 +50,10 @@ const tips: Tip[] = [
     }
 ];
 
+/**
+ * Get the partially random tip of the day using a sin function.
+ * @returns 
+ */
 export default function GetTodayTip(): Tip {
     const date = new Date(Date.now()).setHours(0, 0, 0, 0)
     let randomNumber = Math.sin(date)

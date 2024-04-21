@@ -4,7 +4,7 @@ import SoilButton from "../components/SoilButton";
 import SoilTextField from "../components/SoilTextField";
 import { FormEvent, useState } from "react";
 import CheckoutSection from "../components/CheckoutSection";
-import { GetProductPrice } from "../models/Product";
+import { GetProductPrice } from "../types/Product";
 
 export default function Checkout() {
   const { cartItems, totalPrice, reset } = useShoppingCart();
