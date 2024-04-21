@@ -1,5 +1,4 @@
 import React from "react";
-import SoilButton from "../components/SoilButton";
 import SoilProductCard from "../components/SoilProductCard";
 import { GetProducts } from "../shared/services/ProductService";
 import SoilTipCard from "../components/SoilTipCard";

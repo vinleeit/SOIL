@@ -2,6 +2,7 @@ import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import SoilButton from "../components/SoilButton";
 import SoilTextField from "../components/SoilTextField";
 import { CartItem } from "../models/CartItem";
+import CheckoutSection from "../components/CheckoutSection";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -13,8 +14,7 @@ export default function Checkout() {
   return (
     <section className="flex flex-col grow lg:w-2/3 px-10 py-20 lg:mx-auto space-y-8">
       <p className="text-3xl">Purchase Summary</p>
-      <div className="flex flex-col shadow-md rounded-md p-3 lg:p-5 space-y-5">
-        <p className="text-2xl">Items</p>
+      <CheckoutSection title="Items">
         {(location.state.items as CartItem[]).map((e) => {
           return (
             <div className="flex flex-col lg:flex-row w-full p-5 rounded-md border justify-between">
@@ -36,10 +36,9 @@ export default function Checkout() {
             ${(location.state.totalPrice as number).toFixed(2)}
           </p>
         </div>
-      </div>
+      </CheckoutSection>
 
-      <div className="flex flex-col shadow-md rounded-md p-3 lg:p-5 space-y-5">
-        <p className="text-2xl">Basic Details</p>
+      <CheckoutSection title="Basic Details">
         <div className="flex flex-col space-y-2">
           <SoilTextField
             disabled
@@ -57,10 +56,9 @@ export default function Checkout() {
             label="Email"
           ></SoilTextField>
         </div>
-      </div>
+      </CheckoutSection>
 
-      <div className="flex flex-col shadow-md rounded-md p-3 lg:p-5 space-y-5">
-        <p className="text-2xl">Shipping</p>
+      <CheckoutSection title="Shipping">
         <div className="flex flex-col space-y-2">
           <SoilTextField
             disabled
@@ -99,7 +97,7 @@ export default function Checkout() {
             </div>
           </div>
         </div>
-      </div>
+      </CheckoutSection>
 
       <div className="flex flex-col space-y-2">
         <SoilButton onClick={() => navigate("/")}>Home</SoilButton>

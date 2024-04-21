@@ -1,7 +1,7 @@
 import SoilButton from "../components/SoilButton";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useShoppingCart } from "../components/ShoppingCartProvider";
-import Trash from "../assets/trash.svg";
+import SoilCartCard from "../components/SoilCartCard";
 
 export default function ShoppingCart() {
   const navigate = useNavigate();
@@ -42,57 +42,15 @@ export default function ShoppingCart() {
           cartItems.map((e) => {
             const itemInCardQuantity = getItemQuantity(e.product);
             return (
-              <div className="flex shadow-md border-t-2">
-                <img
-                  src={e.product.photoUrl}
-                  alt=""
-                  className="w-24 object-cover"
-                />
-                <div className="flex flex-col p-5 space-y-3 grow">
-                  <div className="flex flex-col space-y-1">
-                    <div className="flex">
-                      {e.product.isSpecial ? (
-                        <p className="px-5 py-1 bg-red-100 text-red-800  rounded-md ">
-                          Special
-                        </p>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                    <p>{e.product.title}</p>
-                    <p className="font-bold">
-                      ${(e.product.price * e.quantity).toFixed(2)}
-                    </p>
-                  </div>
-                  <div className="flex items-center w-full">
-                    <div className="flex items-center space-x-3 grow">
-                      <SoilButton
-                        outlined
-                        onClick={() => reduceItem(e.product)}
-                      >
-                        -
-                      </SoilButton>
-                      <p>{itemInCardQuantity}</p>
-                      <SoilButton outlined onClick={() => addItem(e.product)}>
-                        +
-                      </SoilButton>
-                    </div>
-                    {itemInCardQuantity > 0 ? (
-                      <div className="">
-                        <Link
-                          to={""}
-                          onClick={() => deleteItem(e.product)}
-                          className="text-red-600"
-                        >
-                          <img src={Trash} alt="" />
-                        </Link>
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                </div>
-              </div>
+              SoilCartCard(
+                {
+                  cartItem: e,
+                  itemInCardQuantity: itemInCardQuantity,
+                  onAddItem: addItem,
+                  onReduceItem: reduceItem,
+                  onDeleteItem: deleteItem,
+                }
+              )
             );
           })
         )}
@@ -104,8 +62,8 @@ export default function ShoppingCart() {
               cartItems.length == 0
                 ? undefined
                 : () => {
-                    navigate("/checkout");
-                  }
+                  navigate("/checkout");
+                }
             }
           >
             Checkout
