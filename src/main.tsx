@@ -11,6 +11,9 @@ import PageWithAuthorization from "./routes/auth/PageWithAuthorization";
 import Register from "./routes/auth/Register ";
 import EditProfile from "./routes/auth/EditProfile";
 import Dashboard from "./routes/Dashboard";
+import ShoppingCart from "./routes/ShoppingCart";
+import Checkout from "./routes/Checkout";
+import Summary from "./routes/Summary";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +56,18 @@ const router = createBrowserRouter([
             <EditProfile></EditProfile>
           </PageWithAuthorization>
         ),
+      },
+      {
+        path: "/cart",
+        element: <ShoppingCart />
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />
+      },
+      {
+        path: "/summary",
+        element: <Summary />
       },
     ],
   },
