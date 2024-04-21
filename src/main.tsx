@@ -5,10 +5,10 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Root from "./routes/Root";
 import Error from "./routes/Error";
 import Login from "./routes/auth/Login";
-import Profile from "./routes/auth/Profile";  
+import Profile from "./routes/auth/Profile";
 import AuthProvider from "./context/AuthContext";
 import PageWithAuthorization from "./routes/auth/PageWithAuthorization";
-import Register from "./routes/auth/Register ";
+import Register from "./routes/auth/Register";
 import EditProfile from "./routes/auth/EditProfile";
 import Dashboard from "./routes/Dashboard";
 import ShoppingCart from "./routes/ShoppingCart";
@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Dashboard />
+        element: <Dashboard />,
       },
       {
         path: "/login",
@@ -59,15 +59,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/cart",
-        element: <ShoppingCart />
+        element: <ShoppingCart />,
       },
       {
         path: "/checkout",
-        element: <Checkout />
+        element: <Checkout />,
       },
       {
         path: "/summary",
-        element: <Summary />
+        element: <Summary />,
       },
     ],
   },
