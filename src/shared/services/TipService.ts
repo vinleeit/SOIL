@@ -39,8 +39,8 @@ const tips: Tip[] = [
 ];
 
 export default function GetTodayTip(): Tip {
-    var date = new Date(Date.now()).setHours(0, 0, 0, 0)
-    var randomNumber = Math.sin(date)
+    const date = new Date(Date.now()).setHours(0, 0, 0, 0)
+    let randomNumber = Math.sin(date)
     if (randomNumber < 0) {
         randomNumber = 1 + randomNumber
     }

@@ -170,7 +170,7 @@ function GenerateRandomNumber(min: number, max: number): number {
  * @returns 
  */
 function GenerateReview(): Review[] {
-    var reviews = [
+    const reviews = [
         {
             rating: 1.0,
             message: "Worst",
@@ -205,8 +205,8 @@ function GenerateReview(): Review[] {
  * @returns 
  */
 export function GetProducts(): Product[] {
-    let productsJson = localStorage.getItem("product")
-    let specialConfigJson = localStorage.getItem("specialConfig")
+    const productsJson = localStorage.getItem("product")
+    const specialConfigJson = localStorage.getItem("specialConfig")
     let isStoreProduct = false
 
     let specialConfig: SpecialConfig
@@ -220,10 +220,10 @@ export function GetProducts(): Product[] {
     }
 
     // Determine the special products randomly
-    let currentDateTimestamp = new Date(Date.now()).setHours(0, 0, 0, 0)
-    let currentDate = new Date(currentDateTimestamp)
-    let currentWeekday = (currentDate.getDay() + 1)
-    let daysToNextWeek = 8 - currentWeekday
+    const currentDateTimestamp = new Date(Date.now()).setHours(0, 0, 0, 0)
+    const currentDate = new Date(currentDateTimestamp)
+    const currentWeekday = (currentDate.getDay() + 1)
+    const daysToNextWeek = 8 - currentWeekday
     if (specialConfigJson == null) {
         specialConfig = {
             seedTimestamp: currentDate.setDate(currentDate.getDate() - currentWeekday),
@@ -244,7 +244,7 @@ export function GetProducts(): Product[] {
             isStoreProduct = true
         }
     }
-    let numOfItems = 4
+    const numOfItems = 4
     for (let i = 0; i < numOfItems; i++) {
         let randomNumber = Math.sin(specialConfig.seedTimestamp + i)
         if (randomNumber < 0) {
