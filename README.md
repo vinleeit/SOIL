@@ -13,3 +13,4 @@ Member 2: Arvin Lee S3937114
 The following are resource used in the project:
 
 - Icon: https://iconoir.com/
+- Organic Food Article: https://www.betterhealth.vic.gov.au/health/healthyliving/organic-food
