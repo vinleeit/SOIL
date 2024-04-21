@@ -3,6 +3,8 @@ import { useShoppingCart } from "../components/ShoppingCartProvider";
 import SoilButton from "../components/SoilButton";
 import SoilTextField from "../components/SoilTextField";
 import { FormEvent, useState } from "react";
+import CheckoutSection from "../components/CheckoutSection";
+import { GetProductPrice } from "../types/Product";
 
 export default function Checkout() {
   const { cartItems, totalPrice, reset } = useShoppingCart();
@@ -181,8 +183,7 @@ export default function Checkout() {
         className="flex flex-col grow lg:w-2/3 px-10 py-20 lg:mx-auto space-y-8"
       >
         <p className="text-3xl">Checkout</p>
-        <div className="flex flex-col shadow-md rounded-lg border p-3 lg:p-5 space-y-5">
-          <p className="text-2xl">Items</p>
+        <CheckoutSection title="Items">
           {cartItems.map((e) => {
             return (
               <div
@@ -191,11 +192,21 @@ export default function Checkout() {
               >
                 <p>{e.product.title}</p>
                 <div className="flex justify-between lg:space-x-8">
-                  <p>
-                    ${e.product.price} x {e.quantity}
+                  <p className="font-bold space-x-1">
+                    <span
+                      className={
+                        !e.product.isSpecial ? "" : "text-sm line-through"
+                      }
+                    >{`$${e.product.price.toFixed(2)}`}</span>
+                    {!e.product.isSpecial ? (
+                      <></>
+                    ) : (
+                      <span>{`$${GetProductPrice(e.product).toFixed(2)}`}</span>
+                    )}
+                    <span>x {e.quantity}</span>
                   </p>
                   <p className="font-bold">
-                    ${(e.product.price * e.quantity).toFixed(2)}
+                    ${(GetProductPrice(e.product) * e.quantity).toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -205,10 +216,9 @@ export default function Checkout() {
             <p>Total:</p>
             <p className="font-bold">${totalPrice.toFixed(2)}</p>
           </div>
-        </div>
+        </CheckoutSection>
 
-        <div className="flex flex-col border shadow-md rounded-md p-3 lg:p-5 space-y-5">
-          <p className="text-2xl">Basic Details</p>
+        <CheckoutSection title="Basic Details">
           <div className="flex flex-col space-y-2">
             <SoilTextField
               value={name}
@@ -237,10 +247,9 @@ export default function Checkout() {
               errMsg={emailError}
             ></SoilTextField>
           </div>
-        </div>
+        </CheckoutSection>
 
-        <div className="flex flex-col border shadow-md rounded-md p-3 lg:p-5 space-y-5">
-          <p className="text-2xl">Shipping</p>
+        <CheckoutSection title="Shipping">
           <div className="flex flex-col space-y-2">
             <SoilTextField
               value={address1}
@@ -295,10 +304,9 @@ export default function Checkout() {
               </div>
             </div>
           </div>
-        </div>
+        </CheckoutSection>
 
-        <div className="flex flex-col border shadow-md rounded-md p-3 lg:p-5 space-y-5">
-          <p className="text-2xl">Payment</p>
+        <CheckoutSection title="Payment">
           <div className="flex flex-col space-y-2">
             <SoilTextField
               value={cardNumber}
@@ -339,7 +347,8 @@ export default function Checkout() {
               ></SoilTextField>
             </div>
           </div>
-        </div>
+        </CheckoutSection>
+
         <div className="flex flex-col space-y-2">
           <SoilButton>Complete Purchase</SoilButton>
           <SoilButton colour="secondary" onClick={() => navigate("/cart")}>

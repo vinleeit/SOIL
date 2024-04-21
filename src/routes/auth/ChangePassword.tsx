@@ -19,6 +19,7 @@ export default function ChangePassword() {
   function editProfile(e: FormEvent) {
     e.preventDefault();
     let success = true;
+    // Check if the password is correct by comparing the hash
     if (!bcrypt.compareSync(password, user!.password)) {
       setPasswordError("Invalid Password");
       success = false;
@@ -47,6 +48,7 @@ export default function ChangePassword() {
       setNewPasswordError("");
     }
     if (success) {
+      // Update user's password with a new hash
       updatePassword(user!.email, bcrypt.hashSync(newPassword));
       dialog?.current?.showModal();
     }

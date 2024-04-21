@@ -7,6 +7,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useShoppingCart } from "./ShoppingCartProvider";
 import { AuthContext, AuthContextValue } from "../context/AuthContext";
 
+/**
+ * Refactored from the base route for a clean code.
+ * @returns
+ */
 export default function SoilHeader() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,6 +25,7 @@ export default function SoilHeader() {
     if (isMenuOpen) {
       toggleMenu(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   const login = () => navigate("/login");

@@ -12,6 +12,9 @@ type DialogProp = {
   onCancel?: React.MouseEventHandler<HTMLButtonElement> | undefined;
 };
 
+/**
+ * A confirmation button with positive and negative actions.
+ */
 const SoilAlertDialog = React.forwardRef<HTMLDialogElement, DialogProp>(
   (
     {

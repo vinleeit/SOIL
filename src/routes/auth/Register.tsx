@@ -18,6 +18,7 @@ export default function Register() {
 
   function performRegister(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
+    // Form validation
     let success = true;
     if (password.length === 0) {
       setPasswordError("Password must not be empty");
@@ -56,6 +57,7 @@ export default function Register() {
     }
 
     if (success) {
+      // register user if validation success
       if (register(email, name, password)) {
         successDialog.current?.showModal();
         return;

@@ -8,6 +8,13 @@ export type PageWithAuthorizationProp = {
   authorized?: boolean;
 };
 
+/*
+ * PageWithAuthorization Component
+ * This component is used to restrict a page from being accessed,
+ * @param destination url to redirect to
+ * @param children data to show
+ * @param authorized whether if the user is authorized or not to be redirected
+ * */
 export default function PageWithAuthorization({
   destination,
   children,

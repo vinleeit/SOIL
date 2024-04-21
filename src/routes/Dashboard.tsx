@@ -1,11 +1,15 @@
 import React from "react";
-import SoilButton from "../components/SoilButton";
 import SoilProductCard from "../components/SoilProductCard";
 import { GetProducts } from "../shared/services/ProductService";
 import SoilTipCard from "../components/SoilTipCard";
 import GetTodayTip from "../shared/services/TipService";
 import { useShoppingCart } from "../components/ShoppingCartProvider";
+import { GetProductPrice } from "../types/Product";
+import { Review } from "../types/Review";
 
+/*
+ * Landing page component
+ * */
 export default function Dashboard() {
   const tip = GetTodayTip();
   return (
@@ -18,7 +22,7 @@ export default function Dashboard() {
           <SoilTipCard
             title={tip.title}
             description={tip.content}
-            action={""}
+            action={tip.source}
           />
         </section>
         <ProductsSection />
@@ -42,7 +46,7 @@ function ProductsSection() {
                 price={product.price}
                 averageRating={
                   product.reviews.reduce(
-                    (sum, review) => sum + review.rating,
+                    (sum: number, review: Review) => sum + review.rating,
                     0,
                   ) / product.reviews.length
                 }
@@ -78,9 +82,10 @@ function WeeklySpecialDealsSection() {
               <SoilProductCard
                 title={product.title}
                 price={product.price}
+                discountedPrice={GetProductPrice(product)}
                 averageRating={
                   product.reviews.reduce(
-                    (sum, review) => sum + review.rating,
+                    (sum: number, review: Review) => sum + review.rating,
                     0,
                   ) / product.reviews.length
                 }
@@ -96,10 +101,6 @@ function WeeklySpecialDealsSection() {
               />
             </React.Fragment>
           ))}
-      </div>
-      <div className="flex flex-col items-center space-y-3 pt-3">
-        <p>Do you want to see more special products?</p>
-        <SoilButton outlined>See More {">>"}</SoilButton>
       </div>
     </section>
   );

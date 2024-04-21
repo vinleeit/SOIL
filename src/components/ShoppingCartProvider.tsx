@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react"
-import { CartItem } from "../models/CartItem";
-import { Product } from "../models/Product";
+import { CartItem } from "../types/CartItem";
+import { GetProductPrice, Product } from "../types/Product";
 
 type ShoppingCartContext = {
     shoppingCart: { [productId: number]: CartItem }
@@ -25,13 +25,22 @@ type ShoppingCartHookProp = {
 
 const ShoppingCartContext = createContext({} as ShoppingCartContext)
 
+/**
+ * Cart custom hook.
+ * @returns 
+ */
 export function useShoppingCart(): ShoppingCartHookProp {
-    var { shoppingCart, setShoppingCart } = useContext(ShoppingCartContext)
+    const { shoppingCart, setShoppingCart } = useContext(ShoppingCartContext)
 
-    var cartItems = Object.values(shoppingCart)
-    var cartQuantity = cartItems.reduce((quantity, item) => quantity + item.quantity, 0)
-    var totalPrice = cartItems.reduce((price, item) => price + (item.product.price * item.quantity), 0)
+    const cartItems = Object.values(shoppingCart)
+    const cartQuantity = cartItems.reduce((quantity, item) => quantity + item.quantity, 0)
+    const totalPrice = cartItems.reduce((price, item) => price + (GetProductPrice(item.product) * item.quantity), 0)
 
+    /**
+     * Get the number of item in the cart.
+     * @param product 
+     * @returns 
+     */
     function getItemQuantity(product: Product): number {
         if (product.id in shoppingCart) {
             return shoppingCart[product.id].quantity
@@ -39,8 +48,12 @@ export function useShoppingCart(): ShoppingCartHookProp {
         return 0
     }
 
+    /**
+     * Increase the item number by 1
+     * @param product 
+     */
     function addItem(product: Product) {
-        var tempCartItems = { ...shoppingCart }
+        const tempCartItems = { ...shoppingCart }
         if (product.id in tempCartItems) {
             tempCartItems[product.id].quantity++
         } else {
@@ -52,10 +65,15 @@ export function useShoppingCart(): ShoppingCartHookProp {
         setShoppingCart(tempCartItems)
     }
 
+    /**
+     * Decrease the item number by 1
+     * @param product 
+     * @returns 
+     */
     function reduceItem(product: Product): boolean {
         if (product.id in shoppingCart) {
-            var tempCartItems = { ...shoppingCart }
-            var modifiedQuantity = --tempCartItems[product.id].quantity
+            const tempCartItems = { ...shoppingCart }
+            const modifiedQuantity = --tempCartItems[product.id].quantity
             if (modifiedQuantity <= 0) {
                 delete tempCartItems[product.id]
             }
@@ -65,9 +83,14 @@ export function useShoppingCart(): ShoppingCartHookProp {
         return false
     }
 
+    /**
+     * Remove the item from cart
+     * @param product 
+     * @returns 
+     */
     function deleteItem(product: Product): boolean {
         if (product.id in shoppingCart) {
-            var tempCartItems = { ...shoppingCart }
+            const tempCartItems = { ...shoppingCart }
             delete tempCartItems[product.id]
             setShoppingCart(tempCartItems)
             return true
@@ -75,6 +98,9 @@ export function useShoppingCart(): ShoppingCartHookProp {
         return false
     }
 
+    /**
+     * Clear the cart
+     */
     function reset() {
         setShoppingCart({})
     }
@@ -91,6 +117,12 @@ export function useShoppingCart(): ShoppingCartHookProp {
     }
 }
 
+/**
+ * Provider to for injecting shopping cart context to the children
+ * components. Used in the entry point of the application.
+ * @param param0 
+ * @returns 
+ */
 export default function ShoppingCartProvider({
     children
 }: ShoppingCartProviderProp) {
