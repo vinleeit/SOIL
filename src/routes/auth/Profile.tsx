@@ -40,14 +40,24 @@ export default function Profile() {
             </dd>
           </div>
         </dl>
-        <div className="flex justify-end md:flex-row flex-col mt-8 space-y-2 md:space-y-0 md:space-x-2">
-          <SoilButton outlined onClick={() => navigate("/profile/edit")}>
+        <div className="flex justify-end md:flex-row flex-col mt-8 space-y-2 md:space-y-0 md:space-x-2 mb-3">
+          <SoilButton
+            outlined
+            fullWidth
+            onClick={() => navigate("/profile/edit")}
+          >
             Edit Account
           </SoilButton>
-          <SoilButton onClick={() => dialogRef.current?.showModal()}>
-            Delete Account
+          <SoilButton
+            fullWidth
+            onClick={() => navigate("/profile/change-password")}
+          >
+            Change Password
           </SoilButton>
         </div>
+        <SoilButton fullWidth onClick={() => dialogRef.current?.showModal()}>
+          Delete Account
+        </SoilButton>
       </section>
     </div>
   );

@@ -9,6 +9,7 @@ export interface AuthContextValue {
   register: (email: string, name: string, password: string) => boolean;
   deleteUser: () => void;
   updateUser: (currentEmail: string, email: string, name: string) => void;
+  updatePassword: (currentEmail: string, passwordHash: string) => void;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -48,10 +49,19 @@ export default function AuthProvider({
   function updateUser(currentEmail: string, email: string, name: string) {
     let users = getUsersFromLocalStorage();
     const current = users.find((u) => u.email == currentEmail) as User;
-    console.log(current);
     users = users.filter((u) => u.email != currentEmail);
     current.email = email;
     current.name = name;
+    users.push(current);
+    saveUser(current);
+    setUser(current);
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+  function updatePassword(currentEmail: string, passwordHash: string) {
+    let users = getUsersFromLocalStorage();
+    const current = users.find((u) => u.email == currentEmail) as User;
+    users = users.filter((u) => u.email != currentEmail);
+    current.password = passwordHash;
     users.push(current);
     saveUser(current);
     setUser(current);
@@ -111,6 +121,7 @@ export default function AuthProvider({
         register,
         deleteUser,
         updateUser,
+        updatePassword,
       }}
     >
       {children}
