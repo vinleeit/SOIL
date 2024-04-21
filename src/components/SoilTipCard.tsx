@@ -7,7 +7,7 @@ type SoilTipsCardProp = {
     action: To,
 }
 
-export default function SoilTipsCard({
+export default function SoilTipCard({
     title,
     description,
     actionLabel = "Read more",
