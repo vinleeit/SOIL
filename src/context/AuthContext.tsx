@@ -13,6 +13,9 @@ export interface AuthContextValue {
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
+/*
+ * Component to provide authentication context to widget tree
+ */
 export default function AuthProvider({
   children,
 }: {
@@ -42,6 +45,7 @@ export default function AuthProvider({
     localStorage.setItem("users", JSON.stringify(users));
   }
 
+  // Save user object to currentUSer key in localstorage
   function saveUser(user: User) {
     localStorage.setItem("currentUser", JSON.stringify(user));
   }

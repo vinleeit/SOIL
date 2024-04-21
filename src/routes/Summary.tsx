@@ -5,6 +5,7 @@ import { CartItem } from "../types/CartItem";
 import CheckoutSection from "../components/CheckoutSection";
 import { GetProductPrice } from "../types/Product";
 
+// Checkout summary page
 export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,6 +17,7 @@ export default function Checkout() {
     <section className="flex flex-col grow lg:w-2/3 px-10 py-20 lg:mx-auto space-y-8">
       <p className="text-3xl">Purchase Summary</p>
       <CheckoutSection title="Items">
+        {/* Show each item */}
         {(location.state.items as CartItem[]).map((e) => {
           return (
             <div className="flex flex-col lg:flex-row w-full p-5 rounded-md border justify-between">
@@ -106,4 +108,3 @@ export default function Checkout() {
     </section>
   );
 }
-

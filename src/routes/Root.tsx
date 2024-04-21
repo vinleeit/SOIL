@@ -2,6 +2,9 @@ import { Outlet } from "react-router-dom";
 import SoilHeader from "../components/SoilHeader";
 import ShoppingCartProvider from "../components/ShoppingCartProvider";
 
+/*
+ * Root Template for the whole website
+ * */
 export default function Root() {
   return (
     <ShoppingCartProvider>

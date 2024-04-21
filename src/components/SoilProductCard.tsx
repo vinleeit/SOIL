@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 type ProductCardProp = {
   title: string;
   price: number;
-  discountedPrice?: number
+  discountedPrice?: number;
   averageRating: number;
   reviewCount: number;
   photoUrl: string;
@@ -18,9 +18,7 @@ type ProductCardProp = {
 };
 
 /**
- * A card to display product informtion
- * @param param0 
- * @returns 
+ * A card to display product information
  */
 export default function SoilProductCard({
   title,
@@ -68,10 +66,14 @@ export default function SoilProductCard({
       <div className="p-5 space-y-3 flex flex-col h-60">
         <div className="space-y-1">
           <p className="font-light text-2xl space-x-1">
-            {
-              (!isSpecial) ? <></> : <span>{`$${discountedPrice?.toFixed(2)}`}</span>
-            }
-            <span className={(!isSpecial) ? "" : "text-base line-through"}>{`$${price.toFixed(2)}`}</span>
+            {!isSpecial ? (
+              <></>
+            ) : (
+              <span>{`$${discountedPrice?.toFixed(2)}`}</span>
+            )}
+            <span
+              className={!isSpecial ? "" : "text-base line-through"}
+            >{`$${price.toFixed(2)}`}</span>
           </p>
           <p className="font-medium line-clamp-3">{title}</p>
         </div>
@@ -105,4 +107,3 @@ export default function SoilProductCard({
     </div>
   );
 }
-

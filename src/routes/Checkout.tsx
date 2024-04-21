@@ -193,11 +193,17 @@ export default function Checkout() {
                 <p>{e.product.title}</p>
                 <div className="flex justify-between lg:space-x-8">
                   <p className="font-bold space-x-1">
-                    <span className={(!e.product.isSpecial) ? "" : "text-sm line-through"}>{`$${e.product.price.toFixed(2)}`}</span>
-                    {
-                      (!e.product.isSpecial) ? <></> : <span>{`$${GetProductPrice(e.product).toFixed(2)}`}</span>
-                    } 
-                    <span>x {e.quantity}</span> 
+                    <span
+                      className={
+                        !e.product.isSpecial ? "" : "text-sm line-through"
+                      }
+                    >{`$${e.product.price.toFixed(2)}`}</span>
+                    {!e.product.isSpecial ? (
+                      <></>
+                    ) : (
+                      <span>{`$${GetProductPrice(e.product).toFixed(2)}`}</span>
+                    )}
+                    <span>x {e.quantity}</span>
                   </p>
                   <p className="font-bold">
                     ${(GetProductPrice(e.product) * e.quantity).toFixed(2)}

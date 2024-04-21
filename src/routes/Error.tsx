@@ -1,6 +1,9 @@
 import SoilButton from "../components/SoilButton";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
+/*
+ * Error page template
+ * */
 export default function Error() {
   const navigate = useNavigate();
   return (
@@ -13,7 +16,7 @@ export default function Error() {
           <br />
           on some other place...
         </p>
-        <SoilButton colour="secondary" onClick={() => navigate('/')}>
+        <SoilButton colour="secondary" onClick={() => navigate("/")}>
           Go Home
         </SoilButton>
       </div>

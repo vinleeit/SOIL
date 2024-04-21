@@ -4,10 +4,15 @@ import SoilButton from "../../components/SoilButton";
 import SoilConfirmationDialog from "../../components/SoilConfirmationDialog";
 import { useNavigate } from "react-router-dom";
 
+/*
+ * Profile page component
+ * */
 export default function Profile() {
+  // Get delete user action from context
   const { user: currentUser, deleteUser } = useContext(
     AuthContext,
   ) as AuthContextValue;
+  // Dialog DOM ref
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const navigate = useNavigate();
 

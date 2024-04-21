@@ -1,10 +1,10 @@
 /**
  * Badge used only to label product special
- * @returns 
  */
 export default function SoilSpecialBadge() {
-    return (
-        <span className="
+  return (
+    <span
+      className="
         bg-red-100 
         text-red-800 
         text-xs
@@ -14,8 +14,10 @@ export default function SoilSpecialBadge() {
         py-0.5
         rounded-full
         dark:bg-red-900
-        dark:text-red-300">
-            Badge
-        </span>
-    )
+        dark:text-red-300"
+    >
+      Badge
+    </span>
+  );
 }
+

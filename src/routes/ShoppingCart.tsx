@@ -13,13 +13,6 @@ export default function ShoppingCart() {
     reduceItem,
     deleteItem,
   } = useShoppingCart();
-  // TODO: Remove commented lines
-  // var cartItems: CartItem[] = [
-  //     {
-  //         product: GetProducts()[0],
-  //         quantity: 1,
-  //     }
-  // ]
   return (
     <div className="flex flex-col grow items-center">
       <div
@@ -42,15 +35,15 @@ export default function ShoppingCart() {
           cartItems.map((e) => {
             const itemInCardQuantity = getItemQuantity(e.product);
             return (
-              SoilCartCard(
-                {
-                  cartItem: e,
-                  itemInCardQuantity: itemInCardQuantity,
-                  onAddItem: addItem,
-                  onReduceItem: reduceItem,
-                  onDeleteItem: deleteItem,
-                }
-              )
+              <div>
+                <SoilCartCard
+                  cartItem={e}
+                  itemInCardQuantity={itemInCardQuantity}
+                  onAddItem={addItem}
+                  onReduceItem={reduceItem}
+                  onDeleteItem={deleteItem}
+                />
+              </div>
             );
           })
         )}
@@ -62,8 +55,8 @@ export default function ShoppingCart() {
               cartItems.length == 0
                 ? undefined
                 : () => {
-                  navigate("/checkout");
-                }
+                    navigate("/checkout");
+                  }
             }
           >
             Checkout
@@ -73,4 +66,3 @@ export default function ShoppingCart() {
     </div>
   );
 }
-

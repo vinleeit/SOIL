@@ -9,7 +9,7 @@ import { AuthContext, AuthContextValue } from "../context/AuthContext";
 
 /**
  * Refactored from the base route for a clean code.
- * @returns 
+ * @returns
  */
 export default function SoilHeader() {
   const navigate = useNavigate();
@@ -25,7 +25,8 @@ export default function SoilHeader() {
     if (isMenuOpen) {
       toggleMenu(false);
     }
-  }, [isMenuOpen, location]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   const login = () => navigate("/login");
   const shoppingCart = () => navigate("/cart");

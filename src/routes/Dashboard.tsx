@@ -7,6 +7,9 @@ import { useShoppingCart } from "../components/ShoppingCartProvider";
 import { GetProductPrice } from "../types/Product";
 import { Review } from "../types/Review";
 
+/*
+ * Landing page component
+ * */
 export default function Dashboard() {
   const tip = GetTodayTip();
   return (
