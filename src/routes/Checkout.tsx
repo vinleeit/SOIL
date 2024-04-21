@@ -4,6 +4,7 @@ import SoilButton from "../components/SoilButton";
 import SoilTextField from "../components/SoilTextField";
 import { FormEvent, useState } from "react";
 import CheckoutSection from "../components/CheckoutSection";
+import { GetProductPrice } from "../models/Product";
 
 export default function Checkout() {
   const { cartItems, totalPrice, reset } = useShoppingCart();
@@ -191,11 +192,15 @@ export default function Checkout() {
               >
                 <p>{e.product.title}</p>
                 <div className="flex justify-between lg:space-x-8">
-                  <p>
-                    ${e.product.price} x {e.quantity}
+                  <p className="font-bold space-x-1">
+                    <span className={(!e.product.isSpecial) ? "" : "text-sm line-through"}>{`$${e.product.price.toFixed(2)}`}</span>
+                    {
+                      (!e.product.isSpecial) ? <></> : <span>{`$${GetProductPrice(e.product).toFixed(2)}`}</span>
+                    } 
+                    <span>x {e.quantity}</span> 
                   </p>
                   <p className="font-bold">
-                    ${(e.product.price * e.quantity).toFixed(2)}
+                    ${(GetProductPrice(e.product) * e.quantity).toFixed(2)}
                   </p>
                 </div>
               </div>

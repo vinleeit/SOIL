@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { CartItem } from "../models/CartItem";
 import SoilButton from "./SoilButton";
-import { Product } from "../models/Product";
+import { GetProductPrice, Product } from "../models/Product";
 import Trash from "../assets/trash.svg";
 
 type SoilCartCardProp = {
@@ -43,8 +43,11 @@ export default function SoilCartCard({
                         )}
                     </div>
                     <p>{cartItem.product.title}</p>
-                    <p className="font-bold">
-                        ${(cartItem.product.price * cartItem.quantity).toFixed(2)}
+                    <p className="font-bold space-x-1">
+                        {
+                            (!cartItem.product.isSpecial) ? <></> : <span>{`$${GetProductPrice(cartItem.product).toFixed(2)}`}</span>
+                        }
+                        <span className={(!cartItem.product.isSpecial) ? "" : "text-sm line-through"}>{`$${cartItem.product.price.toFixed(2)}`}</span>
                     </p>
                 </div>
                 <div className="flex items-center w-full">

@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react"
 import { CartItem } from "../models/CartItem";
-import { Product } from "../models/Product";
+import { GetProductPrice, Product } from "../models/Product";
 
 type ShoppingCartContext = {
     shoppingCart: { [productId: number]: CartItem }
@@ -26,11 +26,11 @@ type ShoppingCartHookProp = {
 const ShoppingCartContext = createContext({} as ShoppingCartContext)
 
 export function useShoppingCart(): ShoppingCartHookProp {
-    var { shoppingCart, setShoppingCart } = useContext(ShoppingCartContext)
+    const { shoppingCart, setShoppingCart } = useContext(ShoppingCartContext)
 
-    var cartItems = Object.values(shoppingCart)
-    var cartQuantity = cartItems.reduce((quantity, item) => quantity + item.quantity, 0)
-    var totalPrice = cartItems.reduce((price, item) => price + (item.product.price * item.quantity), 0)
+    const cartItems = Object.values(shoppingCart)
+    const cartQuantity = cartItems.reduce((quantity, item) => quantity + item.quantity, 0)
+    const totalPrice = cartItems.reduce((price, item) => price + (GetProductPrice(item.product) * item.quantity), 0)
 
     function getItemQuantity(product: Product): number {
         if (product.id in shoppingCart) {
@@ -40,7 +40,7 @@ export function useShoppingCart(): ShoppingCartHookProp {
     }
 
     function addItem(product: Product) {
-        var tempCartItems = { ...shoppingCart }
+        const tempCartItems = { ...shoppingCart }
         if (product.id in tempCartItems) {
             tempCartItems[product.id].quantity++
         } else {
@@ -54,8 +54,8 @@ export function useShoppingCart(): ShoppingCartHookProp {
 
     function reduceItem(product: Product): boolean {
         if (product.id in shoppingCart) {
-            var tempCartItems = { ...shoppingCart }
-            var modifiedQuantity = --tempCartItems[product.id].quantity
+            const tempCartItems = { ...shoppingCart }
+            const modifiedQuantity = --tempCartItems[product.id].quantity
             if (modifiedQuantity <= 0) {
                 delete tempCartItems[product.id]
             }
@@ -67,7 +67,7 @@ export function useShoppingCart(): ShoppingCartHookProp {
 
     function deleteItem(product: Product): boolean {
         if (product.id in shoppingCart) {
-            var tempCartItems = { ...shoppingCart }
+            const tempCartItems = { ...shoppingCart }
             delete tempCartItems[product.id]
             setShoppingCart(tempCartItems)
             return true

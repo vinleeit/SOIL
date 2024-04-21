@@ -10,3 +10,10 @@ export type Product = {
     sources: string[]
     isSpecial: boolean
 }
+
+export function GetProductPrice(product: Product): number {
+    if (product.isSpecial) {
+        return product.price - (product.price * 0.5)
+    }
+    return product.price
+}

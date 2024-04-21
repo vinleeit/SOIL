@@ -3,6 +3,7 @@ import SoilButton from "../components/SoilButton";
 import SoilTextField from "../components/SoilTextField";
 import { CartItem } from "../models/CartItem";
 import CheckoutSection from "../components/CheckoutSection";
+import { GetProductPrice } from "../models/Product";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -21,10 +22,10 @@ export default function Checkout() {
               <p>{e.product.title}</p>
               <div className="flex justify-between lg:space-x-8">
                 <p>
-                  ${e.product.price} x {e.quantity}
+                  ${GetProductPrice(e.product).toFixed(2)} x {e.quantity}
                 </p>
                 <p className="font-bold">
-                  ${(e.product.price * e.quantity).toFixed(2)}
+                  ${(GetProductPrice(e.product) * e.quantity).toFixed(2)}
                 </p>
               </div>
             </div>
