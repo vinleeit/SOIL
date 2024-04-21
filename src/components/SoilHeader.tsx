@@ -1,8 +1,10 @@
-import React, { useContext, useState } from "react";
-import SoilButton from "./SoilButton";
-import SoilLogo from "../components/SoilLogo";
-import Menu from "../assets/menu.svg";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react"
+import SoilButton from "./SoilButton"
+import SoilLogo from "../components/SoilLogo"
+import Menu from "../assets/menu.svg"
+import Cart from "../assets/cart.svg"
+import { useLocation, useNavigate } from "react-router-dom"
+import { useShoppingCart } from "./ShoppingCartProvider"
 import { AuthContext, AuthContextValue } from "../context/AuthContext";
 
 export default function SoilHeader() {
@@ -21,6 +23,15 @@ export default function SoilHeader() {
     }
   }, [location]);
 
+  const login = () => navigate("/login")
+  const shoppingCart = () => navigate("/cart")
+  const doLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  var shoppingCartContext = useShoppingCart()
+
   /**
    * Toggle the menu opend/closed.
    * @param state true means the state menu is open.
@@ -33,12 +44,6 @@ export default function SoilHeader() {
     }
     setIsMenuOpen(state);
   }
-
-  const doLogout = () => {
-    logout();
-    navigate("/");
-  };
-  const login = () => navigate("/login");
 
   return (
     <header>
@@ -57,16 +62,32 @@ export default function SoilHeader() {
               </li>
             )}
             <li>
+              <SoilButton onClick={shoppingCart}>
+                <span className="absolute -right-2 -top-1 bg-red-500 rounded-full h-6 w-6 text-center text-white">
+                  {shoppingCartContext.cartQuantity}
+                </span>
+                <img src={Cart} alt="" className="" />
+              </SoilButton>
+            </li>
+            <li>
               {user ? (
                 <div>
-                  <SoilButton onClick={doLogout}>Logout</SoilButton>
+                  <SoilButton colour="secondary" onClick={doLogout}>Logout</SoilButton>
                 </div>
               ) : (
                 <SoilButton onClick={login}>Login</SoilButton>
               )}
             </li>
           </ul>
-          <ul className="md:hidden">
+          <ul className="flex space-x-2 md:hidden">
+            <li>
+              <SoilButton onClick={shoppingCart}>
+                <span className="absolute -right-2 -top-1 bg-red-500 rounded-full h-6 w-6 text-center text-white">
+                  {shoppingCartContext.cartQuantity}
+                </span>
+                <img src={Cart} alt="" className="" />
+              </SoilButton>
+            </li>
             <li>
               <SoilButton outlined onClick={() => toggleMenu(!isMenuOpen)}>
                 <img src={Menu} alt="" />
@@ -80,7 +101,7 @@ export default function SoilHeader() {
       </span>
 
       <div
-        className={`fixed top-0 w-full h-full bg-black bg-opacity-50 flex md:hidden ${isBackgroundVisible ? "visible" : "invisible"}`}
+        className={`z-50 fixed top-0 w-full h-full bg-black bg-opacity-50 flex md:hidden ${isBackgroundVisible ? "visible" : "invisible"}`}
       >
         <div
           className={`relative w-full p-12 bg-white mx-auto flex-col flex transition-transform duration-200 ease-in-out ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
