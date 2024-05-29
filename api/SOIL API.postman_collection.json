@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"raveltanjaya@outlook.com\",\n    \"password\":\"raveltan123\",\n    \"username\":\"ravle tanjaya\"\n}",
+							"raw": "{\n    \"email\":\"rav1@outlook.com\",\n    \"password\":\"AbengAnakHantup@123\",\n    \"username\":\"rav1\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -43,7 +43,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"abeng@outlook.com\",\n    \"password\":\"AbengAnakHantup@123\"\n}",
+							"raw": "{\n    \"email\":\"rav1@outlook.com\",\n    \"password\":\"AbengAnakHantup@123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -64,6 +64,33 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Token tester",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/bla",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"bla"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -92,6 +119,11 @@
 		{
 			"key": "url",
 			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoicmF2MUBvdXRsb29rLmNvbSIsImlhdCI6MTcxNjk4OTIxMiwiZXhwIjoxNzE3ODUzMjEyfQ.jRussEaSlTpdqpJm7cIvhu7oN58ErY-7apI_BPP_rH8",
 			"type": "string"
 		}
 	]

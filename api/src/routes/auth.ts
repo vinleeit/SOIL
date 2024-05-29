@@ -1,18 +1,22 @@
 import express from "express";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import validator from "validator";
+import { JWT_SECRET } from "../config";
 
 const router = express.Router();
 
 // Registration endpoint
 router.post("/register", async (req, res) => {
-  const { email, username, password } = req.body;
+  const { email: reqEmail, username: reqUsername, password } = req.body;
 
   try {
     // Check if all body data is present
-    if (!email || !username || !password) {
+    if (!reqEmail || !reqUsername || !password) {
       return res.status(400).json({ error: "Missing required fields" });
     }
+    const email = (reqEmail as string).toLowerCase();
+    const username = (reqUsername as string).toLowerCase();
 
     // Check if username is at least 3 characters
     if (username.length < 3) {
@@ -72,14 +76,15 @@ router.post("/register", async (req, res) => {
 
 // Login endpoint
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email: reqEmail, password } = req.body;
 
   try {
     // Check if all body data is present
-    if (!email || !password) {
+    if (!reqEmail || !password) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
+    const email = (reqEmail as string).toLowerCase();
     // Find the user by email
     const user = await req.models.User.findOne({ where: { email } });
 
@@ -104,8 +109,13 @@ router.post("/login", async (req, res) => {
       return res.status(403).json({ error: "User is blocked" });
     }
 
+    // Generate a JWT token
+    const token = jwt.sign({ user: email }, JWT_SECRET, {
+      expiresIn: "10d",
+    });
+
     // If the user is valid, return a success message
-    res.json({ message: "Login successful" });
+    res.json({ token });
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ error: "An error occurred while logging in" });
