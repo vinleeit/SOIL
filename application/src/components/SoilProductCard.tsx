@@ -79,7 +79,7 @@ export default function SoilProductCard({
         </div>
         <div className="flex-grow flex flex-col space-y-3 items-center justify-end">
           {itemInCardQuantity <= 0 ? (
-            <SoilButton onClick={onAddItem} fullWidth colour="primary">
+            <SoilButton onClick={onAddItem} fullWidth outlined>
               Add To Cart
             </SoilButton>
           ) : (
