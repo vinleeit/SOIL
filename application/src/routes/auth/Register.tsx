@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import SoilAlertDialog from "../../components/SoilAlertDialog";
 import SoilButton from "../../components/SoilButton";
 import SoilTextField from "../../components/SoilTextField";
@@ -13,8 +13,7 @@ export default function Register() {
   const [emailError, setEmailError] = useState("");
   const [nameError, setNameError] = useState("");
   const successDialog = useRef<HTMLDialogElement | null>(null);
-  const navigate = useNavigate();
-  const { register } = useContext(AuthContext) as AuthContextValue;
+  const { register, checkRegister } = useContext(AuthContext) as AuthContextValue;
 
   function performRegister(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -58,7 +57,7 @@ export default function Register() {
 
     if (success) {
       // register user if validation success
-      if (register(email, name, password)) {
+      if (checkRegister(email)) {
         successDialog.current?.showModal();
         return;
       }
@@ -112,7 +111,7 @@ export default function Register() {
         title={`Welcome ${name}!`}
         description="Your account has been created"
         buttonLabel="Continue"
-        onClick={() => navigate("/profile")}
+        onClick={() => register(email, name, password)}
       />
     </section>
   );

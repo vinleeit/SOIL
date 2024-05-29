@@ -11,6 +11,7 @@ export interface AuthContextValue {
   updateUser: (currentEmail: string, email: string, name: string) => void;
   updatePassword: (currentEmail: string, passwordHash: string) => void;
   checkUser: (email:string, password:string) => boolean;
+  checkRegister: (email: string) => boolean;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -106,6 +107,19 @@ export default function AuthProvider({
     return setUser(null);
   };
 
+  const checkRegister = (email: string) => {
+    email = email.toLowerCase();
+    const usersString = localStorage.getItem("users");
+    let users: User[] = [];
+    if (usersString) {
+      users = JSON.parse(usersString);
+      if (users.find((v) => v.email === email)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const register = (email: string, name: string, password: string) => {
     email = email.toLowerCase();
     name = name.toLowerCase();
@@ -140,7 +154,8 @@ export default function AuthProvider({
         deleteUser,
         updateUser,
         updatePassword,
-        checkUser
+        checkUser,
+        checkRegister
       }}
     >
       {children}
