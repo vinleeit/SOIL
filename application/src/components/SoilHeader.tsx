@@ -55,7 +55,7 @@ export default function SoilHeader() {
       <div className="h-16">
         <nav className="flex h-full items-center justify-between px-8 border-b-1">
           <SoilLogo />
-          <ul className="space-x-2 hidd1n md:flex">
+          <ul className="space-x-2 hidden md:flex">
             {user && (
               <li>
                 <SoilButton outlined onClick={() => navigate("/profile")}>
@@ -85,7 +85,7 @@ export default function SoilHeader() {
           </ul>
           <ul className="flex space-x-2 md:hidden">
             <li>
-              <SoilButton onClick={shoppingCart}>
+              <SoilButton colour="secondary" onClick={shoppingCart}>
                 <span className="absolute -right-2 -top-1 bg-red-500 rounded-full h-6 w-6 text-center text-white">
                   {shoppingCartContext.cartQuantity}
                 </span>
@@ -137,7 +137,7 @@ export default function SoilHeader() {
               </li>
               <li>
                 <SoilButton
-                  colour="secondary"
+                  outlined
                   fullWidth
                   onClick={() => toggleMenu(false)}
                 >

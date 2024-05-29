@@ -36,6 +36,7 @@ export default function Login() {
 
     if (success) {
       if (login(email, password)) {
+        console.log(successDialog.current)
         successDialog.current?.showModal();
         return;
       }
