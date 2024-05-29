@@ -15,6 +15,7 @@ import ShoppingCart from "./routes/ShoppingCart";
 import Checkout from "./routes/Checkout";
 import Summary from "./routes/Summary";
 import ChangePassword from "./routes/auth/ChangePassword";
+import Welcome from "./routes/Welcome";
 
 const router = createBrowserRouter([
   {
@@ -27,9 +28,15 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
+        path: "/welcome",
+        element: <PageWithAuthorization destination="/login" authorized>
+          <Welcome />
+        </PageWithAuthorization>
+      },
+      {
         path: "/login",
         element: (
-          <PageWithAuthorization destination="/profile">
+          <PageWithAuthorization destination="/welcome">
             <Login />
           </PageWithAuthorization>
         ),
@@ -37,7 +44,7 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: (
-          <PageWithAuthorization destination="/profile">
+          <PageWithAuthorization destination="/welcome">
             <Register />
           </PageWithAuthorization>
         ),
