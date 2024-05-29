@@ -101,7 +101,7 @@ export default function Register() {
         <SoilButton fullWidth>CREATE ACCOUNT</SoilButton>
         <Link
           to={"/login"}
-          className="text-sm text-lime-700 underline text-center block"
+          className="text-sm text-green-light underline text-center block"
         >
           Already have an account?
         </Link>

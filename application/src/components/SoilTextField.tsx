@@ -25,7 +25,7 @@ export default function SoilTextField({
       {label && <label className="ml-1 mb-0.5 text-sm">{label}</label>}
       <input
         type={type}
-        className="w-full rounded focus:border-lime-400 border-gray-300 focus:ring focus:ring-lime-400 focus:ring-opacity-45"
+        className="w-full rounded focus:border-green-light border-gray-300 focus:ring focus:ring-green-light focus:ring-opacity-45"
         placeholder={placeholder}
         onChange={onChange}
         value={value}

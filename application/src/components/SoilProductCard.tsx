@@ -39,11 +39,11 @@ export default function SoilProductCard({
         {!isSpecial ? (
           <></>
         ) : (
-          <span className="absolute -right-3 top-4 px-5 py-1 bg-red-100 text-red-800  rounded-md ">
+          <span className="absolute -right-3 top-4 px-5 py-1 bg-red-50 text-red-950  rounded-md ">
             Special
           </span>
         )}
-        <div className="absolute flex right-3 -bottom-3 space-x-3 bg-lime-50 rounded-md px-3 py-0.5 shadow-md">
+        <div className="absolute flex right-3 -bottom-3 space-x-3 bg-yellow-light rounded-md px-3 py-0.5 shadow-md">
           <div className="space-x-1">
             <img
               src={Star}
@@ -79,7 +79,7 @@ export default function SoilProductCard({
         </div>
         <div className="flex-grow flex flex-col space-y-3 items-center justify-end">
           {itemInCardQuantity <= 0 ? (
-            <SoilButton onClick={onAddItem} outlined fullWidth colour="primary">
+            <SoilButton onClick={onAddItem} fullWidth colour="primary">
               Add To Cart
             </SoilButton>
           ) : (

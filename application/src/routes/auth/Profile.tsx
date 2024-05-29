@@ -55,6 +55,7 @@ export default function Profile() {
           </SoilButton>
           <SoilButton
             fullWidth
+            outlined
             onClick={() => navigate("/profile/change-password")}
           >
             Change Password
