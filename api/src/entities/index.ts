@@ -16,11 +16,11 @@ const sequelize = new Sequelize(
 );
 
 export interface Models {
-  User: any;
-  Review: any;
-  Product: any;
-  Thread: any;
-  CartItem: any;
+  User: ReturnType<typeof UserFactory>;
+  Review: ReturnType<typeof ReviewFactory>;
+  Product: ReturnType<typeof ProductFactory>;
+  Thread: ReturnType<typeof ThreadFactory>;
+  CartItem: ReturnType<typeof CartItemFactory>;
 }
 
 export const initModels = () => {
