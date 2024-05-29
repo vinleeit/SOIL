@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import validator from "validator";
 import { JWT_SECRET } from "../config";
+import { normalizeInput } from "../utils";
 
 const router = express.Router();
 
@@ -15,8 +16,8 @@ router.post("/register", async (req, res) => {
     if (!reqEmail || !reqUsername || !password) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    const email = (reqEmail as string).toLowerCase();
-    const username = (reqUsername as string).toLowerCase();
+    const email = normalizeInput(reqEmail);
+    const username = normalizeInput(reqUsername);
 
     // Check if username is at least 3 characters
     if (username.length < 3) {
@@ -84,7 +85,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const email = (reqEmail as string).toLowerCase();
+    const email = normalizeInput(reqEmail);
     // Find the user by email
     const user = await req.models.User.findOne({ where: { email } });
 
