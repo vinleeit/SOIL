@@ -2,8 +2,8 @@ import express from "express";
 import { sequelize, initModels } from "./entities";
 import { modelInjectionMiddleware } from "./middleware/modelInjectionMiddleware";
 import authRouter from "./routes/auth.ts";
+import profileRouter from "./routes/profile.ts";
 import dotenv from "dotenv";
-import { validateToken } from "./middleware/authMiddleware.ts";
 import { PORT } from "./config.ts";
 
 // TODO: add er digram to repo
@@ -28,9 +28,7 @@ app.use(modelInjectionMiddleware(models));
     });
 
     app.use("/auth", authRouter);
-    app.get("/bla", validateToken, (req, res) => {
-      res.json({ name: req.user });
-    });
+    app.use("/profile", profileRouter);
 
     app.listen(PORT, () => {
       console.log("Server is running on port", PORT);
