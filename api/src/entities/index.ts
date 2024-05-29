@@ -15,6 +15,14 @@ const sequelize = new Sequelize(
   },
 );
 
+export interface Models {
+  User: any;
+  Review: any;
+  Product: any;
+  Thread: any;
+  CartItem: any;
+}
+
 export const initModels = () => {
   const User = UserFactory(sequelize);
   const Review = ReviewFactory(sequelize);

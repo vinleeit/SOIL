@@ -19,6 +19,8 @@
     "dev": "npx tsx src/index.ts"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
     "express": "^4.19.2",
     "mysql2": "^3.9.8",
     "sequelize": "^6.37.3"
