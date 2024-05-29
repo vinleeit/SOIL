@@ -8,7 +8,6 @@ export default {
         "green-super-light":"#EBEFE0",
         "green-light": "#90A955",
         "green-light2": "#95AD5B",
-        "green": "#3A5A40",
         "green-dark": "#373D20",
         "green-dark2": "#474E28",
         "yellow-light": "#ECF39E",

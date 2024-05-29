@@ -10,6 +10,7 @@ export interface AuthContextValue {
   deleteUser: () => void;
   updateUser: (currentEmail: string, email: string, name: string) => void;
   updatePassword: (currentEmail: string, passwordHash: string) => void;
+  checkUser: (email:string, password:string) => boolean;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -22,6 +23,19 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<User | null>(null);
+
+  function checkUser(email:string, password: string){
+    email = email.toLowerCase();
+    const users = getUsersFromLocalStorage();
+
+    const matchedUser = users.find((e) => e.email === email);
+    if (matchedUser) {
+      if (bcrypt.compareSync(password, matchedUser.password)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   useEffect(() => {
     const userString = localStorage.getItem("currentUser");
@@ -126,6 +140,7 @@ export default function AuthProvider({
         deleteUser,
         updateUser,
         updatePassword,
+        checkUser
       }}
     >
       {children}
