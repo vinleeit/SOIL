@@ -34,8 +34,8 @@ const SoilAlertDialog = React.forwardRef<HTMLDialogElement, DialogProp>(
       className="backdrop:bg-stone-400 backdrop:opacity-60 rounded"
       ref={ref}
     >
-      <div className="bg-stone-100 w-96 h-64 flex flex-col items-center justify-center  border-t-8 border-lime-500 ">
-        <h2 className="text-2xl font-bold text-stone-700 capitalize">
+      <div className="bg-stone-100 w-96 h-64 flex flex-col items-center justify-center  border-t-8 border-green-dark">
+        <h2 className="text-2xl font-bold capitalize">
           {title}
         </h2>
         <p className="mb-8 mt-1 px-20 text-center">{description}</p>

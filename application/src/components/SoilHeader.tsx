@@ -53,7 +53,7 @@ export default function SoilHeader() {
   return (
     <header>
       <div className="h-16">
-        <nav className="flex h-full items-center justify-between px-8 border-b-2 border-lime-500">
+        <nav className="flex h-full items-center justify-between px-8 border-b-1">
           <SoilLogo />
           <ul className="space-x-2 hidden md:flex">
             {user && (
@@ -64,7 +64,7 @@ export default function SoilHeader() {
               </li>
             )}
             <li>
-              <SoilButton onClick={shoppingCart}>
+              <SoilButton colour="secondary" onClick={shoppingCart}>
                 <span className="absolute -right-2 -top-1 bg-red-500 rounded-full h-6 w-6 text-center text-white">
                   {shoppingCartContext.cartQuantity}
                 </span>
@@ -74,7 +74,7 @@ export default function SoilHeader() {
             <li>
               {user ? (
                 <div>
-                  <SoilButton colour="secondary" onClick={doLogout}>
+                  <SoilButton colour="primary" onClick={doLogout}>
                     Logout
                   </SoilButton>
                 </div>
@@ -85,7 +85,7 @@ export default function SoilHeader() {
           </ul>
           <ul className="flex space-x-2 md:hidden">
             <li>
-              <SoilButton onClick={shoppingCart}>
+              <SoilButton colour="secondary" onClick={shoppingCart}>
                 <span className="absolute -right-2 -top-1 bg-red-500 rounded-full h-6 w-6 text-center text-white">
                   {shoppingCartContext.cartQuantity}
                 </span>
@@ -100,7 +100,7 @@ export default function SoilHeader() {
           </ul>
         </nav>
       </div>
-      <span className="h-8 bg-lime-400 flex items-center justify-center text-sm">
+      <span className="h-8 bg-yellow-light flex items-center justify-center text-sm">
         Fresh and Organic Foods for Australians!
       </span>
 
@@ -137,7 +137,7 @@ export default function SoilHeader() {
               </li>
               <li>
                 <SoilButton
-                  colour="secondary"
+                  outlined
                   fullWidth
                   onClick={() => toggleMenu(false)}
                 >

@@ -351,7 +351,7 @@ export default function Checkout() {
 
         <div className="flex flex-col space-y-2">
           <SoilButton>Complete Purchase</SoilButton>
-          <SoilButton colour="secondary" onClick={() => navigate("/cart")}>
+          <SoilButton outlined onClick={() => navigate("/cart")}>
             Cancel
           </SoilButton>
         </div>

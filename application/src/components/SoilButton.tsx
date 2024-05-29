@@ -37,16 +37,16 @@ export default function SoilButton({
                     ? disabled
                       ? "text-gray-400 border-gray-400"
                       : colour == "primary"
-                        ? "bg-transparent border-lime-400 hover:bg-lime-100"
+                        ? "bg-transparent text-green-dark border-green-dark hover:bg-green-super-light"
                         : colour == "secondary"
-                          ? "bg-transparent border-stone-800 hover:bg-stone-200"
+                          ? "bg-transparent border-yellow hover:bg-yellow-light"
                           : "bg-transparent border-red-600 hover:bg-red-100"
                     : disabled
                       ? "text-white bg-gray-400"
                       : colour == "primary"
-                        ? "bg-lime-400 hover:bg-lime-300"
+                        ? "text-white bg-green-dark hover:bg-green-dark2"
                         : colour == "secondary"
-                          ? "text-white bg-stone-800 hover:bg-stone-700"
+                          ? "bg-yellow-light hover:bg-yellow"
                           : "text-white bg-red-500 hover:bg-red-400"
                 }
                 py-2  border rounded-md relative`}

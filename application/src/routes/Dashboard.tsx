@@ -108,7 +108,7 @@ function WeeklySpecialDealsSection() {
 
 function Jumbotron() {
   return (
-    <div className="w-full py-24 bg-stone-500 flex flex-col justify-center items-center px-6 border-b-4 border-lime-800">
+    <div className="w-full py-24 bg-green-dark flex flex-col justify-center items-center px-6">
       <h1 className="text-5xl text-white font-bold text-center mb-6">
         Get Healthy, Go Organic
       </h1>
@@ -128,16 +128,16 @@ function Jumbotron() {
 
 function WhyOrganicCards() {
   return (
-    <div className="px-16  py-10 bg-lime-400 w-full">
+    <div className="px-16  py-10 bg-green-light w-full">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:w-2/3 m-auto">
-        <div className="bg-white text-black py-6 px-8 rounded-lg">
+        <div className="bg-white py-6 px-8 rounded-lg">
           <h2 className="text-lg mb-2 font-semibold">Ethics</h2>
           <p>
             Organic food promotes better handling and treatment of plants and
             animal, which contributes to environment stability.
           </p>
         </div>
-        <div className="bg-white text-black py-6 px-8 rounded-lg">
+        <div className="bg-white py-6 px-8 rounded-lg">
           <h2 className="text-lg mb-2 font-semibold">
             Less Additional Content
           </h2>
@@ -146,7 +146,7 @@ function WhyOrganicCards() {
             use pesticides, additive, antibiotics on the process.
           </p>
         </div>
-        <div className="bg-white text-black py-6 px-8 rounded-lg">
+        <div className="bg-white py-6 px-8 rounded-lg">
           <h2 className="text-lg mb-2 font-semibold">Standardized</h2>
           <p>
             Organic food in Australia is standardized by either Department of

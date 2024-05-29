@@ -12,7 +12,7 @@ export default function Login() {
   const [emailError, setEmailError] = useState("");
   const successDialog = useRef<HTMLDialogElement | null>(null);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext) as AuthContextValue;
+  const { checkUser, login } = useContext(AuthContext) as AuthContextValue;
 
   function performLogin(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -35,7 +35,7 @@ export default function Login() {
     }
 
     if (success) {
-      if (login(email, password)) {
+      if (checkUser(email, password)) {
         successDialog.current?.showModal();
         return;
       }
@@ -93,7 +93,7 @@ export default function Login() {
         title={"Login Success"}
         description="Enjoy the brand new organic shopping experience"
         buttonLabel="Continue"
-        onClick={() => navigate("/profile")}
+        onClick={() => login(email, password)}
       />
     </section>
   );

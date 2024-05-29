@@ -10,6 +10,8 @@ export interface AuthContextValue {
   deleteUser: () => void;
   updateUser: (currentEmail: string, email: string, name: string) => void;
   updatePassword: (currentEmail: string, passwordHash: string) => void;
+  checkUser: (email:string, password:string) => boolean;
+  checkRegister: (email: string) => boolean;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -22,6 +24,19 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const [user, setUser] = useState<User | null>(null);
+
+  function checkUser(email:string, password: string){
+    email = email.toLowerCase();
+    const users = getUsersFromLocalStorage();
+
+    const matchedUser = users.find((e) => e.email === email);
+    if (matchedUser) {
+      if (bcrypt.compareSync(password, matchedUser.password)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   useEffect(() => {
     const userString = localStorage.getItem("currentUser");
@@ -92,6 +107,19 @@ export default function AuthProvider({
     return setUser(null);
   };
 
+  const checkRegister = (email: string) => {
+    email = email.toLowerCase();
+    const usersString = localStorage.getItem("users");
+    let users: User[] = [];
+    if (usersString) {
+      users = JSON.parse(usersString);
+      if (users.find((v) => v.email === email)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const register = (email: string, name: string, password: string) => {
     email = email.toLowerCase();
     name = name.toLowerCase();
@@ -126,6 +154,8 @@ export default function AuthProvider({
         deleteUser,
         updateUser,
         updatePassword,
+        checkUser,
+        checkRegister
       }}
     >
       {children}
