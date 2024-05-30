@@ -33,6 +33,7 @@ router.post("/", async (req, res) => {
   try {
     const { email, username } = req.body;
     const userId = req.user;
+
     // Validate input
     if (!email || !username) {
       return res
@@ -40,32 +41,41 @@ router.post("/", async (req, res) => {
         .json({ error: "Both email and username are required" });
     }
 
+    // find the user
+    const currentUser = await req.models.User.findOne({
+      where: { id: userId },
+    });
+
     // Normalize input
     const normalizedEmail = normalizeInput(email);
     const normalizedUsername = normalizeInput(username);
 
+    if (
+      normalizedUsername == currentUser?.getDataValue("username") &&
+      normalizedEmail == currentUser.getDataValue("email")
+    ) {
+      return res.sendStatus(304);
+    }
     // Check if email or username already exists
     const existingUser = await req.models.User.findOne({
       where: { email: normalizedEmail },
     });
-    if (existingUser && existingUser.email !== userId) {
+    console.log(parseInt(userId));
+    if (existingUser && existingUser.getDataValue("id") !== parseInt(userId)) {
       return res.status(409).json({ error: "Email already exists" });
     }
 
     const existingUsername = await req.models.User.findOne({
       where: { username: normalizedUsername },
     });
-    if (existingUsername && existingUsername.email !== userId) {
+    if (
+      existingUsername &&
+      existingUsername.getDataValue("id") !== parseInt(userId)
+    ) {
       return res.status(409).json({ error: "Username already exists" });
     }
 
     // Update the user's profile
-    // find the user and update the fields
-    //
-    const currentUser = await req.models.User.findOne({
-      where: { id: userId },
-    });
-
     if (currentUser == null) {
       return res.status(404).send("User not found");
     }

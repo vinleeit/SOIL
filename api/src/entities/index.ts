@@ -44,8 +44,6 @@ export const initModels = () => {
   CartItem.belongsTo(User);
   Product.hasMany(CartItem);
   CartItem.belongsTo(Product);
-  User.hasMany(UserFollow, { foreignKey: "followingId", as: "following" });
-  UserFollow.belongsTo(User, { foreignKey: "followingId", as: "following" });
 
   return {
     User,
