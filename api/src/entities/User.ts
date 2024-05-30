@@ -1,16 +1,4 @@
-import {
-  Model,
-  DataTypes,
-  type Optional,
-  Sequelize,
-  type HasManyGetAssociationsMixin,
-  type HasManyAddAssociationMixin,
-  type HasManyHasAssociationMixin,
-  type HasManyCountAssociationsMixin,
-  type HasManyCreateAssociationMixin,
-  Association,
-} from "sequelize";
-import { UserFollow } from "./UserFollow";
+import { Model, DataTypes, type Optional, Sequelize } from "sequelize";
 
 interface UserAttributes {
   id: number;
@@ -22,29 +10,15 @@ interface UserAttributes {
 
 interface UserCreationAttributes
   extends Optional<UserAttributes, "id" | "isBlocked"> {}
+class User extends Model<UserAttributes, UserCreationAttributes> {
+  public id!: number;
+  public email!: string;
+  public username!: string;
+  public password!: string;
+  public isBlocked!: boolean;
+}
 
 export const UserFactory = (sequelize: Sequelize) => {
-  class User extends Model<UserAttributes, UserCreationAttributes> {
-    public id!: number;
-    public email!: string;
-    public username!: string;
-    public password!: string;
-    public isBlocked!: boolean;
-
-    // Associations
-    public readonly following?: UserFollow[];
-
-    public getFollowing!: HasManyGetAssociationsMixin<UserFollow>;
-    public addFollowing!: HasManyAddAssociationMixin<UserFollow, number>;
-    public hasFollowing!: HasManyHasAssociationMixin<UserFollow, number>;
-    public countFollowing!: HasManyCountAssociationsMixin;
-    public createFollowing!: HasManyCreateAssociationMixin<UserFollow>;
-
-    public static associations: {
-      following: Association<User, UserFollow>;
-    };
-  }
-
   User.init(
     {
       id: {
@@ -79,3 +53,4 @@ export const UserFactory = (sequelize: Sequelize) => {
 
   return User;
 };
+export { User };

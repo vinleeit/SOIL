@@ -6,6 +6,7 @@ import profileRouter from "./routes/profile.ts";
 import dotenv from "dotenv";
 import { PORT } from "./config.ts";
 import productRouter from "./routes/product.ts";
+import followRouter from "./routes/follow.ts";
 
 // TODO: add er digram to repo
 
@@ -31,6 +32,7 @@ app.use(modelInjectionMiddleware(models));
     app.use("/auth", authRouter);
     app.use("/profile", profileRouter);
     app.use("/product", productRouter);
+    app.use("/follow", followRouter);
 
     app.listen(PORT, () => {
       console.log("Server is running on port", PORT);
