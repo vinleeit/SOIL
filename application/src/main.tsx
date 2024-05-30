@@ -28,12 +28,6 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: "/welcome",
-        element: <PageWithAuthorization destination="/login" authorized>
-          <Welcome />
-        </PageWithAuthorization>
-      },
-      {
         path: "/login",
         element: (
           <PageWithAuthorization destination="/welcome">
@@ -48,6 +42,12 @@ const router = createBrowserRouter([
             <Register />
           </PageWithAuthorization>
         ),
+      },
+      {
+        path: "/welcome",
+        element: <PageWithAuthorization destination="/login" authorized>
+          <Welcome />
+        </PageWithAuthorization>
       },
       {
         path: "/profile",

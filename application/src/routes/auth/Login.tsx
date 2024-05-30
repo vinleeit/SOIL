@@ -12,9 +12,9 @@ export default function Login() {
   const [emailError, setEmailError] = useState("");
   const successDialog = useRef<HTMLDialogElement | null>(null);
   const navigate = useNavigate();
-  const { checkUser, login } = useContext(AuthContext) as AuthContextValue;
+  const { login, updateCurrentToken } = useContext(AuthContext) as AuthContextValue;
 
-  function performLogin(event: FormEvent<HTMLFormElement>): void {
+  async function performLogin(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     let success = true;
     if (password.length === 0) {
@@ -35,11 +35,12 @@ export default function Login() {
     }
 
     if (success) {
-      if (checkUser(email, password)) {
-        successDialog.current?.showModal();
+      const error = await login(email, password);
+      if (error != null) {
+        setEmailError(error);
         return;
       }
-      setEmailError("Invalid email or password");
+      successDialog.current?.showModal();
     }
   }
 
@@ -93,7 +94,7 @@ export default function Login() {
         title={"Login Success"}
         description="Enjoy the brand new organic shopping experience"
         buttonLabel="Continue"
-        onClick={() => login(email, password)}
+        onClick={() => updateCurrentToken()}
       />
     </section>
   );

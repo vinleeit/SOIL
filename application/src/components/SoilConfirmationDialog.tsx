@@ -43,7 +43,7 @@ const SoilAlertDialog = React.forwardRef<HTMLDialogElement, DialogProp>(
           <SoilButton fullWidth onClick={onConfirm}>
             {confirmButtonLabel}
           </SoilButton>
-          <SoilButton colour="secondary" fullWidth onClick={onCancel}>
+          <SoilButton outlined fullWidth onClick={onCancel}>
             {cancelButtonLabel}
           </SoilButton>
         </div>

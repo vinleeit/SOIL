@@ -1,30 +1,59 @@
 import { useNavigate } from "react-router-dom";
 import SoilButton from "../components/SoilButton";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext, AuthContextValue } from "../context/AuthContext";
+import { ProfileResponse, profileService } from "../shared/services/AuthService";
+import SoilErrorAlert from "../components/SoilErrorAlert";
 
 export default function Welcome() {
   const navigate = useNavigate();
-  const { user: currentUser } = useContext(
+
+  // TODO(profile): Add loading
+  const [profile, setProfile] = useState<ProfileResponse | null>(null);
+  const [error, setError] = useState('');
+
+  const { token: currentToken } = useContext(
     AuthContext,
   ) as AuthContextValue;
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const [profileData, error] = await profileService(currentToken as string);
+      if (profileData) {
+        setProfile(profileData);
+      }
+      setError(error ?? "");
+    };
+
+    fetchProfile();
+  }, []);
+
   return (
     <section className="grow flex flex-col items-center justify-center">
-      <h1 className="text-2xl md:text-3xl font-bold mb-2 text-center">
-        Welcome {currentUser?.name}
-      </h1>
-      <p className="max-w-80 md:max-w-96 text-center">
-        Dive into Melbourne's freshest organic produce and inspiring seminars—head to your Profile or Home to start your healthy journey!
-      </p>
-      <div className="w-80 space-y-2 mt-8">
-        <SoilButton fullWidth onClick={() => navigate('/')}>
-          Get Started!
-        </SoilButton>
-        <SoilButton outlined fullWidth onClick={() => navigate('/profile')}>
-          View Profile
-        </SoilButton>
-      </div>
+      {error &&
+        <SoilErrorAlert
+          actionLabel="Go to Dashboard"
+          action={() => navigate("/")} >
+          {error}
+        </SoilErrorAlert>}
+      {!error &&
+        <>
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 text-center">
+            Welcome {profile?.username}
+          </h1>
+          <p className="max-w-80 md:max-w-96 text-center">
+            Dive into Melbourne's freshest organic produce and inspiring seminars—head to your Profile or Home to start your healthy journey!
+          </p>
+          <div className="w-80 space-y-2 mt-8">
+            <SoilButton fullWidth onClick={() => navigate('/')}>
+              Get Started!
+            </SoilButton>
+            <SoilButton outlined fullWidth onClick={() => navigate('/profile')}>
+              View Profile
+            </SoilButton>
+          </div>
+        </>
+      }
     </section>
   );
 }

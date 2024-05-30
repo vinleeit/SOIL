@@ -1,16 +1,17 @@
 import { createContext, useEffect, useState } from "react";
 import { User } from "../types/User";
 import bcrypt from "bcryptjs-react";
+import { loginService } from "../shared/services/AuthService";
 
 export interface AuthContextValue {
-  user: User | null;
-  login: (email: string, password: string) => boolean;
+  token: string | null;
+  updateCurrentToken: () => void;
+  login: (email: string, password: string) => Promise<string | null>;
   logout: () => void;
   register: (email: string, name: string, password: string) => boolean;
   deleteUser: () => void;
   updateUser: (currentEmail: string, email: string, name: string) => void;
   updatePassword: (currentEmail: string, passwordHash: string) => void;
-  checkUser: (email:string, password:string) => boolean;
   checkRegister: (email: string) => boolean;
 }
 
@@ -23,88 +24,69 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
-  function checkUser(email:string, password: string){
-    email = email.toLowerCase();
-    const users = getUsersFromLocalStorage();
-
-    const matchedUser = users.find((e) => e.email === email);
-    if (matchedUser) {
-      if (bcrypt.compareSync(password, matchedUser.password)) {
-        return true;
-      }
+  async function login(email: string, password: string): Promise<string | null> {
+    const [token, error] = await loginService(email, password);
+    if (token) {
+      localStorage.setItem("token", token);
     }
-    return false;
+    return error;
   }
 
-  useEffect(() => {
-    const userString = localStorage.getItem("currentUser");
-    if (userString) {
-      const user: User = JSON.parse(userString);
-      setUser(user);
+  function updateCurrentToken() {
+    const token = localStorage.getItem("token")
+    if (token && token.length > 0) {
+      setToken(token);
     }
-  }, []);
-
-  function getUsersFromLocalStorage(): User[] {
-    const usersString = localStorage.getItem("users");
-    const users: User[] = usersString ? JSON.parse(usersString) : [];
-    return users;
   }
+
+  useEffect(updateCurrentToken, []);
 
   function deleteUser() {
-    const deletedUser = user?.email;
-    logout();
-    let users = getUsersFromLocalStorage();
-    users = users.filter((u) => u.email != deletedUser);
-    localStorage.setItem("users", JSON.stringify(users));
-  }
-
-  // Save user object to currentUSer key in localstorage
-  function saveUser(user: User) {
-    localStorage.setItem("currentUser", JSON.stringify(user));
+    // const deletedUser = user?.email;
+    // logout();
+    // let users = getUsersFromLocalStorage();
+    // users = users.filter((u) => u.email != deletedUser);
+    // localStorage.setItem("users", JSON.stringify(users));
   }
 
   function updateUser(currentEmail: string, email: string, name: string) {
-    let users = getUsersFromLocalStorage();
-    const current = users.find((u) => u.email == currentEmail) as User;
-    users = users.filter((u) => u.email != currentEmail);
-    current.email = email;
-    current.name = name;
-    users.push(current);
-    saveUser(current);
-    setUser(current);
-    localStorage.setItem("users", JSON.stringify(users));
+    // let users = getUsersFromLocalStorage();
+    // const current = users.find((u) => u.email == currentEmail) as User;
+    // users = users.filter((u) => u.email != currentEmail);
+    // current.email = email;
+    // current.name = name;
+    // setUser(current);
+    // localStorage.setItem("users", JSON.stringify(users));
   }
   function updatePassword(currentEmail: string, passwordHash: string) {
-    let users = getUsersFromLocalStorage();
-    const current = users.find((u) => u.email == currentEmail) as User;
-    users = users.filter((u) => u.email != currentEmail);
-    current.password = passwordHash;
-    users.push(current);
-    saveUser(current);
-    setUser(current);
-    localStorage.setItem("users", JSON.stringify(users));
+    // let users = getUsersFromLocalStorage();
+    // const current = users.find((u) => u.email == currentEmail) as User;
+    // users = users.filter((u) => u.email != currentEmail);
+    // current.password = passwordHash;
+    // users.push(current);
+    // setUser(current);
+    // localStorage.setItem("users", JSON.stringify(users));
   }
 
-  const login = (email: string, password: string) => {
-    email = email.toLowerCase();
-    const users = getUsersFromLocalStorage();
+  // const login = (email: string, password: string) => {
+  //   email = email.toLowerCase();
+  //   const users = getUsersFromLocalStorage();
 
-    const matchedUser = users.find((e) => e.email === email);
-    if (matchedUser) {
-      if (bcrypt.compareSync(password, matchedUser.password)) {
-        saveUser(matchedUser);
-        setUser(matchedUser);
-        return true;
-      }
-    }
-    return false;
-  };
+  //   const matchedUser = users.find((e) => e.email === email);
+  //   if (matchedUser) {
+  //     if (bcrypt.compareSync(password, matchedUser.password)) {
+  //       setUser(matchedUser);
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // };
 
   const logout = () => {
-    localStorage.setItem("currentUser", "");
-    return setUser(null);
+    localStorage.setItem("token", "");
+    return setToken(null);
   };
 
   const checkRegister = (email: string) => {
@@ -139,22 +121,21 @@ export default function AuthProvider({
     };
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
-    saveUser(newUser);
-    setUser(newUser);
+    setToken(null);
     return true;
   };
 
   return (
     <AuthContext.Provider
       value={{
-        user,
+        token,
+        updateCurrentToken,
         login,
         logout,
         register,
         deleteUser,
         updateUser,
         updatePassword,
-        checkUser,
         checkRegister
       }}
     >

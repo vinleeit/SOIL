@@ -20,8 +20,8 @@ export default function PageWithAuthorization({
   children,
   authorized,
 }: PageWithAuthorizationProp) {
-  const { user } = useContext(AuthContext) as AuthContextValue;
-  const isLoggedIn = user != null;
+  const { token } = useContext(AuthContext) as AuthContextValue;
+  const isLoggedIn = token != null;
   if (authorized) {
     if (isLoggedIn) {
       return children;
