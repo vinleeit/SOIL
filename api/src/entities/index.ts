@@ -4,6 +4,7 @@ import { ReviewFactory } from "./Review";
 import { ProductFactory } from "./Product";
 import { ThreadFactory } from "./Thread";
 import { CartItemFactory } from "./CartItem";
+import { UserFollowFactory } from "./UserFollow";
 
 const sequelize = new Sequelize(
   "s3937118_fsd_a2",
@@ -21,6 +22,7 @@ export interface Models {
   Product: ReturnType<typeof ProductFactory>;
   Thread: ReturnType<typeof ThreadFactory>;
   CartItem: ReturnType<typeof CartItemFactory>;
+  UserFollow: ReturnType<typeof UserFollowFactory>;
 }
 
 export const initModels = () => {
@@ -29,6 +31,7 @@ export const initModels = () => {
   const Product = ProductFactory(sequelize);
   const Thread = ThreadFactory(sequelize);
   const CartItem = CartItemFactory(sequelize);
+  const UserFollow = UserFollowFactory(sequelize);
 
   // Associations
   User.hasMany(Review);
@@ -41,9 +44,12 @@ export const initModels = () => {
   CartItem.belongsTo(User);
   Product.hasMany(CartItem);
   CartItem.belongsTo(Product);
+  User.hasMany(UserFollow, { foreignKey: "followingId", as: "following" });
+  UserFollow.belongsTo(User, { foreignKey: "followingId", as: "following" });
 
   return {
     User,
+    UserFollow,
     Review,
     Product,
     Thread,
