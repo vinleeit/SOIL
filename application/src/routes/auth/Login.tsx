@@ -10,9 +10,11 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [error, setError] = useState("");
   const successDialog = useRef<HTMLDialogElement | null>(null);
-  const navigate = useNavigate();
+  const failureDialog = useRef<HTMLDialogElement | null>(null);
   const { login, updateCurrentToken } = useContext(AuthContext) as AuthContextValue;
+  const navigate = useNavigate();
 
   async function performLogin(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -37,7 +39,8 @@ export default function Login() {
     if (success) {
       const error = await login(email, password);
       if (error != null) {
-        setEmailError(error);
+        setError(error);
+        failureDialog.current?.showModal();
         return;
       }
       successDialog.current?.showModal();
@@ -95,6 +98,14 @@ export default function Login() {
         description="Enjoy the brand new organic shopping experience"
         buttonLabel="Continue"
         onClick={() => updateCurrentToken()}
+      />
+      <SoilAlertDialog
+        id={"failureDialog"}
+        ref={failureDialog}
+        title={`Error`}
+        description={error}
+        buttonLabel="Ok"
+        onClick={() => failureDialog.current?.close()}
       />
     </section>
   );

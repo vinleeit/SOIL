@@ -16,15 +16,22 @@ interface ErrorResponse {
     error: string;
 }
 
+interface LoginData {
+    email: string;
+    password: string;
+}
+
+interface RegisterData {
+    email: string;
+    password: string;
+    username: string;
+}
+
 export const loginService = async (
-    email: string,
-    password: string,
+    data: LoginData,
 ): Promise<[result: string | null, error: string | null]> => {
     try {
-        const response = await axios.post<LoginResponse>(`${URL}/auth/login`, {
-            email,
-            password,
-        });
+        const response = await axios.post<LoginResponse>(`${URL}/auth/login`, data);
         return [response.data.token, null];
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -33,6 +40,23 @@ export const loginService = async (
         } else {
             console.log(error);
             return [null, 'An unexpected error occurred'];
+        }
+    }
+};
+
+export const registerService = async (
+    data: RegisterData,
+): Promise<string | null> => {
+    try {
+        await axios.post(`${URL}/auth/register`, data);
+        return null;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            const errorData: ErrorResponse = error.response.data;
+            return errorData.error;
+        } else {
+            console.log(error);
+            return "An unexpected error occurred";
         }
     }
 };

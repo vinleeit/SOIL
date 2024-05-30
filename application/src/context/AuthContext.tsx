@@ -1,18 +1,15 @@
 import { createContext, useEffect, useState } from "react";
-import { User } from "../types/User";
-import bcrypt from "bcryptjs-react";
-import { loginService } from "../shared/services/AuthService";
+import { loginService, registerService } from "../shared/services/AuthService";
 
 export interface AuthContextValue {
   token: string | null;
   updateCurrentToken: () => void;
   login: (email: string, password: string) => Promise<string | null>;
   logout: () => void;
-  register: (email: string, name: string, password: string) => boolean;
+  register: (email: string, username: string, password: string) => Promise<string | null>;
   deleteUser: () => void;
   updateUser: (currentEmail: string, email: string, name: string) => void;
   updatePassword: (currentEmail: string, passwordHash: string) => void;
-  checkRegister: (email: string) => boolean;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -26,22 +23,39 @@ export default function AuthProvider({
 }) {
   const [token, setToken] = useState<string | null>(null);
 
+  useEffect(updateCurrentToken, []);
+
+  function updateCurrentToken() {
+    const token = localStorage.getItem("token");
+    if (token && token.length > 0) {
+      setToken(token);
+    }
+  }
+
   async function login(email: string, password: string): Promise<string | null> {
-    const [token, error] = await loginService(email, password);
+    const [token, error] = await loginService({
+      email: email,
+      password: password,
+    });
     if (token) {
       localStorage.setItem("token", token);
     }
     return error;
   }
 
-  function updateCurrentToken() {
-    const token = localStorage.getItem("token")
-    if (token && token.length > 0) {
-      setToken(token);
-    }
-  }
+  const logout = () => {
+    localStorage.setItem("token", "");
+    return setToken(null);
+  };
 
-  useEffect(updateCurrentToken, []);
+  async function register(
+    email: string,
+    username: string,
+    password: string
+  ): Promise<string | null> {
+    const error = await registerService({ email, username, password });
+    return error;
+  }
 
   function deleteUser() {
     // const deletedUser = user?.email;
@@ -70,73 +84,17 @@ export default function AuthProvider({
     // localStorage.setItem("users", JSON.stringify(users));
   }
 
-  // const login = (email: string, password: string) => {
-  //   email = email.toLowerCase();
-  //   const users = getUsersFromLocalStorage();
-
-  //   const matchedUser = users.find((e) => e.email === email);
-  //   if (matchedUser) {
-  //     if (bcrypt.compareSync(password, matchedUser.password)) {
-  //       setUser(matchedUser);
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // };
-
-  const logout = () => {
-    localStorage.setItem("token", "");
-    return setToken(null);
-  };
-
-  const checkRegister = (email: string) => {
-    email = email.toLowerCase();
-    const usersString = localStorage.getItem("users");
-    let users: User[] = [];
-    if (usersString) {
-      users = JSON.parse(usersString);
-      if (users.find((v) => v.email === email)) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  const register = (email: string, name: string, password: string) => {
-    email = email.toLowerCase();
-    name = name.toLowerCase();
-    const usersString = localStorage.getItem("users");
-    let users: User[] = [];
-    if (usersString) {
-      users = JSON.parse(usersString);
-      if (users.find((v) => v.email === email)) {
-        return false;
-      }
-    }
-    const newUser: User = {
-      name: name,
-      email: email,
-      password: bcrypt.hashSync(password),
-      joinDate: Date.now(),
-    };
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    setToken(null);
-    return true;
-  };
-
   return (
     <AuthContext.Provider
       value={{
-        token,
-        updateCurrentToken,
-        login,
-        logout,
-        register,
-        deleteUser,
-        updateUser,
-        updatePassword,
-        checkRegister
+        token: token,
+        updateCurrentToken: updateCurrentToken,
+        login: login,
+        logout: logout,
+        register: register,
+        deleteUser: deleteUser,
+        updateUser: updateUser,
+        updatePassword: updatePassword,
       }}
     >
       {children}
