@@ -1,8 +1,6 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import { validateToken } from "../middleware/authMiddleware";
 import { normalizeInput } from "../utils";
-import { JWT_SECRET } from "../config";
 
 const router = express.Router();
 
@@ -13,7 +11,7 @@ router.use(validateToken);
 router.get("/", async (req, res) => {
   try {
     const user = await req.models.User.findOne({
-      where: { email: req.user },
+      where: { id: req.user },
       attributes: ["email", "username", "createdAt"],
     });
 
@@ -65,7 +63,7 @@ router.post("/", async (req, res) => {
     // find the user and update the fields
     //
     const currentUser = await req.models.User.findOne({
-      where: { email: userId },
+      where: { id: userId },
     });
 
     if (currentUser == null) {
@@ -73,16 +71,10 @@ router.post("/", async (req, res) => {
     }
     await req.models.User.update(
       { email: normalizedEmail, username: normalizedUsername },
-      { where: { email: userId }, returning: true },
+      { where: { id: userId }, returning: true },
     );
 
-    // Generate a JWT token
-    const token = jwt.sign({ user: normalizedEmail }, JWT_SECRET, {
-      expiresIn: "10d",
-    });
-
-    // If the user is valid, return a success message
-    res.json({ token });
+    res.sendStatus(200);
   } catch (error) {
     console.error("Error updating profile:", error);
     res
@@ -94,11 +86,11 @@ router.post("/", async (req, res) => {
 // Delete profile
 router.delete("/", async (req, res) => {
   try {
-    const email = req.user;
+    const userID = req.user;
 
     // Delete the user
     const deletedRows = await req.models.User.destroy({
-      where: { email: email },
+      where: { id: userID },
     });
 
     if (deletedRows) {
