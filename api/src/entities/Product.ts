@@ -11,16 +11,15 @@ interface ProductAttributes {
 
 interface ProductCreationAttributes extends Optional<ProductAttributes, "id"> {}
 
+class Product extends Model<ProductAttributes, ProductCreationAttributes> {
+  public id!: number;
+  public name!: string;
+  public description!: string;
+  public price!: number;
+  public imageURL!: string;
+  public discountAmount!: number;
+}
 export const ProductFactory = (sequelize: Sequelize) => {
-  class Product extends Model<ProductAttributes, ProductCreationAttributes> {
-    public id!: number;
-    public name!: string;
-    public description!: string;
-    public price!: number;
-    public imageURL!: string;
-    public discountAmount!: number;
-  }
-
   Product.init(
     {
       id: {
@@ -52,3 +51,4 @@ export const ProductFactory = (sequelize: Sequelize) => {
 
   return Product;
 };
+export { Product };

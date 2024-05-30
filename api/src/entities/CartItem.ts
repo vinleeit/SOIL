@@ -3,6 +3,9 @@ import { Model, DataTypes, Sequelize } from "sequelize";
 interface CartItemAttributes {
   quantity: number;
 }
+class CartItem extends Model<CartItemAttributes> {
+  public quantity!: number;
+}
 
 export const CartItemFactory = (sequelize: Sequelize) => {
   class CartItem extends Model<CartItemAttributes> {
@@ -23,3 +26,4 @@ export const CartItemFactory = (sequelize: Sequelize) => {
 
   return CartItem;
 };
+export { CartItem };
