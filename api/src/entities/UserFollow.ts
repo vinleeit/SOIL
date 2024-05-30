@@ -1,20 +1,21 @@
-// models/UserFollow.ts
 import { Model, DataTypes, Sequelize } from "sequelize";
 
-interface UserFollowAttributes {
-  followerId: number;
-  followingId: number;
-}
-class UserFollow extends Model<UserFollowAttributes> {
+class UserFollow extends Model {
+  public id!: number;
   public followerId!: number;
   public followingId!: number;
 }
-
 export const UserFollowFactory = (sequelize: Sequelize) => {
   UserFollow.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
       followerId: {
         type: DataTypes.INTEGER,
+        allowNull: false,
         references: {
           model: "Users",
           key: "id",
@@ -22,6 +23,7 @@ export const UserFollowFactory = (sequelize: Sequelize) => {
       },
       followingId: {
         type: DataTypes.INTEGER,
+        allowNull: false,
         references: {
           model: "Users",
           key: "id",
@@ -36,5 +38,4 @@ export const UserFollowFactory = (sequelize: Sequelize) => {
 
   return UserFollow;
 };
-
 export { UserFollow };
