@@ -33,17 +33,26 @@ export const initModels = () => {
   const CartItem = CartItemFactory(sequelize);
   const UserFollow = UserFollowFactory(sequelize);
 
-  // Associations
-  User.hasMany(Review);
+  // Associations with cascade delete and update
+  User.hasMany(Review, { onDelete: "CASCADE", onUpdate: "CASCADE" });
   Review.belongsTo(User);
-  Review.hasMany(Thread);
+
+  Review.hasMany(Thread, { onDelete: "CASCADE", onUpdate: "CASCADE" });
   Thread.belongsTo(Review);
-  Product.hasMany(Review);
+
+  Product.hasMany(Review, { onDelete: "CASCADE", onUpdate: "CASCADE" });
   Review.belongsTo(Product);
-  User.hasMany(CartItem);
+
+  User.hasMany(CartItem, { onDelete: "CASCADE", onUpdate: "CASCADE" });
   CartItem.belongsTo(User);
-  Product.hasMany(CartItem);
+
+  Product.hasMany(CartItem, { onDelete: "CASCADE", onUpdate: "CASCADE" });
   CartItem.belongsTo(Product);
+
+  User.hasMany(UserFollow, { foreignKey: "followerId", as: "Followers" });
+  User.hasMany(UserFollow, { foreignKey: "followingId", as: "Following" });
+  UserFollow.belongsTo(User, { foreignKey: "followerId", as: "Follower" });
+  UserFollow.belongsTo(User, { foreignKey: "followingId", as: "Following" });
 
   return {
     User,
