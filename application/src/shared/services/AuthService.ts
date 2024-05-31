@@ -32,6 +32,10 @@ interface UpdateProfileData {
     username?: string;
 }
 
+interface ChangePasswordData {
+    password: string;
+}
+
 export const loginService = async (
     data: LoginData,
 ): Promise<[result: string | null, error: string | null]> => {
@@ -140,3 +144,34 @@ export const deleteAccountService = async (
         }
     }
 };
+
+
+export const changePasswordService = async (
+    token: string,
+    data: ChangePasswordData,
+): Promise<string | null> => {
+    try {
+        await axios.put<void>(
+            `${URL}/profile/password`,
+            data,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+        return null;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response?.data) {
+                const errorData: ErrorResponse = error.response.data;
+                return errorData.error;
+            }
+            return error.response.statusText;
+        } else {
+            console.log(error);
+            return "An unexpected error occurred";
+        }
+    }
+};
+
+

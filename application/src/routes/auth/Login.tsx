@@ -6,15 +6,15 @@ import SoilTextField from "../../components/SoilTextField";
 import { AuthContext, AuthContextValue } from "../../context/AuthContext";
 
 export default function Login() {
+  const { login, updateCurrentToken } = useContext(AuthContext) as AuthContextValue;
+  const navigate = useNavigate();
+  const successDialog = useRef<HTMLDialogElement | null>(null);
+  const failureDialog = useRef<HTMLDialogElement | null>(null);
+  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [error, setError] = useState("");
-  const successDialog = useRef<HTMLDialogElement | null>(null);
-  const failureDialog = useRef<HTMLDialogElement | null>(null);
-  const { login, updateCurrentToken } = useContext(AuthContext) as AuthContextValue;
-  const navigate = useNavigate();
 
   async function performLogin(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();

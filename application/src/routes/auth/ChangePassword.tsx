@@ -4,28 +4,24 @@ import SoilTextField from "../../components/SoilTextField";
 import { AuthContext, AuthContextValue } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import SoilAlertDialog from "../../components/SoilAlertDialog";
-import bcrypt from "bcryptjs-react";
 
+// TODO(change-password): add loading
 export default function ChangePassword() {
-  const { user, updatePassword } = useContext(AuthContext) as AuthContextValue;
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const { updatePassword } = useContext(AuthContext) as AuthContextValue;
+  const navigate = useNavigate();
+  const dialog = useRef<HTMLDialogElement | null>(null);
+  const failureDialog = useRef<HTMLDialogElement | null>(null);
+  const [error, setError] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [passwordError, setPasswordError] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const navigate = useNavigate();
-  const dialog = useRef<HTMLDialogElement | null>(null);
 
-  function editProfile(e: FormEvent) {
+  async function editProfile(e: FormEvent) {
     e.preventDefault();
     let success = true;
     // Check if the password is correct by comparing the hash
-    if (!bcrypt.compareSync(password, user!.password)) {
-      setPasswordError("Invalid Password");
-      success = false;
-    } else {
-      setPasswordError("");
-    }
     if (newPassword.length === 0) {
       setNewPasswordError("Password must not be empty");
       success = false;
@@ -41,6 +37,9 @@ export default function ChangePassword() {
     } else if (newPassword.search(/\d/) == -1) {
       setNewPasswordError("Password should contain numbers");
       success = false;
+    } else if (newPassword.search(/[^A-Za-z0-9\s]/) == -1) {
+      setNewPasswordError("Password should contain special characters");
+      success = false;
     } else if (newPassword != confirmNewPassword) {
       setNewPasswordError("Password confirmation is incorrect");
       success = false;
@@ -49,8 +48,13 @@ export default function ChangePassword() {
     }
     if (success) {
       // Update user's password with a new hash
-      updatePassword(user!.email, bcrypt.hashSync(newPassword));
-      dialog?.current?.showModal();
+      const error = await updatePassword(newPassword);
+      if (error) {
+        setError(error);
+        failureDialog.current?.showModal();
+      } else {
+        dialog?.current?.showModal();
+      }
     }
   }
 
@@ -63,10 +67,18 @@ export default function ChangePassword() {
         ref={dialog}
         onClick={() => navigate("/profile")}
       />
+      <SoilAlertDialog
+        id={"failureDialog"}
+        ref={failureDialog}
+        title={`Error`}
+        description={error}
+        buttonLabel="Ok"
+        onClick={() => failureDialog.current?.close()}
+      />
       <section className="w-2/3 max-w-96 my-16 p-8 bg-stone-100 rounded border text-stone-900">
         <h1 className="text-4xl font-bold mb-3">Change Password</h1>
         <form className="space-y-1" onSubmit={editProfile}>
-          <div>
+          {/* <div>
             <label className="text-sm font-bold">Old Password</label>
             <SoilTextField
               type="password"
@@ -78,7 +90,7 @@ export default function ChangePassword() {
                 {passwordError}
               </span>
             )}
-          </div>
+          </div> */}
           <div>
             <label className="text-sm font-bold">New Password</label>
             <SoilTextField
