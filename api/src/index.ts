@@ -8,6 +8,7 @@ import { PORT } from "./config.ts";
 import productRouter from "./routes/product.ts";
 import followRouter from "./routes/follow.ts";
 import cartRouter from "./routes/cart.ts";
+import reviewRouter from "./routes/review.ts";
 import cors from "cors";
 
 // TODO: add er digram to repo
@@ -37,6 +38,7 @@ app.use(modelInjectionMiddleware(models));
     app.use("/product", productRouter);
     app.use("/follow", followRouter);
     app.use("/cart", cartRouter);
+    app.use("/review", reviewRouter);
 
     app.listen(PORT, () => {
       console.log("Server is running on port", PORT);

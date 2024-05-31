@@ -3,17 +3,18 @@ import { Model, DataTypes, type Optional, Sequelize } from "sequelize";
 interface ReviewAttributes {
   reviewID: number;
   rating: number;
+  review: string;
 }
 
 interface ReviewCreationAttributes
   extends Optional<ReviewAttributes, "reviewID"> {}
+class Review extends Model<ReviewAttributes, ReviewCreationAttributes> {
+  public reviewID!: number;
+  public rating!: number;
+  public review!: string;
+}
 
 export const ReviewFactory = (sequelize: Sequelize) => {
-  class Review extends Model<ReviewAttributes, ReviewCreationAttributes> {
-    public reviewID!: number;
-    public rating!: number;
-  }
-
   Review.init(
     {
       reviewID: {
@@ -24,6 +25,10 @@ export const ReviewFactory = (sequelize: Sequelize) => {
       rating: {
         type: DataTypes.INTEGER,
       },
+      review: {
+        // The length of around 100 words if each word is 10 characters
+        type: DataTypes.STRING(1000),
+      },
     },
     {
       sequelize,
@@ -33,3 +38,4 @@ export const ReviewFactory = (sequelize: Sequelize) => {
 
   return Review;
 };
+export { Review };
