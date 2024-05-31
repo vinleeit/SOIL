@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { loginService, registerService } from "../shared/services/AuthService";
+import { loginService, registerService, updateProfileService as updateUserService } from "../shared/services/AuthService";
 
 export interface AuthContextValue {
   token: string | null;
@@ -8,7 +8,7 @@ export interface AuthContextValue {
   logout: () => void;
   register: (email: string, username: string, password: string) => Promise<string | null>;
   deleteUser: () => void;
-  updateUser: (currentEmail: string, email: string, name: string) => void;
+  updateUser: (email: string, username: string) => Promise<string | null>;
   updatePassword: (currentEmail: string, passwordHash: string) => void;
 }
 
@@ -65,15 +65,17 @@ export default function AuthProvider({
     // localStorage.setItem("users", JSON.stringify(users));
   }
 
-  function updateUser(currentEmail: string, email: string, name: string) {
-    // let users = getUsersFromLocalStorage();
-    // const current = users.find((u) => u.email == currentEmail) as User;
-    // users = users.filter((u) => u.email != currentEmail);
-    // current.email = email;
-    // current.name = name;
-    // setUser(current);
-    // localStorage.setItem("users", JSON.stringify(users));
+  async function updateUser(
+    email: string,
+    username: string,
+  ): Promise<string | null> {
+    const error = updateUserService(token!, {
+      email: email,
+      username: username,
+    });
+    return error;
   }
+
   function updatePassword(currentEmail: string, passwordHash: string) {
     // let users = getUsersFromLocalStorage();
     // const current = users.find((u) => u.email == currentEmail) as User;

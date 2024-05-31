@@ -11,7 +11,7 @@ import SoilErrorAlert from "../../components/SoilErrorAlert";
  * */
 export default function Profile() {
   // Get delete user action from context
-  const { deleteUser } = useContext(
+  const { token, deleteUser } = useContext(
     AuthContext,
   ) as AuthContextValue;
   // Dialog DOM ref
@@ -22,13 +22,9 @@ export default function Profile() {
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const [error, setError] = useState('');
 
-  const { token: currentToken } = useContext(
-    AuthContext,
-  ) as AuthContextValue;
-
   useEffect(() => {
     const fetchProfile = async () => {
-      const [profile, error] = await profileService(currentToken as string);
+      const [profile, error] = await profileService(token as string);
       if (profile) {
         setProfile(profile);
       }

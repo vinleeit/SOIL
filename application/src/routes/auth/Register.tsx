@@ -6,17 +6,17 @@ import SoilTextField from "../../components/SoilTextField";
 import { AuthContext, AuthContextValue } from "../../context/AuthContext";
 
 export default function Register() {
+  const { register } = useContext(AuthContext) as AuthContextValue;
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [username, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [error, setError] = useState("");
   const successDialog = useRef<HTMLDialogElement | null>(null);
   const failureDialog = useRef<HTMLDialogElement | null>(null);
-  const { register } = useContext(AuthContext) as AuthContextValue;
+  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [username, setName] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   async function performRegister(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -52,10 +52,10 @@ export default function Register() {
     }
 
     if (username.length < 2) {
-      setNameError("Name must be at least 2 characters");
+      setUsernameError("Name must be at least 2 characters");
       success = false;
     } else {
-      setNameError("");
+      setUsernameError("");
     }
 
     if (success) {
@@ -81,9 +81,9 @@ export default function Register() {
         <SoilTextField
           type="text"
           value={username}
-          placeholder="Name"
+          placeholder="Username"
           onChange={(e) => setName(e.target.value)}
-          errMsg={nameError}
+          errMsg={usernameError}
         />
         <SoilTextField
           type="text"

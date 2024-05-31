@@ -27,6 +27,11 @@ interface RegisterData {
     username: string;
 }
 
+interface UpdateProfileData {
+    email?: string;
+    username?: string;
+}
+
 export const loginService = async (
     data: LoginData,
 ): Promise<[result: string | null, error: string | null]> => {
@@ -78,6 +83,36 @@ export const profileService = async (
         } else {
             console.log(error);
             return [null, "An unexpected error occurred"];
+        }
+    }
+};
+
+export const updateProfileService = async (
+    token: string,
+    data: UpdateProfileData,
+): Promise<string | null> => {
+    try {
+        const response = await axios.post<void>(`${URL}/profile`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return null;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response?.data) {
+                const errorData: ErrorResponse = error.response.data;
+                return errorData.error;
+            }
+
+            if (error.response.status == 304) {
+                return "No data modification is provided";
+            }
+
+            return error.response.statusText;
+        } else {
+            console.log(error);
+            return "An unexpected error occurred";
         }
     }
 };
