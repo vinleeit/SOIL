@@ -43,7 +43,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"bob@bob.com\",\n    \"password\":\"AbengAnakHantup@123\"\n}",
+							"raw": "{\n    \"email\":\"ravel@abcd.com\",\n    \"password\":\"Test@1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -495,6 +495,160 @@
 							"variable": [
 								{
 									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Review",
+			"item": [
+				{
+					"name": "Get review for product",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/review/:productID",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"review",
+								":productID"
+							],
+							"variable": [
+								{
+									"key": "productID",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Review for Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\":1,\n    \"review\":\"THis is a review\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/review/:productID",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"review",
+								":productID"
+							],
+							"variable": [
+								{
+									"key": "productID",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Review",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\":5,\n    \"review\":\"THis is a review, it is actually really good\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/review/:reviewID",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"review",
+								":reviewID"
+							],
+							"variable": [
+								{
+									"key": "reviewID",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Review",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/review/:reviewID",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"review",
+								":reviewID"
+							],
+							"variable": [
+								{
+									"key": "reviewID",
 									"value": "2"
 								}
 							]
