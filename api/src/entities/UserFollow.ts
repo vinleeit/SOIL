@@ -20,6 +20,8 @@ export const UserFollowFactory = (sequelize: Sequelize) => {
           model: "Users",
           key: "id",
         },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       followingId: {
         type: DataTypes.INTEGER,
@@ -28,6 +30,8 @@ export const UserFollowFactory = (sequelize: Sequelize) => {
           model: "Users",
           key: "id",
         },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
     },
     {
