@@ -1,6 +1,7 @@
 import express from "express";
 import { validateToken } from "../middleware/authMiddleware";
 import { normalizeInput } from "../utils";
+import validator from "validator";
 
 const router = express.Router();
 
@@ -56,11 +57,19 @@ router.post("/", async (req, res) => {
     ) {
       return res.sendStatus(304);
     }
+    if (normalizedUsername.length < 3) {
+      return res
+        .status(400)
+        .json({ error: "Username must be at least 3 characters long" });
+    }
+    // Check if email is valid
+    if (!validator.isEmail(normalizedEmail)) {
+      return res.status(400).json({ error: "Invalid email address" });
+    }
     // Check if email or username already exists
     const existingUser = await req.models.User.findOne({
       where: { email: normalizedEmail },
     });
-    console.log(parseInt(userId));
     if (existingUser && existingUser.getDataValue("id") !== parseInt(userId)) {
       return res.status(409).json({ error: "Email already exists" });
     }
