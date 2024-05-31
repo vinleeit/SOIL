@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"rav1@outlook.com\",\n    \"password\":\"AbengAnakHantup@123\",\n    \"username\":\"rav1\"\n}",
+							"raw": "{\n    \"email\":\"a2@a.com\",\n    \"password\":\"Test@1234\",\n    \"username\":\"vin2\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -43,7 +43,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"rav1@outlook.com\",\n    \"password\":\"AbengAnakHantup@123\"\n}",
+							"raw": "{\n    \"email\":\"bob@bob.com\",\n    \"password\":\"AbengAnakHantup@123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -90,6 +90,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"bob4@bob.com\",\n    \"username\":\"thsatshtatsha\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{url}}/profile",
 							"host": [
@@ -114,6 +123,33 @@
 							],
 							"path": [
 								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\":\"fasdfsdafdsa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/profile/password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile",
+								"password"
 							]
 						}
 					},
@@ -160,7 +196,16 @@
 					"name": "Get all product",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{url}}/product",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"product"
+							]
+						}
 					},
 					"response": []
 				},
@@ -181,7 +226,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "1"
 								}
 							]
 						}
@@ -195,7 +240,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\":\"botol\",\n    \"description\":\"ini bootol\",\n    \"price\": 12.40,\n    \"imageURL\": \"https://picsum.photos/200/300\",\n    \"discountAmount\": 0\n}",
+							"raw": "{\n    \"name\":\"botol2\",\n    \"description\":\"ini bootol\",\n    \"price\": 12.40,\n    \"imageURL\": \"https://picsum.photos/200/300\",\n    \"discountAmount\": 0\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -287,7 +332,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "3"
 								}
 							]
 						}
@@ -311,7 +356,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "3"
 								}
 							]
 						}
@@ -380,7 +425,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"productId\":11,\n    \"quantity\":2\n}",
+							"raw": "{\n    \"productId\":1,\n    \"quantity\":243\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -407,7 +452,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"quantity\": 4\n}",
+							"raw": "{\n    \"quantity\": 16\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -426,7 +471,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "2"
 								}
 							]
 						}
@@ -450,7 +495,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "2"
 								}
 							]
 						}
@@ -522,7 +567,7 @@
 		},
 		{
 			"key": "token",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoicmF2MUBvdXRsb29rLmNvbSIsImlhdCI6MTcxNjk4OTIxMiwiZXhwIjoxNzE3ODUzMjEyfQ.jRussEaSlTpdqpJm7cIvhu7oN58ErY-7apI_BPP_rH8",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoyLCJpYXQiOjE3MTcxMzA3MTQsImV4cCI6MTcxNzk5NDcxNH0.fknWLU5RV8OqROMMxjGM94dnmwcmTRD4W1ZdPBGV_PQ",
 			"type": "string"
 		}
 	]

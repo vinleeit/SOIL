@@ -1,6 +1,8 @@
 import express from "express";
 import { validateToken } from "../middleware/authMiddleware";
 import { normalizeInput } from "../utils";
+import validator from "validator";
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 
@@ -56,11 +58,19 @@ router.post("/", async (req, res) => {
     ) {
       return res.sendStatus(304);
     }
+    if (normalizedUsername.length < 3) {
+      return res
+        .status(400)
+        .json({ error: "Username must be at least 3 characters long" });
+    }
+    // Check if email is valid
+    if (!validator.isEmail(normalizedEmail)) {
+      return res.status(400).json({ error: "Invalid email address" });
+    }
     // Check if email or username already exists
     const existingUser = await req.models.User.findOne({
       where: { email: normalizedEmail },
     });
-    console.log(parseInt(userId));
     if (existingUser && existingUser.getDataValue("id") !== parseInt(userId)) {
       return res.status(409).json({ error: "Email already exists" });
     }
@@ -114,6 +124,33 @@ router.delete("/", async (req, res) => {
       .status(500)
       .json({ error: "An error occurred while deleting the profile" });
   }
+});
+
+//change password
+router.put("/password", async (req, res) => {
+  const userId = req.user;
+  const { password } = req.body;
+  console.log(password);
+  const currentUser = await req.models.User.findOne({ where: { id: userId } });
+  if (!currentUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Check password
+  const strongPasswordRegex =
+    /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?])[\w!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{8,}$/;
+  if (!strongPasswordRegex.test(password)) {
+    return res.status(400).json({
+      error:
+        "Password must be at least 8 characters long, contain at least one uppercase letter, one digit, and one symbol",
+    });
+  }
+  // Change password
+  const hashedPassword = await bcrypt.hash(password, 10);
+  currentUser.setDataValue("password", hashedPassword);
+  await currentUser.save();
+
+  res.sendStatus(200);
 });
 
 export default router;
