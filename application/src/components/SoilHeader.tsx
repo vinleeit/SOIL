@@ -16,7 +16,7 @@ export default function SoilHeader() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isBackgroundVisible, setIsBackgroundVisible] = useState(false);
-  const { user, logout } = useContext(AuthContext) as AuthContextValue;
+  const { token, logout } = useContext(AuthContext) as AuthContextValue;
 
   /**
    * Closes the menu if it is open whenever the route changes.
@@ -56,7 +56,7 @@ export default function SoilHeader() {
         <nav className="flex h-full items-center justify-between px-8 border-b-1">
           <SoilLogo />
           <ul className="space-x-2 hidden md:flex">
-            {user && (
+            {token && (
               <li>
                 <SoilButton outlined onClick={() => navigate("/profile")}>
                   Profile
@@ -72,7 +72,7 @@ export default function SoilHeader() {
               </SoilButton>
             </li>
             <li>
-              {user ? (
+              {token ? (
                 <div>
                   <SoilButton colour="primary" onClick={doLogout}>
                     Logout
@@ -113,7 +113,7 @@ export default function SoilHeader() {
           <SoilLogo size="medium" vertical onClick={() => toggleMenu(false)} />
           <div className="flex flex-col h-full justify-end">
             <ul className="space-y-3">
-              {user && (
+              {token && (
                 <li>
                   <SoilButton
                     fullWidth
@@ -125,7 +125,7 @@ export default function SoilHeader() {
                 </li>
               )}
               <li>
-                {user ? (
+                {token ? (
                   <SoilButton fullWidth onClick={doLogout}>
                     Logout
                   </SoilButton>

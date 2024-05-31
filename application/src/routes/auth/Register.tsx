@@ -1,21 +1,24 @@
 import { FormEvent, useContext, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SoilAlertDialog from "../../components/SoilAlertDialog";
 import SoilButton from "../../components/SoilButton";
 import SoilTextField from "../../components/SoilTextField";
 import { AuthContext, AuthContextValue } from "../../context/AuthContext";
 
 export default function Register() {
+  const { register } = useContext(AuthContext) as AuthContextValue;
+  const navigate = useNavigate();
+  const successDialog = useRef<HTMLDialogElement | null>(null);
+  const failureDialog = useRef<HTMLDialogElement | null>(null);
+  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [username, setName] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [nameError, setNameError] = useState("");
-  const successDialog = useRef<HTMLDialogElement | null>(null);
-  const { register, checkRegister } = useContext(AuthContext) as AuthContextValue;
 
-  function performRegister(event: FormEvent<HTMLFormElement>): void {
+  async function performRegister(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     // Form validation
     let success = true;
@@ -48,20 +51,22 @@ export default function Register() {
       setEmailError("");
     }
 
-    if (name.length < 2) {
-      setNameError("Name must be at least 2 characters");
+    if (username.length < 2) {
+      setUsernameError("Name must be at least 2 characters");
       success = false;
     } else {
-      setNameError("");
+      setUsernameError("");
     }
 
     if (success) {
       // register user if validation success
-      if (checkRegister(email)) {
-        successDialog.current?.showModal();
+      const error = await register(email, username, password);
+      if (error) {
+        setError(error);
+        failureDialog.current?.showModal();
         return;
       }
-      setEmailError("User already exits");
+      successDialog.current?.showModal();
     }
   }
 
@@ -75,10 +80,10 @@ export default function Register() {
       <form className="w-80 space-y-2 mt-8" onSubmit={performRegister}>
         <SoilTextField
           type="text"
-          value={name}
-          placeholder="Name"
+          value={username}
+          placeholder="Username"
           onChange={(e) => setName(e.target.value)}
-          errMsg={nameError}
+          errMsg={usernameError}
         />
         <SoilTextField
           type="text"
@@ -108,10 +113,18 @@ export default function Register() {
       <SoilAlertDialog
         id={"successDialog"}
         ref={successDialog}
-        title={`Welcome ${name}!`}
+        title={`Hi ${username}!`}
         description="Your account has been created"
         buttonLabel="Continue"
-        onClick={() => register(email, name, password)}
+        onClick={() => navigate("/login")}
+      />
+      <SoilAlertDialog
+        id={"failureDialog"}
+        ref={failureDialog}
+        title={`Error`}
+        description={error}
+        buttonLabel="Ok"
+        onClick={() => failureDialog.current?.close()}
       />
     </section>
   );

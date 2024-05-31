@@ -6,15 +6,17 @@ import SoilTextField from "../../components/SoilTextField";
 import { AuthContext, AuthContextValue } from "../../context/AuthContext";
 
 export default function Login() {
+  const { login, updateCurrentToken } = useContext(AuthContext) as AuthContextValue;
+  const navigate = useNavigate();
+  const successDialog = useRef<HTMLDialogElement | null>(null);
+  const failureDialog = useRef<HTMLDialogElement | null>(null);
+  const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const successDialog = useRef<HTMLDialogElement | null>(null);
-  const navigate = useNavigate();
-  const { checkUser, login } = useContext(AuthContext) as AuthContextValue;
 
-  function performLogin(event: FormEvent<HTMLFormElement>): void {
+  async function performLogin(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     let success = true;
     if (password.length === 0) {
@@ -35,11 +37,13 @@ export default function Login() {
     }
 
     if (success) {
-      if (checkUser(email, password)) {
-        successDialog.current?.showModal();
+      const error = await login(email, password);
+      if (error != null) {
+        setError(error);
+        failureDialog.current?.showModal();
         return;
       }
-      setEmailError("Invalid email or password");
+      successDialog.current?.showModal();
     }
   }
 
@@ -93,7 +97,15 @@ export default function Login() {
         title={"Login Success"}
         description="Enjoy the brand new organic shopping experience"
         buttonLabel="Continue"
-        onClick={() => login(email, password)}
+        onClick={() => updateCurrentToken()}
+      />
+      <SoilAlertDialog
+        id={"failureDialog"}
+        ref={failureDialog}
+        title={`Error`}
+        description={error}
+        buttonLabel="Ok"
+        onClick={() => failureDialog.current?.close()}
       />
     </section>
   );

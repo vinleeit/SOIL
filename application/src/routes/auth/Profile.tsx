@@ -1,20 +1,43 @@
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext, AuthContextValue } from "../../context/AuthContext";
 import SoilButton from "../../components/SoilButton";
 import SoilConfirmationDialog from "../../components/SoilConfirmationDialog";
 import { useNavigate } from "react-router-dom";
+import { ProfileResponse, profileService } from "../../shared/services/AuthService";
+import SoilAlertDialog from "../../components/SoilAlertDialog";
 
 /*
  * Profile page component
  * */
 export default function Profile() {
   // Get delete user action from context
-  const { user: currentUser, deleteUser } = useContext(
+  const { token, deleteUser } = useContext(
     AuthContext,
   ) as AuthContextValue;
   // Dialog DOM ref
   const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const failureDialog = useRef<HTMLDialogElement | null>(null);
   const navigate = useNavigate();
+
+  // TODO(profile): Add loading
+  const [profile, setProfile] = useState<ProfileResponse | null>(null);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const [profile, error] = await profileService(token as string);
+      if (profile) {
+        setProfile(profile);
+      }
+
+      if (error) {
+        setError(error);
+        failureDialog.current?.showModal();
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   return (
     <div className="grow flex items-center justify-center">
@@ -25,23 +48,39 @@ export default function Profile() {
         confirmButtonLabel="DELETE"
         cancelButtonLabel="Cancel"
         onCancel={() => dialogRef.current?.close()}
-        onConfirm={() => deleteUser()}
-      ></SoilConfirmationDialog>
+        onConfirm={async () => {
+          const error = await deleteUser();
+          if (error) {
+            setError(error);
+
+            return;
+          }
+          dialogRef.current?.close();
+        }}
+      />
+      <SoilAlertDialog
+        id={"failureDialog"}
+        ref={failureDialog}
+        title={`Error`}
+        description={error}
+        buttonLabel="Ok"
+        onClick={() => failureDialog.current?.close()}
+      />
       <section className="w-2/3 max-w-96 my-16 p-8 bg-stone-100 rounded border text-stone-900">
         <h1 className="text-4xl font-bold tracking-wider">Profile</h1>
         <dl className="mt-4 flex space-y-5 leading-4 flex-col">
           <div>
-            <dt className="font-bold text-sm">Name</dt>
-            <dd className="capitalize">{currentUser!.name}</dd>
+            <dt className="font-bold text-sm">Username</dt>
+            <dd className="capitalize">{profile?.username}</dd>
           </div>
           <div>
             <dt className="font-bold text-sm">Email Address</dt>
-            <dd className="lowercase">{currentUser!.email}</dd>
+            <dd className="lowercase">{profile?.email}</dd>
           </div>
           <div>
             <dt className="font-bold text-sm">Joining Date</dt>
             <dd className="lowercase">
-              {new Date(currentUser!.joinDate).toJSON().split("T")[0]}
+              {new Date(profile?.createdAt ?? "").toLocaleDateString()}
             </dd>
           </div>
         </dl>

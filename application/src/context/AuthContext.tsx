@@ -1,17 +1,15 @@
 import { createContext, useEffect, useState } from "react";
-import { User } from "../types/User";
-import bcrypt from "bcryptjs-react";
+import { changePasswordService, deleteAccountService, loginService, registerService, updateProfileService as updateUserService } from "../shared/services/AuthService";
 
 export interface AuthContextValue {
-  user: User | null;
-  login: (email: string, password: string) => boolean;
+  token: string | null;
+  updateCurrentToken: () => void;
+  login: (email: string, password: string) => Promise<string | null>;
   logout: () => void;
-  register: (email: string, name: string, password: string) => boolean;
-  deleteUser: () => void;
-  updateUser: (currentEmail: string, email: string, name: string) => void;
-  updatePassword: (currentEmail: string, passwordHash: string) => void;
-  checkUser: (email:string, password:string) => boolean;
-  checkRegister: (email: string) => boolean;
+  register: (email: string, username: string, password: string) => Promise<string | null>;
+  deleteUser: () => Promise<string | null>;
+  updateUser: (email: string, username: string) => Promise<string | null>;
+  updatePassword: (password: string) => Promise<string | null>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -23,139 +21,80 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
-  function checkUser(email:string, password: string){
-    email = email.toLowerCase();
-    const users = getUsersFromLocalStorage();
+  useEffect(updateCurrentToken, []);
 
-    const matchedUser = users.find((e) => e.email === email);
-    if (matchedUser) {
-      if (bcrypt.compareSync(password, matchedUser.password)) {
-        return true;
-      }
+  function updateCurrentToken() {
+    const token = localStorage.getItem("token");
+    if (token && token.length > 0) {
+      setToken(token);
     }
-    return false;
   }
 
-  useEffect(() => {
-    const userString = localStorage.getItem("currentUser");
-    if (userString) {
-      const user: User = JSON.parse(userString);
-      setUser(user);
+  async function login(email: string, password: string): Promise<string | null> {
+    const [token, error] = await loginService({
+      email: email,
+      password: password,
+    });
+    if (token) {
+      localStorage.setItem("token", token);
     }
-  }, []);
-
-  function getUsersFromLocalStorage(): User[] {
-    const usersString = localStorage.getItem("users");
-    const users: User[] = usersString ? JSON.parse(usersString) : [];
-    return users;
+    return error;
   }
-
-  function deleteUser() {
-    const deletedUser = user?.email;
-    logout();
-    let users = getUsersFromLocalStorage();
-    users = users.filter((u) => u.email != deletedUser);
-    localStorage.setItem("users", JSON.stringify(users));
-  }
-
-  // Save user object to currentUSer key in localstorage
-  function saveUser(user: User) {
-    localStorage.setItem("currentUser", JSON.stringify(user));
-  }
-
-  function updateUser(currentEmail: string, email: string, name: string) {
-    let users = getUsersFromLocalStorage();
-    const current = users.find((u) => u.email == currentEmail) as User;
-    users = users.filter((u) => u.email != currentEmail);
-    current.email = email;
-    current.name = name;
-    users.push(current);
-    saveUser(current);
-    setUser(current);
-    localStorage.setItem("users", JSON.stringify(users));
-  }
-  function updatePassword(currentEmail: string, passwordHash: string) {
-    let users = getUsersFromLocalStorage();
-    const current = users.find((u) => u.email == currentEmail) as User;
-    users = users.filter((u) => u.email != currentEmail);
-    current.password = passwordHash;
-    users.push(current);
-    saveUser(current);
-    setUser(current);
-    localStorage.setItem("users", JSON.stringify(users));
-  }
-
-  const login = (email: string, password: string) => {
-    email = email.toLowerCase();
-    const users = getUsersFromLocalStorage();
-
-    const matchedUser = users.find((e) => e.email === email);
-    if (matchedUser) {
-      if (bcrypt.compareSync(password, matchedUser.password)) {
-        saveUser(matchedUser);
-        setUser(matchedUser);
-        return true;
-      }
-    }
-    return false;
-  };
 
   const logout = () => {
-    localStorage.setItem("currentUser", "");
-    return setUser(null);
+    localStorage.setItem("token", "");
+    setToken(null);
   };
 
-  const checkRegister = (email: string) => {
-    email = email.toLowerCase();
-    const usersString = localStorage.getItem("users");
-    let users: User[] = [];
-    if (usersString) {
-      users = JSON.parse(usersString);
-      if (users.find((v) => v.email === email)) {
-        return false;
-      }
-    }
-    return true;
-  };
+  async function register(
+    email: string,
+    username: string,
+    password: string
+  ): Promise<string | null> {
+    const error = await registerService({ email, username, password });
+    return error;
+  }
 
-  const register = (email: string, name: string, password: string) => {
-    email = email.toLowerCase();
-    name = name.toLowerCase();
-    const usersString = localStorage.getItem("users");
-    let users: User[] = [];
-    if (usersString) {
-      users = JSON.parse(usersString);
-      if (users.find((v) => v.email === email)) {
-        return false;
-      }
+  async function deleteUser(): Promise<string | null> {
+    const error = deleteAccountService(token!);
+    if (error) {
+      return error;
     }
-    const newUser: User = {
-      name: name,
+    logout();
+    return null;
+  }
+
+  async function updateUser(
+    email: string,
+    username: string,
+  ): Promise<string | null> {
+    const error = updateUserService(token!, {
       email: email,
-      password: bcrypt.hashSync(password),
-      joinDate: Date.now(),
-    };
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    saveUser(newUser);
-    setUser(newUser);
-    return true;
-  };
+      username: username,
+    });
+    return error;
+  }
+
+  async function updatePassword(
+    password: string
+  ): Promise<string | null> {
+    const error = await changePasswordService(token!, { password: password });
+    return error;
+  }
 
   return (
     <AuthContext.Provider
       value={{
-        user,
-        login,
-        logout,
-        register,
-        deleteUser,
-        updateUser,
-        updatePassword,
-        checkUser,
-        checkRegister
+        token: token,
+        updateCurrentToken: updateCurrentToken,
+        login: login,
+        logout: logout,
+        register: register,
+        deleteUser: deleteUser,
+        updateUser: updateUser,
+        updatePassword: updatePassword,
       }}
     >
       {children}
