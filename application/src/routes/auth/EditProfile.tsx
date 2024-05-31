@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import SoilAlertDialog from "../../components/SoilAlertDialog";
 import { profileService } from "../../shared/services/AuthService";
 
+// TODO(edit-profile): Add loading
 export default function EditProfile() {
   const { token, updateUser } = useContext(AuthContext) as AuthContextValue;
   const navigate = useNavigate();

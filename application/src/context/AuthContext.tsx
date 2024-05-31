@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { loginService, registerService, updateProfileService as updateUserService } from "../shared/services/AuthService";
+import { deleteAccountService, loginService, registerService, updateProfileService as updateUserService } from "../shared/services/AuthService";
 
 export interface AuthContextValue {
   token: string | null;
@@ -7,7 +7,7 @@ export interface AuthContextValue {
   login: (email: string, password: string) => Promise<string | null>;
   logout: () => void;
   register: (email: string, username: string, password: string) => Promise<string | null>;
-  deleteUser: () => void;
+  deleteUser: () => Promise<string | null>;
   updateUser: (email: string, username: string) => Promise<string | null>;
   updatePassword: (currentEmail: string, passwordHash: string) => void;
 }
@@ -45,7 +45,7 @@ export default function AuthProvider({
 
   const logout = () => {
     localStorage.setItem("token", "");
-    return setToken(null);
+    setToken(null);
   };
 
   async function register(
@@ -57,12 +57,13 @@ export default function AuthProvider({
     return error;
   }
 
-  function deleteUser() {
-    // const deletedUser = user?.email;
-    // logout();
-    // let users = getUsersFromLocalStorage();
-    // users = users.filter((u) => u.email != deletedUser);
-    // localStorage.setItem("users", JSON.stringify(users));
+  async function deleteUser(): Promise<string | null> {
+    const error = deleteAccountService(token!);
+    if (error) {
+      return error;
+    }
+    logout();
+    return null;
   }
 
   async function updateUser(

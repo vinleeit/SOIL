@@ -92,7 +92,7 @@ export const updateProfileService = async (
     data: UpdateProfileData,
 ): Promise<string | null> => {
     try {
-        const response = await axios.post<void>(`${URL}/profile`, data, {
+        await axios.post<void>(`${URL}/profile`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -109,6 +109,30 @@ export const updateProfileService = async (
                 return "No data modification is provided";
             }
 
+            return error.response.statusText;
+        } else {
+            console.log(error);
+            return "An unexpected error occurred";
+        }
+    }
+};
+
+export const deleteAccountService = async (
+    token: string,
+): Promise<string | null> => {
+    try {
+        await axios.delete<void>(`${URL}/profile`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return null;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response?.data) {
+                const errorData: ErrorResponse = error.response.data;
+                return errorData.error;
+            }
             return error.response.statusText;
         } else {
             console.log(error);
