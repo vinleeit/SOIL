@@ -2,6 +2,7 @@ import express from "express";
 import { validateToken } from "../middleware/authMiddleware";
 import { normalizeInput } from "../utils";
 import validator from "validator";
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 
@@ -123,6 +124,33 @@ router.delete("/", async (req, res) => {
       .status(500)
       .json({ error: "An error occurred while deleting the profile" });
   }
+});
+
+//change password
+router.put("/password", async (req, res) => {
+  const userId = req.user;
+  const { password } = req.body;
+  console.log(password);
+  const currentUser = await req.models.User.findOne({ where: { id: userId } });
+  if (!currentUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // Check password
+  const strongPasswordRegex =
+    /^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?])[\w!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?]{8,}$/;
+  if (!strongPasswordRegex.test(password)) {
+    return res.status(400).json({
+      error:
+        "Password must be at least 8 characters long, contain at least one uppercase letter, one digit, and one symbol",
+    });
+  }
+  // Change password
+  const hashedPassword = await bcrypt.hash(password, 10);
+  currentUser.setDataValue("password", hashedPassword);
+  await currentUser.save();
+
+  res.sendStatus(200);
 });
 
 export default router;
