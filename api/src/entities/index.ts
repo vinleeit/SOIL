@@ -37,8 +37,30 @@ export const initModels = () => {
   User.hasMany(Review, { onDelete: "CASCADE", onUpdate: "CASCADE" });
   Review.belongsTo(User);
 
-  Review.hasMany(Thread, { onDelete: "CASCADE", onUpdate: "CASCADE" });
-  Thread.belongsTo(Review);
+  User.hasMany(Thread, {
+    foreignKey: "userID",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+  Thread.belongsTo(User, { foreignKey: "userID" });
+
+  Review.hasMany(Thread, {
+    foreignKey: "reviewID",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+  Thread.belongsTo(Review, { foreignKey: "reviewID" });
+
+  Thread.belongsTo(Thread, {
+    foreignKey: "parentThreadID",
+    as: "ParentThread",
+  });
+  Thread.hasMany(Thread, {
+    foreignKey: "parentThreadID",
+    as: "ChildThreads",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
 
   Product.hasMany(Review, { onDelete: "CASCADE", onUpdate: "CASCADE" });
   Review.belongsTo(Product);
@@ -63,5 +85,4 @@ export const initModels = () => {
     CartItem,
   };
 };
-
 export { sequelize };
