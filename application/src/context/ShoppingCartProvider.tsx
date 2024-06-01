@@ -5,6 +5,7 @@ import { AuthContext, AuthContextValue } from "./AuthContext"
 import { serviceAddCartProduct, serviceDeleteCartProduct, serviceGetCart, serviceUpdateCartProduct } from "../shared/services/StoreService"
 
 // TODO(cart): add error and loading
+// ALERT(cart): cart will not reload on refresh, only when website is opened for the first time and when auth change
 type ShoppingCartContext = {
     shoppingCart: Map<number, CartItem>
     setShoppingCart: (shoppingCart: Map<number, CartItem>) => void
