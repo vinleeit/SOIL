@@ -129,11 +129,18 @@ router.delete("/", async (req, res) => {
 //change password
 router.put("/password", async (req, res) => {
   const userId = req.user;
-  const { password } = req.body;
-  console.log(password);
+  const { oldPassword, password } = req.body;
+
   const currentUser = await req.models.User.findOne({ where: { id: userId } });
   if (!currentUser) {
     return res.status(404).json({ message: "User not found" });
+  }
+  const isPasswordValid = await bcrypt.compare(
+    oldPassword,
+    currentUser.dataValues.password,
+  );
+  if (!isPasswordValid) {
+    return res.status(403).json({ message: "Wrong old password" });
   }
 
   // Check password
