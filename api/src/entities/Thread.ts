@@ -2,29 +2,26 @@ import { Model, DataTypes, type Optional, Sequelize } from "sequelize";
 
 interface ThreadAttributes {
   threadID: number;
-  rootThreadID?: number;
-  parentThreadID?: number;
   content: string;
-  isRemoved: boolean;
+  reviewID: number;
+  userID: number;
+  parentThreadID?: number | null;
   isBlocked: boolean;
 }
 
 interface ThreadCreationAttributes
-  extends Optional<
-    ThreadAttributes,
-    "threadID" | "rootThreadID" | "parentThreadID"
-  > {}
+  extends Optional<ThreadAttributes, "threadID" | "isBlocked"> {}
+
+class Thread extends Model<ThreadAttributes, ThreadCreationAttributes> {
+  public threadID!: number;
+  public content!: string;
+  public reviewID!: number;
+  public userID!: number;
+  public parentThreadID?: number | null;
+  public isBlocked!: boolean;
+}
 
 export const ThreadFactory = (sequelize: Sequelize) => {
-  class Thread extends Model<ThreadAttributes, ThreadCreationAttributes> {
-    public threadID!: number;
-    public rootThreadID?: number;
-    public parentThreadID?: number;
-    public content!: string;
-    public isRemoved!: boolean;
-    public isBlocked!: boolean;
-  }
-
   Thread.init(
     {
       threadID: {
@@ -32,20 +29,29 @@ export const ThreadFactory = (sequelize: Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      rootThreadID: {
+      content: {
+        type: DataTypes.STRING(1000),
+      },
+      reviewID: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      userID: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
       parentThreadID: {
         type: DataTypes.INTEGER,
-      },
-      content: {
-        type: DataTypes.TEXT,
-      },
-      isRemoved: {
-        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        references: {
+          model: Thread,
+          key: "threadID",
+        },
+        onDelete: "CASCADE",
       },
       isBlocked: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {
@@ -56,3 +62,5 @@ export const ThreadFactory = (sequelize: Sequelize) => {
 
   return Thread;
 };
+
+export { Thread };

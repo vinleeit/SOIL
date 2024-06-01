@@ -43,7 +43,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"ravel@abcd.com\",\n    \"password\":\"Test@1234\"\n}",
+							"raw": "{\n    \"email\":\"user2@abcd.com\",\n    \"password\":\"Test@1234\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -650,6 +650,199 @@
 								{
 									"key": "reviewID",
 									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Thread",
+			"item": [
+				{
+					"name": "Get all thread for review",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/thread/:reviewID/threads",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"thread",
+								":reviewID",
+								"threads"
+							],
+							"variable": [
+								{
+									"key": "reviewID",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a thread to a review",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"This is not true, item not good 2\"\n    //\"parentThreadID\": 12\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/thread/:reviewID/review",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"thread",
+								":reviewID",
+								"review"
+							],
+							"variable": [
+								{
+									"key": "reviewID",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a thread to another thread",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"This is a comment for the thread\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/thread/:reviewID/thread/:threadID/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"thread",
+								":reviewID",
+								"thread",
+								":threadID",
+								""
+							],
+							"variable": [
+								{
+									"key": "reviewID",
+									"value": "1"
+								},
+								{
+									"key": "threadID",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Thread",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"This is a  comment updated\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/thread/:threadID",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"thread",
+								":threadID"
+							],
+							"variable": [
+								{
+									"key": "threadID",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Thread",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/thread/:threadID",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"thread",
+								":threadID"
+							],
+							"variable": [
+								{
+									"key": "threadID",
+									"value": "4"
 								}
 							]
 						}
