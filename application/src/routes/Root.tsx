@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import SoilHeader from "../components/SoilHeader";
-import ShoppingCartProvider from "../components/ShoppingCartProvider";
+import ShoppingCartProvider from "../context/ShoppingCartProvider";
 
 /*
  * Root Template for the whole website

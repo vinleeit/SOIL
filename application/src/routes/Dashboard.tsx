@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import SoilProductCard from "../components/SoilProductCard";
 import SoilTipCard from "../components/SoilTipCard";
 import GetTodayTip from "../shared/services/TipService";
-import { useShoppingCart } from "../components/ShoppingCartProvider";
+import { useShoppingCart } from "../context/ShoppingCartProvider";
 import { GetProductPrice, Product } from "../types/Product";
 import { serviceGetProducts } from "../shared/services/StoreService";
 import SoilAlertDialog from "../components/SoilAlertDialog";

@@ -1,6 +1,6 @@
 import SoilButton from "../components/SoilButton";
 import { useNavigate } from "react-router-dom";
-import { useShoppingCart } from "../components/ShoppingCartProvider";
+import { useShoppingCart } from "../context/ShoppingCartProvider";
 import SoilCartCard from "../components/SoilCartCard";
 
 export default function ShoppingCart() {
