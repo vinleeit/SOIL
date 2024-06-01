@@ -1,5 +1,3 @@
-import Star from "../assets/star.svg";
-import ChatBubble from "../assets/chat-buble.svg";
 import SoilButton from "./SoilButton";
 import { Link } from "react-router-dom";
 
@@ -7,8 +5,6 @@ type ProductCardProp = {
   title: string;
   price: number;
   discountedPrice?: number;
-  averageRating: number;
-  reviewCount: number;
   photoUrl: string;
   isSpecial: boolean;
   itemInCardQuantity?: number;
@@ -24,8 +20,6 @@ export default function SoilProductCard({
   title,
   price,
   discountedPrice,
-  averageRating,
-  reviewCount,
   photoUrl,
   isSpecial,
   itemInCardQuantity = 0,
@@ -43,24 +37,6 @@ export default function SoilProductCard({
             Special
           </span>
         )}
-        <div className="absolute flex right-3 -bottom-3 space-x-3 bg-yellow-light rounded-md px-3 py-0.5 shadow-md">
-          <div className="space-x-1">
-            <img
-              src={Star}
-              alt=""
-              className="inline-flex items-center size-4"
-            />
-            <span className="text-sm">{averageRating.toFixed(1)}</span>
-          </div>
-          <div className="space-x-1">
-            <img
-              src={ChatBubble}
-              alt=""
-              className="inline-flex items-center size-4"
-            />
-            <span className="text-sm">{reviewCount}</span>
-          </div>
-        </div>
         <img src={photoUrl} alt="" className="h-48 object-contain" />
       </div>
       <div className="p-5 space-y-3 flex flex-col h-60">
