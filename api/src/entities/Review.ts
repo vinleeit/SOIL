@@ -4,6 +4,7 @@ interface ReviewAttributes {
   reviewID: number;
   rating: number;
   review: string;
+  isBlocked: boolean;
 }
 
 interface ReviewCreationAttributes
@@ -12,6 +13,7 @@ class Review extends Model<ReviewAttributes, ReviewCreationAttributes> {
   public reviewID!: number;
   public rating!: number;
   public review!: string;
+  public isBlocked!: boolean;
 }
 
 export const ReviewFactory = (sequelize: Sequelize) => {
@@ -28,6 +30,11 @@ export const ReviewFactory = (sequelize: Sequelize) => {
       review: {
         // The length of around 100 words if each word is 10 characters
         type: DataTypes.STRING(1000),
+      },
+
+      isBlocked: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {
