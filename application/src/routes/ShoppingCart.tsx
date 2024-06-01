@@ -35,15 +35,14 @@ export default function ShoppingCart() {
           cartItems.map((e) => {
             const itemInCardQuantity = getItemQuantity(e.product);
             return (
-              <div>
-                <SoilCartCard
-                  cartItem={e}
-                  itemInCardQuantity={itemInCardQuantity}
-                  onAddItem={addItem}
-                  onReduceItem={reduceItem}
-                  onDeleteItem={deleteItem}
-                />
-              </div>
+              <SoilCartCard
+                key={e.product.id}
+                cartItem={e}
+                itemInCardQuantity={itemInCardQuantity}
+                onAddItem={addItem}
+                onReduceItem={reduceItem}
+                onDeleteItem={deleteItem}
+              />
             );
           })
         )}
@@ -55,8 +54,8 @@ export default function ShoppingCart() {
               cartItems.length == 0
                 ? undefined
                 : () => {
-                    navigate("/checkout");
-                  }
+                  navigate("/checkout");
+                }
             }
           >
             Checkout
