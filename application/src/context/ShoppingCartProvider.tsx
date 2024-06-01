@@ -2,7 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { CartItem } from "../types/CartItem"
 import { GetProductPrice, Product } from "../types/Product"
 import { AuthContext, AuthContextValue } from "./AuthContext"
-import { serviceAddCartProduct, serviceDeleteCartProduct, serviceGetCart } from "../shared/services/StoreService"
+import { serviceAddCartProduct, serviceDeleteCartProduct, serviceGetCart, serviceUpdateCartProduct } from "../shared/services/StoreService"
 
 // TODO(cart): add error and loading
 type ShoppingCartContext = {
@@ -203,13 +203,42 @@ export default function ShoppingCartProvider({
             if (token) {
                 const [cart, _] = await serviceGetCart(token)
                 if (cart) {
-                    setShoppingCart(cart)
+                    const tempCart = new Map(shoppingCart)
+                    tempCart.forEach((v, k) => {
+                        if (cart.has(k)) {
+                            if (cart.get(k)?.quantity != v.quantity) {
+                                // Remote cart has item but quantity is not the same
+                                // Remote cart will follow local quantity
+                                // It is expected that the local quantity is the newest desired
+                                serviceUpdateCartProduct(
+                                    token,
+                                    k,
+                                    { quantity: v.quantity }
+                                )
+                            }
+                        } else {
+                            // Remote cart does not have item
+                            // Item will be added to remote
+                            // It is assumed that new item is intended
+                            serviceAddCartProduct(token, { productId: k, quantity: v.quantity })
+                        }
+                    })
+
+                    cart.forEach((v, k) => {
+                        if (!tempCart.has(k)) {
+                            // Add every remote item to local if not exists
+                            tempCart.set(k, v)
+                        }
+                    })
+                    setShoppingCart(tempCart)
                 }
+            } else {
+                setShoppingCart(new Map())
             }
         }
 
         fetchCart()
-    }, [])
+    }, [token])
 
     return (
         <ShoppingCartContext.Provider value={{

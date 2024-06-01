@@ -30,6 +30,10 @@ interface AddCartData {
     quantity: number;
 }
 
+interface UpdateCartData {
+    quantity: number;
+}
+
 interface ErrorResponse {
     error: string;
 }
@@ -137,13 +141,40 @@ export const serviceAddCartProduct = async (
     }
 };
 
+export const serviceUpdateCartProduct = async (
+    token: string,
+    productId: number,
+    data: UpdateCartData,
+): Promise<string | null> => {
+    try {
+        await axios.post<void>(
+            `${URL}/cart/${productId}`,
+            data,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return null;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            const errorData: ErrorResponse = error.response.data;
+            return errorData.error;
+        } else {
+            console.log(error);
+            return 'An unexpected error occurred';
+        }
+    }
+};
+
 export const serviceDeleteCartProduct = async (
     token: string,
-    cartId: number
+    productId: number
 ): Promise<string | null> => {
     try {
         await axios.delete<void>(
-            `${URL}/cart/${cartId}`,
+            `${URL}/cart/${productId}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
