@@ -1,14 +1,24 @@
-import { useEffect, useState } from "react";
-import { ProductDetail, Review, Thread } from "../types/ProductDetail";
+import { useContext, useEffect, useRef, useState } from "react";
+import { ProductDetail, Thread } from "../types/ProductDetail";
 import { serviceGetProductDetail } from "../shared/services/ProductService";
-import Star from "../assets/star-solid.svg";
-import SoilButton from "../components/SoilButton";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useShoppingCart } from "../context/ShoppingCartProvider";
+import { AuthContext, AuthContextValue } from "../context/AuthContext";
+import { ProfileResponse, profileService } from "../shared/services/AuthService";
+import Star from "../assets/star-solid.svg";
+import Trash from "../assets/trash.svg";
+import SoilButton from "../components/SoilButton";
+import SoilAlertDialog from "../components/SoilAlertDialog";
+import { serviceDeleteReview } from "../shared/services/ReviewService";
 
-const ProductDetailPage: React.FC = () => {
+export default function ProductDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams()
+  const { token } = useContext(AuthContext) as AuthContextValue;
+  const failureDialog = useRef<HTMLDialogElement | null>(null);
+  const [error, setError] = useState('');
   const [product, setProduct] = useState<ProductDetail | null>(null);
+  const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const {
     getItemQuantity,
     addItem,
@@ -23,8 +33,28 @@ const ProductDetailPage: React.FC = () => {
         if (product) {
           setProduct(product);
         }
+        if (error) {
+          setError(error);
+          failureDialog.current?.showModal();
+        }
       }
     }
+
+    const fetchProfile = async () => {
+      if (token) {
+        const [profile, error] = await profileService(token);
+        if (profile) {
+          setProfile(profile);
+        }
+
+        if (error) {
+          setError(error);
+          failureDialog.current?.showModal();
+        }
+      }
+    }
+
+    fetchProfile();
     fetchProductDetail();
   }, []);
 
@@ -34,6 +64,14 @@ const ProductDetailPage: React.FC = () => {
 
   return (
     product && <div className="container mx-auto">
+      <SoilAlertDialog
+        id={"failureDialog"}
+        ref={failureDialog}
+        title={`Error`}
+        description={error}
+        buttonLabel="Ok"
+        onClick={() => failureDialog.current?.close()}
+      />
       <div className="flex">
         <div className="w-1/2">
           <img src={product.imageURL} alt={product.name} className="w-full rounded-lg shadow-lg" />
@@ -87,35 +125,62 @@ const ProductDetailPage: React.FC = () => {
       </div>
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+        {
+          token &&
+          !product.Reviews.find((review) => review.User.username == profile?.username) &&
+          <SoilButton onClick={() => { navigate(`/product/${product.id}/review`) }}>
+            Add Review
+          </SoilButton>
+        }
         {product.Reviews.map((review) => (
-          <ReviewItem key={review.reviewID} review={review} />
+          <div key={review.reviewID} className="border rounded-lg p-4 mb-4">
+            <div className="flex items-center">
+              <div className="flex items-center">
+                {[...Array(review.rating)].map((_, index) => (
+                  <img key={index} src={Star} alt="" className="" />
+                ))}
+              </div>
+              <span className="text-gray-600 ml-2">
+                {review.User.username} - {new Date(review.createdAt).toLocaleDateString()}
+              </span>
+              {
+                token &&
+                review.User.username == profile?.username &&
+                <>
+                  <SoilButton onClick={() => {
+                    navigate(`/product/${product.id}/review/${review.reviewID}/edit`, {
+                      state: {
+                        rating: review.rating,
+                        reviewText: review.review,
+                      }
+                    })
+                  }}>
+                    Edit
+                  </SoilButton>
+                  <Link onClick={async () => {
+                    const error = await serviceDeleteReview(token, review.reviewID)
+                    if (error) {
+                      setError(error);
+                      failureDialog.current?.showModal();
+                      return;
+                    }
+                    window.location.reload();
+                  }} to={""} >
+                    <img src={Trash} alt="" />
+                  </Link>
+                </>
+              }
+            </div>
+            <p className="mt-2">{review.review}</p>
+            <div className="mt-4">
+              {review.Threads.map((thread) => (
+                <ThreadItem key={thread.threadID} thread={thread} />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
-    </div>
-  );
-};
-
-const ReviewItem: React.FC<{ review: Review }> = ({ review }) => {
-  return (
-    <div className="border rounded-lg p-4 mb-4">
-      <div className="flex items-center">
-        <div className="flex items-center">
-
-          {[...Array(review.rating)].map((_, __) => (
-            <img src={Star} alt="" className="" />
-          ))}
-        </div>
-        <span className="text-gray-600 ml-2">
-          {review.User.username} - {new Date(review.createdAt).toLocaleDateString()}
-        </span>
-      </div>
-      <p className="mt-2">{review.review}</p>
-      <div className="mt-4">
-        {review.Threads.map((thread) => (
-          <ThreadItem key={thread.threadID} thread={thread} />
-        ))}
-      </div>
-    </div>
+    </div >
   );
 };
 
@@ -137,5 +202,3 @@ const ThreadItem: React.FC<{ thread: Thread }> = ({ thread }) => {
     </div>
   );
 };
-
-export default ProductDetailPage;
