@@ -19,6 +19,8 @@ import Welcome from "./routes/Welcome";
 import ProductDetailPage from "./routes/PoductDetailPage";
 import AddReview from "./routes/review/AddReview";
 import UpdateReview from "./routes/review/UpdateReview";
+import AddThread from "./routes/thread/AddThread";
+import UpdateThread from "./routes/thread/UpdateThead";
 
 const router = createBrowserRouter([
   {
@@ -102,6 +104,18 @@ const router = createBrowserRouter([
         path: "/product/:productId/review/:reviewId/edit",
         element: <PageWithAuthorization destination="/login" authorized>
           <UpdateReview />
+        </PageWithAuthorization>,
+      },
+      {
+        path: "/product/:productId/review/:reviewId/thread/:threadId?",
+        element: <PageWithAuthorization destination="/login" authorized>
+          <AddThread />
+        </PageWithAuthorization>,
+      },
+      {
+        path: "/product/:productId/thread/:threadId/edit",
+        element: <PageWithAuthorization destination="/login" authorized>
+          <UpdateThread />
         </PageWithAuthorization>,
       }
     ],

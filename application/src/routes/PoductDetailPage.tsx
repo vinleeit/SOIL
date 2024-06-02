@@ -9,7 +9,7 @@ import Star from "../assets/star-solid.svg";
 import Trash from "../assets/trash.svg";
 import SoilButton from "../components/SoilButton";
 import SoilAlertDialog from "../components/SoilAlertDialog";
-import { serviceDeleteReview } from "../shared/services/ReviewService";
+import { serviceDeleteReview, serviceDeleteThread } from "../shared/services/ReviewService";
 
 export default function ProductDetailPage() {
   const navigate = useNavigate();
@@ -172,9 +172,16 @@ export default function ProductDetailPage() {
               }
             </div>
             <p className="mt-2">{review.review}</p>
+            <div className="flex space-x-2">
+              <Link to={""} onClick={() => {
+                navigate(`/product/${product.id}/review/${review.reviewID}/thread`)
+              }} className="text-blue-700 underline">
+                reply
+              </Link>
+            </div>
             <div className="mt-4">
               {review.Threads.map((thread) => (
-                <ThreadItem key={thread.threadID} thread={thread} />
+                <ThreadItem key={thread.threadID} productId={product.id} username={profile?.username ?? ''} thread={thread} />
               ))}
             </div>
           </div>
@@ -182,9 +189,15 @@ export default function ProductDetailPage() {
       </div>
     </div >
   );
-};
+}
 
-const ThreadItem: React.FC<{ thread: Thread }> = ({ thread }) => {
+const ThreadItem: React.FC<{ productId: number, username: string, thread: Thread }> = ({
+  productId,
+  username,
+  thread,
+}) => {
+  const { token } = useContext(AuthContext) as AuthContextValue;
+  const navigate = useNavigate();
   return (
     <div className="border rounded-lg p-2 mb-2 ml-4">
       <div className="flex items-center">
@@ -194,9 +207,42 @@ const ThreadItem: React.FC<{ thread: Thread }> = ({ thread }) => {
         </span>
       </div>
       <p className="mt-1">{thread.content}</p>
+      <div className="flex space-x-2">
+        <Link to={""} onClick={() => {
+          navigate(`/product/${productId}/review/${thread.reviewID}/thread/${thread.threadID}`)
+        }} className="text-blue-700 underline">
+          reply
+        </Link>
+        {
+          thread.User.username === username && <Link to={""} onClick={async () => {
+            if (token) {
+              const error = await serviceDeleteThread(token, thread.threadID)
+              if (!error) {
+                window.location.reload();
+              }
+            }
+          }} className="text-blue-700 underline">
+            delete
+          </Link>
+        }
+        {
+          thread.User.username === username && <SoilButton onClick={async () => {
+            navigate(
+              `/product/${productId}/thread/${thread.threadID}/edit`,
+              {
+                state: {
+                  content: thread.content
+                }
+              }
+            )
+          }} >
+            edit
+          </SoilButton>
+        }
+      </div>
       <div className="mt-2">
         {thread.ChildThreads.map((childThread) => (
-          <ThreadItem key={childThread.threadID} thread={childThread} />
+          <ThreadItem key={childThread.threadID} productId={productId} username={username} thread={childThread} />
         ))}
       </div>
     </div>
