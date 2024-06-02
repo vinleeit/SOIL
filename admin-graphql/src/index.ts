@@ -1,9 +1,11 @@
 import express from "express";
+import cors from "cors";
 import { graphqlHTTP } from "express-graphql";
 import { initModels } from "./entities";
 import { schema } from "./schema";
 
 const app = express();
+app.use(cors());
 const { User, Review, Product, Thread } = initModels();
 
 const root = {
