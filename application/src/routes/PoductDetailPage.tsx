@@ -171,7 +171,7 @@ export default function ProductDetailPage() {
                 </>
               }
             </div>
-            <p className="mt-2">{review.review}</p>
+            <p className="mt-2">{review.isBlocked ? "This review is blocked by Admin" : review.review}</p>
             <div className="flex space-x-2">
               <Link to={""} onClick={() => {
                 navigate(`/product/${product.id}/review/${review.reviewID}/thread`)
@@ -206,7 +206,7 @@ const ThreadItem: React.FC<{ productId: number, username: string, thread: Thread
           {new Date(thread.createdAt).toLocaleDateString()}
         </span>
       </div>
-      <p className="mt-1">{thread.content}</p>
+      <p className="mt-1">{thread.isBlocked ? "This reply is blocked by admin": thread.content}</p>
       <div className="flex space-x-2">
         <Link to={""} onClick={() => {
           navigate(`/product/${productId}/review/${thread.reviewID}/thread/${thread.threadID}`)
