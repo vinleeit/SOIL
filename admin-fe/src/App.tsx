@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 
 export default function App() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <div className="flex bg-black text-white px-8 py-3 items-center">
         <Link to={"/"}>Admin Panel</Link>
         <div className="flex-1 flex justify-end space-x-1">
@@ -26,7 +26,9 @@ export default function App() {
           </Link>
         </div>
       </div>
-      <Outlet />
+      <div className="flex h-full grow">
+        <Outlet />
+      </div>
     </div>
   );
 }
