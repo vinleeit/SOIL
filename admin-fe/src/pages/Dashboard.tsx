@@ -13,7 +13,7 @@ export default function Dashboard() {
           Management
         </Link>
         <Link
-          to={"/users"}
+          to={"/reviews"}
           className=" text-center border border-black p-4 rounded hover:shadow-xl"
         >
           Review
@@ -21,7 +21,7 @@ export default function Dashboard() {
           Management
         </Link>
         <Link
-          to={"/users"}
+          to={"/products"}
           className=" text-center border border-black p-4 rounded hover:shadow-xl"
         >
           Product

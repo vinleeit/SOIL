@@ -55,7 +55,11 @@ export default function Users() {
     refetch();
   };
   return (
-    <div className="px-8 py-2 grow flex flex-col items-center justify-center">
+    <div className="px-8 py-8 grow flex flex-col items-center ">
+      <div className="flex justify-between w-full">
+        <h1 className="mb-4 text-2xl">User Management</h1>
+        <div></div>
+      </div>
       <table className="table-auto w-full text-left border-collapse">
         <thead>
           <tr className="bg-gray-100">

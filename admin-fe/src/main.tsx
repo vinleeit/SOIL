@@ -9,9 +9,12 @@ import Users from "./pages/Users.tsx";
 import Reviews from "./pages/Reviews.tsx";
 import Products from "./pages/Products.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
+import AddProduct from "./pages/AddProduct.tsx";
+import EditProduct from "./pages/EditProduct.tsx";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
+
   cache: new InMemoryCache(),
 });
 
@@ -35,7 +38,20 @@ const router = createBrowserRouter([
       },
       {
         path: "/products/",
-        element: <Products />,
+        children: [
+          {
+            path: "",
+            element: <Products />,
+          },
+          {
+            path: "add",
+            element: <AddProduct />,
+          },
+          {
+            path: "edit",
+            element: <EditProduct />,
+          },
+        ],
       },
     ],
   },
