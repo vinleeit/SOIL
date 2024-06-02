@@ -9,7 +9,7 @@ export interface AuthContextValue {
   register: (email: string, username: string, password: string) => Promise<string | null>;
   deleteUser: () => Promise<string | null>;
   updateUser: (email: string, username: string) => Promise<string | null>;
-  updatePassword: (password: string) => Promise<string | null>;
+  updatePassword: (oldPassword: string, newPassword: string) => Promise<string | null>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -78,9 +78,16 @@ export default function AuthProvider({
   }
 
   async function updatePassword(
-    password: string
+    oldPassword: string,
+    newPassword: string,
   ): Promise<string | null> {
-    const error = await changePasswordService(token!, { password: password });
+    const error = await changePasswordService(
+      token!,
+      {
+        oldPassword: oldPassword,
+        password: newPassword,
+      },
+    );
     return error;
   }
 
