@@ -59,6 +59,10 @@ router.get("/:id", async (req, res) => {
           model: req.models.Review,
           include: [
             {
+              model: req.models.User,
+              attributes: ["id", "username"], // Include both id and username fields
+            },
+            {
               model: req.models.Thread,
               where: {
                 parentThreadID: null, // Exclude threads that have a parent
@@ -66,13 +70,25 @@ router.get("/:id", async (req, res) => {
               required: false, // Allow reviews without associated threads
               include: [
                 {
+                  model: req.models.User,
+                  attributes: ["id", "username"], // Include both id and username fields
+                },
+                {
                   model: req.models.Thread,
                   as: "ChildThreads",
                   include: [
                     {
+                      model: req.models.User,
+                      attributes: ["id", "username"], // Include both id and username fields
+                    },
+                    {
                       model: req.models.Thread,
                       as: "ChildThreads",
                       include: [
+                        {
+                          model: req.models.User,
+                          attributes: ["id", "username"], // Include both id and username fields
+                        },
                         {
                           model: req.models.Thread,
                           as: "ChildThreads",
@@ -97,6 +113,7 @@ router.get("/:id", async (req, res) => {
       //@ts-ignore
       return threads.map((thread) => ({
         ...thread.toJSON(),
+        User: thread.User ? thread.User.toJSON() : null,
         ChildThreads: formatThreads(thread.ChildThreads),
       }));
     };
@@ -106,6 +123,7 @@ router.get("/:id", async (req, res) => {
       //@ts-ignore
       Reviews: product.Reviews.map((review) => ({
         ...review.toJSON(),
+        User: review.User ? review.User.toJSON() : null,
         Threads: review.Threads ? formatThreads(review.Threads) : [],
       })),
     };
