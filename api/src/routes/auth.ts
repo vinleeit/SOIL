@@ -106,7 +106,7 @@ router.post("/login", async (req, res) => {
     }
 
     // If the user is blocked, return an error
-    if (user.isBlocked) {
+    if (user.dataValues.isBlocked) {
       return res.status(403).json({ error: "User is blocked" });
     }
 
