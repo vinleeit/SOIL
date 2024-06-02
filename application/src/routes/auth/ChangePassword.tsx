@@ -12,15 +12,20 @@ export default function ChangePassword() {
   const dialog = useRef<HTMLDialogElement | null>(null);
   const failureDialog = useRef<HTMLDialogElement | null>(null);
   const [error, setError] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [passwordError, setPasswordError] = useState("");
-  const [newPasswordError, setNewPasswordError] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setpasswordError] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [newPasswordError, setNewPasswordError] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   async function editProfile(e: FormEvent) {
     e.preventDefault();
     let success = true;
+    if (password.length === 0) {
+      setpasswordError("Password must not be empty");
+      success = false;
+    }
+
     // Check if the password is correct by comparing the hash
     if (newPassword.length === 0) {
       setNewPasswordError("Password must not be empty");
@@ -48,7 +53,7 @@ export default function ChangePassword() {
     }
     if (success) {
       // Update user's password with a new hash
-      const error = await updatePassword(newPassword);
+      const error = await updatePassword(password, newPassword);
       if (error) {
         setError(error);
         failureDialog.current?.showModal();
@@ -78,19 +83,15 @@ export default function ChangePassword() {
       <section className="w-2/3 max-w-96 my-16 p-8 bg-stone-100 rounded border text-stone-900">
         <h1 className="text-4xl font-bold mb-3">Change Password</h1>
         <form className="space-y-1" onSubmit={editProfile}>
-          {/* <div>
+          <div>
             <label className="text-sm font-bold">Old Password</label>
             <SoilTextField
               type="password"
               value={password}
+              errMsg={passwordError}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {passwordError && (
-              <span className="block text-sm mt-2 text-red-500">
-                {passwordError}
-              </span>
-            )}
-          </div> */}
+          </div>
           <div>
             <label className="text-sm font-bold">New Password</label>
             <SoilTextField
@@ -105,13 +106,9 @@ export default function ChangePassword() {
               type="password"
               value={confirmNewPassword}
               onChange={(e) => setConfirmNewPassword(e.target.value)}
+              errMsg={newPasswordError}
             />
           </div>
-          {newPasswordError && (
-            <span className="block text-sm mt-2 text-red-500">
-              {newPasswordError}
-            </span>
-          )}
           <div className="pt-6 flex justify-end flex-col space-y-2">
             <SoilButton fullWidth>Edit</SoilButton>
             <SoilButton fullWidth onClick={() => navigate("/profile")} outlined>

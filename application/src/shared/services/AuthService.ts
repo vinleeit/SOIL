@@ -33,7 +33,12 @@ interface UpdateProfileData {
 }
 
 interface ChangePasswordData {
+    oldPassword: string;
     password: string;
+}
+
+interface ChangePasswordErrorResponse {
+    message: string;
 }
 
 export const loginService = async (
@@ -163,8 +168,8 @@ export const changePasswordService = async (
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             if (error.response?.data) {
-                const errorData: ErrorResponse = error.response.data;
-                return errorData.error;
+                const errorData: ChangePasswordErrorResponse = error.response.data;
+                return errorData.message;
             }
             return error.response.statusText;
         } else {
