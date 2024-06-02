@@ -71,8 +71,18 @@ export const initModels = () => {
   Product.hasMany(CartItem, { onDelete: "CASCADE", onUpdate: "CASCADE" });
   CartItem.belongsTo(Product);
 
-  User.hasMany(UserFollow, { foreignKey: "followerId", as: "Followers" });
-  User.hasMany(UserFollow, { foreignKey: "followingId", as: "Following" });
+  User.hasMany(UserFollow, {
+    foreignKey: "followerId",
+    as: "Followers",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
+  User.hasMany(UserFollow, {
+    foreignKey: "followingId",
+    as: "Following",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  });
   UserFollow.belongsTo(User, { foreignKey: "followerId", as: "Follower" });
   UserFollow.belongsTo(User, { foreignKey: "followingId", as: "Following" });
 
