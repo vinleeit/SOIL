@@ -147,7 +147,7 @@ export const serviceUpdateCartProduct = async (
     data: UpdateCartData,
 ): Promise<string | null> => {
     try {
-        await axios.post<void>(
+        await axios.put<void>(
             `${URL}/cart/${productId}`,
             data,
             {
