@@ -4,7 +4,7 @@ import SoilLogo from "../components/SoilLogo";
 import Menu from "../assets/menu.svg";
 import Cart from "../assets/cart.svg";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useShoppingCart } from "./ShoppingCartProvider";
+import { useShoppingCart } from "../context/ShoppingCartProvider";
 import { AuthContext, AuthContextValue } from "../context/AuthContext";
 
 /**

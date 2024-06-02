@@ -1,5 +1,5 @@
 import { Navigate, useNavigate } from "react-router-dom";
-import { useShoppingCart } from "../components/ShoppingCartProvider";
+import { useShoppingCart } from "../context/ShoppingCartProvider";
 import SoilButton from "../components/SoilButton";
 import SoilTextField from "../components/SoilTextField";
 import { FormEvent, useState } from "react";
@@ -185,20 +185,21 @@ export default function Checkout() {
         <p className="text-3xl">Checkout</p>
         <CheckoutSection title="Items">
           {cartItems.map((e) => {
+            const isProductSpecial = e.product.discountAmount > 0;
             return (
               <div
                 key={e.product.id}
                 className="flex flex-col lg:flex-row w-full p-5 rounded-md border justify-between"
               >
-                <p>{e.product.title}</p>
+                <p>{e.product.name}</p>
                 <div className="flex justify-between lg:space-x-8">
                   <p className="font-bold space-x-1">
                     <span
                       className={
-                        !e.product.isSpecial ? "" : "text-sm line-through"
+                        !isProductSpecial ? "" : "text-sm line-through"
                       }
                     >{`$${e.product.price.toFixed(2)}`}</span>
-                    {!e.product.isSpecial ? (
+                    {!isProductSpecial ? (
                       <></>
                     ) : (
                       <span>{`$${GetProductPrice(e.product).toFixed(2)}`}</span>

@@ -1,23 +1,56 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SoilProductCard from "../components/SoilProductCard";
-import { GetProducts } from "../shared/services/ProductService";
 import SoilTipCard from "../components/SoilTipCard";
 import GetTodayTip from "../shared/services/TipService";
-import { useShoppingCart } from "../components/ShoppingCartProvider";
-import { GetProductPrice } from "../types/Product";
-import { Review } from "../types/Review";
+import { useShoppingCart } from "../context/ShoppingCartProvider";
+import { GetProductPrice, Product } from "../types/Product";
+import { serviceGetProducts } from "../shared/services/StoreService";
+import SoilAlertDialog from "../components/SoilAlertDialog";
+
+interface ProductProp {
+  products: Product[],
+}
 
 /*
  * Landing page component
  * */
 export default function Dashboard() {
+  const failureDialog = useRef<HTMLDialogElement | null>(null);
+  const [error, setError] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
+
   const tip = GetTodayTip();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const [products, error] = await serviceGetProducts();
+      if (products) {
+        setProducts(products);
+      }
+
+      if (error) {
+        setError(error);
+        failureDialog.current?.showModal();
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <div className="flex flex-col items-center">
+      <SoilAlertDialog
+        id={"failureDialog"}
+        ref={failureDialog}
+        title={`Error`}
+        description={error}
+        buttonLabel="Ok"
+        onClick={() => failureDialog.current?.close()}
+      />
       <Jumbotron />
       <WhyOrganicCards />
       <div className="lg:w-2/3 space-y-16 px-10 py-20">
-        <WeeklySpecialDealsSection />
+        <WeeklySpecialDealsSection products={products} />
         <section>
           <SoilTipCard
             title={tip.title}
@@ -25,34 +58,25 @@ export default function Dashboard() {
             action={tip.source}
           />
         </section>
-        <ProductsSection />
+        <ProductsSection products={products} />
       </div>
     </div>
   );
 }
-function ProductsSection() {
-  const products = GetProducts();
+function ProductsSection({ products }: ProductProp) {
   const shoppingCartContext = useShoppingCart();
   return (
     <section className="space-y-6">
       <p className="text-3xl">Our Products</p>
       <div className="gap-5 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4">
-        {products
-          .filter((product) => !product.isSpecial)
+        {products.length > 0 && products
           .map((product) => (
             <React.Fragment key={product.id}>
               <SoilProductCard
-                title={product.title}
+                title={product.name}
                 price={product.price}
-                averageRating={
-                  product.reviews.reduce(
-                    (sum: number, review: Review) => sum + review.rating,
-                    0,
-                  ) / product.reviews.length
-                }
-                reviewCount={product.reviews.length}
-                photoUrl={product.photoUrl}
-                isSpecial={product.isSpecial}
+                photoUrl={product.imageURL}
+                isSpecial={product.discountAmount > 0}
                 itemInCardQuantity={shoppingCartContext.getItemQuantity(
                   product,
                 )}
@@ -67,31 +91,23 @@ function ProductsSection() {
   );
 }
 
-function WeeklySpecialDealsSection() {
-  const products = GetProducts();
+function WeeklySpecialDealsSection({ products }: ProductProp) {
   const shoppingCartContext = useShoppingCart();
   return (
     <section className="space-y-6">
       <p className="text-3xl">This Week's Special Deals</p>
       <div className="gap-5 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4">
         {products
-          .filter((product) => product.isSpecial)
+          .filter((product) => product.discountAmount > 0)
           .slice(0, 4)
           .map((product) => (
             <React.Fragment key={product.id}>
               <SoilProductCard
-                title={product.title}
+                title={product.name}
                 price={product.price}
                 discountedPrice={GetProductPrice(product)}
-                averageRating={
-                  product.reviews.reduce(
-                    (sum: number, review: Review) => sum + review.rating,
-                    0,
-                  ) / product.reviews.length
-                }
-                reviewCount={product.reviews.length}
-                photoUrl={product.photoUrl}
-                isSpecial={product.isSpecial}
+                photoUrl={product.imageURL}
+                isSpecial={product.discountAmount > 0}
                 itemInCardQuantity={shoppingCartContext.getItemQuantity(
                   product,
                 )}

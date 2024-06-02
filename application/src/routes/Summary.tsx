@@ -20,8 +20,8 @@ export default function Checkout() {
         {/* Show each item */}
         {(location.state.items as CartItem[]).map((e) => {
           return (
-            <div className="flex flex-col lg:flex-row w-full p-5 rounded-md border justify-between">
-              <p>{e.product.title}</p>
+            <div key={e.id} className="flex flex-col lg:flex-row w-full p-5 rounded-md border justify-between">
+              <p>{e.product.name}</p>
               <div className="flex justify-between lg:space-x-8">
                 <p>
                   ${GetProductPrice(e.product).toFixed(2)} x {e.quantity}

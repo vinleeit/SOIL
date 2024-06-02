@@ -22,17 +22,18 @@ export default function SoilCartCard({
   onReduceItem,
   onDeleteItem,
 }: SoilCartCardProp) {
+  const isProductSpecial = cartItem.product.discountAmount > 0;
   return (
     <div className="flex shadow-md border-t-2">
       <img
-        src={cartItem.product.photoUrl}
+        src={cartItem.product.imageURL}
         alt=""
         className="w-24 object-cover"
       />
       <div className="flex flex-col p-5 space-y-3 grow">
         <div className="flex flex-col space-y-1">
           <div className="flex">
-            {cartItem.product.isSpecial ? (
+            {isProductSpecial ? (
               <p className="px-5 py-1 bg-red-100 text-red-800  rounded-md ">
                 Special
               </p>
@@ -40,16 +41,16 @@ export default function SoilCartCard({
               <></>
             )}
           </div>
-          <p>{cartItem.product.title}</p>
+          <p>{cartItem.product.name}</p>
           <p className="font-bold space-x-1">
-            {!cartItem.product.isSpecial ? (
+            {!isProductSpecial ? (
               <></>
             ) : (
               <span>{`$${GetProductPrice(cartItem.product).toFixed(2)}`}</span>
             )}
             <span
               className={
-                !cartItem.product.isSpecial ? "" : "text-sm line-through"
+                !isProductSpecial ? "" : "text-sm line-through"
               }
             >{`$${cartItem.product.price.toFixed(2)}`}</span>
           </p>

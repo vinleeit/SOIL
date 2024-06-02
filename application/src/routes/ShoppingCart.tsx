@@ -1,6 +1,6 @@
 import SoilButton from "../components/SoilButton";
 import { useNavigate } from "react-router-dom";
-import { useShoppingCart } from "../components/ShoppingCartProvider";
+import { useShoppingCart } from "../context/ShoppingCartProvider";
 import SoilCartCard from "../components/SoilCartCard";
 
 export default function ShoppingCart() {
@@ -35,15 +35,14 @@ export default function ShoppingCart() {
           cartItems.map((e) => {
             const itemInCardQuantity = getItemQuantity(e.product);
             return (
-              <div>
-                <SoilCartCard
-                  cartItem={e}
-                  itemInCardQuantity={itemInCardQuantity}
-                  onAddItem={addItem}
-                  onReduceItem={reduceItem}
-                  onDeleteItem={deleteItem}
-                />
-              </div>
+              <SoilCartCard
+                key={e.product.id}
+                cartItem={e}
+                itemInCardQuantity={itemInCardQuantity}
+                onAddItem={addItem}
+                onReduceItem={reduceItem}
+                onDeleteItem={deleteItem}
+              />
             );
           })
         )}
@@ -55,8 +54,8 @@ export default function ShoppingCart() {
               cartItems.length == 0
                 ? undefined
                 : () => {
-                    navigate("/checkout");
-                  }
+                  navigate("/checkout");
+                }
             }
           >
             Checkout
