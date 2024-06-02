@@ -5,6 +5,10 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Error from "./pages/Users.tsx";
+import Users from "./pages/Users.tsx";
+import Reviews from "./pages/Reviews.tsx";
+import Products from "./pages/Products.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -19,19 +23,19 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <div>dashboard</div>,
+        element: <Dashboard />,
       },
       {
         path: "/users/",
-        element: <div>Users</div>,
+        element: <Users></Users>,
       },
       {
         path: "/reviews/",
-        element: <div>Users</div>,
+        element: <Reviews />,
       },
       {
-        path: "/product/",
-        element: <div>Users</div>,
+        path: "/products/",
+        element: <Products />,
       },
     ],
   },
