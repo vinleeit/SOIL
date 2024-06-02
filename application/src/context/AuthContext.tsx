@@ -23,7 +23,9 @@ export default function AuthProvider({
 }) {
   const [token, setToken] = useState<string | null>(null);
 
-  useEffect(updateCurrentToken, []);
+  useEffect(() => {
+    updateCurrentToken()
+  }, []);
 
   function updateCurrentToken() {
     const token = localStorage.getItem("token");

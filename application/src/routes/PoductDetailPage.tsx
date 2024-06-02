@@ -56,7 +56,7 @@ export default function ProductDetailPage() {
 
     fetchProfile();
     fetchProductDetail();
-  }, []);
+  }, [token]);
 
   if (!product) {
     return <div>Loading...</div>;

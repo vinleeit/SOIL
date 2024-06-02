@@ -17,7 +17,7 @@ export default function UpdateThread() {
     const [contentError, setContentError] = useState<string>('');
 
     useEffect(() => {
-        const initialContent = location.state.threadContent;
+        const initialContent = location.state.content;
         if (initialContent) {
             setInitialContent(initialContent);
             setContent(initialContent);
