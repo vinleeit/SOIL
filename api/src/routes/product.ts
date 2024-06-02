@@ -53,13 +53,64 @@ router.get("/", async (req, res) => {
 // Get a specific product by ID
 router.get("/:id", async (req, res) => {
   try {
-    const product = await req.models.Product.findByPk(req.params.id);
+    const product = await req.models.Product.findByPk(req.params.id, {
+      include: [
+        {
+          model: req.models.Review,
+          include: [
+            {
+              model: req.models.Thread,
+              where: {
+                parentThreadID: null, // Exclude threads that have a parent
+              },
+              required: false, // Allow reviews without associated threads
+              include: [
+                {
+                  model: req.models.Thread,
+                  as: "ChildThreads",
+                  include: [
+                    {
+                      model: req.models.Thread,
+                      as: "ChildThreads",
+                      include: [
+                        {
+                          model: req.models.Thread,
+                          as: "ChildThreads",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
 
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    res.json(product);
+    //@ts-ignore
+    const formatThreads = (threads) => {
+      //@ts-ignore
+      return threads.map((thread) => ({
+        ...thread.toJSON(),
+        ChildThreads: formatThreads(thread.ChildThreads),
+      }));
+    };
+
+    const formattedProduct = {
+      ...product.toJSON(),
+      //@ts-ignore
+      Reviews: product.Reviews.map((review) => ({
+        ...review.toJSON(),
+        Threads: review.Threads ? formatThreads(review.Threads) : [],
+      })),
+    };
+
+    res.json(formattedProduct);
   } catch (error) {
     console.error("Error fetching product:", error);
     res
@@ -67,5 +118,4 @@ router.get("/:id", async (req, res) => {
       .json({ error: "An error occurred while fetching the product" });
   }
 });
-
 export default router;
