@@ -60,7 +60,7 @@ export default function AuthProvider({
   }
 
   async function deleteUser(): Promise<string | null> {
-    const error = deleteAccountService(token!);
+    const error = await deleteAccountService(token!);
     if (error) {
       return error;
     }
