@@ -16,6 +16,8 @@ import Checkout from "./routes/Checkout";
 import Summary from "./routes/Summary";
 import ChangePassword from "./routes/auth/ChangePassword";
 import Welcome from "./routes/Welcome";
+import ProductDetailPage from "./routes/product-detail/PoductDetailPage";
+import FollowingList from "./routes/Following";
 
 const router = createBrowserRouter([
   {
@@ -74,6 +76,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/following",
+        element: (
+          <PageWithAuthorization destination="/login" authorized>
+            <FollowingList />
+          </PageWithAuthorization>
+        ),
+      },
+      {
         path: "/cart",
         element: <ShoppingCart />,
       },
@@ -84,6 +94,10 @@ const router = createBrowserRouter([
       {
         path: "/summary",
         element: <Summary />,
+      },
+      {
+        path: "/product/:id",
+        element: <ProductDetailPage />,
       },
     ],
   },

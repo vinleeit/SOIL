@@ -1,5 +1,6 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
 
+// Table representing user following other user relatoinship
 class UserFollow extends Model {
   public id!: number;
   public followerId!: number;

@@ -4,7 +4,7 @@ import { validateToken } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-// Create a new product
+// Create a new product (THIS ROUTE IS ONLY USED IN DEV)
 router.post("/", validateToken, async (req, res) => {
   try {
     const { name, description, price, imageURL, discountAmount } = req.body;
@@ -53,6 +53,7 @@ router.get("/", async (req, res) => {
 // Get a specific product by ID
 router.get("/:id", async (req, res) => {
   try {
+    // Get products including review and thread
     const product = await req.models.Product.findByPk(req.params.id, {
       include: [
         {
@@ -108,24 +109,34 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
+    // Block reviews if they are blocked/moderated by admin
     //@ts-ignore
     const formatThreads = (threads) => {
       //@ts-ignore
       return threads.map((thread) => ({
         ...thread.toJSON(),
+        content: thread.dataValues.isBlocked
+          ? "[**** This review has been deleted by the admin ***]"
+          : thread.dataValues.content,
         User: thread.User ? thread.User.toJSON() : null,
         ChildThreads: formatThreads(thread.ChildThreads),
       }));
     };
 
+    // Block reviews if they are blocked/moderated by admin
     const formattedProduct = {
       ...product.toJSON(),
       //@ts-ignore
-      Reviews: product.Reviews.map((review) => ({
-        ...review.toJSON(),
-        User: review.User ? review.User.toJSON() : null,
-        Threads: review.Threads ? formatThreads(review.Threads) : [],
-      })),
+      Reviews: product.Reviews.map((review) => {
+        return {
+          ...review.toJSON(),
+          review: review.dataValues.isBlocked
+            ? "[**** This review has been deleted by the admin ***]"
+            : review.dataValues.review,
+          User: review.User ? review.User.toJSON() : null,
+          Threads: review.Threads ? formatThreads(review.Threads) : [],
+        };
+      }),
     };
 
     res.json(formattedProduct);

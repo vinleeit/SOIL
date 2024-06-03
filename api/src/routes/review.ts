@@ -1,6 +1,7 @@
 import express from "express";
 import { validateToken } from "../middleware/authMiddleware";
 import { User } from "../entities/User";
+import axios from "axios";
 
 const router = express.Router();
 
@@ -62,16 +63,31 @@ router.post("/:productId", validateToken, async (req, res) => {
       return res.status(404).json({ error: "Product not found." });
     }
 
-    // Check if the user has already left a review for this product
-    const existingReview = await req.models.Review.findOne({
-      //@ts-ignore
-      where: { UserId: userId, ProductId: productId },
+    // Check if user that add the product still exists (or abaandoned token)
+    const currentUser = await req.models.User.findOne({
+      where: { id: userId },
     });
-    if (existingReview) {
-      return res
-        .status(400)
-        .json({ error: "User has already left a review for this product." });
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    // Blocked user cannot leave review
+    if (currentUser.dataValues.isBlocked) {
+      return res
+        .status(403)
+        .json({ message: "Blocked user cannot leave review" });
+    }
+    // According to the tutor on the discussoin, a user can leave many reviews
+    // Check if the user has already left a review for this product
+    // const existingReview = await req.models.Review.findOne({
+    //   //@ts-ignore
+    //   where: { UserId: userId, ProductId: productId },
+    // });
+    // if (existingReview) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "User has already left a review for this product." });
+    // }
 
     // Create a new review
     const newReview = await req.models.Review.create({
@@ -81,8 +97,8 @@ router.post("/:productId", validateToken, async (req, res) => {
       UserId: userId,
       ProductId: productId,
     });
-
     newReview.setDataValue("reviewID", newReview.reviewID);
+    await axios.post("http://localhost:4000/refresh-review");
     res.status(201).json(newReview.dataValues);
   } catch (error) {
     console.error("Error adding review:", error);

@@ -8,6 +8,7 @@ type ProductCardProp = {
   photoUrl: string;
   isSpecial: boolean;
   itemInCardQuantity?: number;
+  onCardClicked?: React.MouseEventHandler<HTMLDivElement>;
   onAddItem?: React.MouseEventHandler<HTMLButtonElement>;
   onReduceItem?: React.MouseEventHandler<HTMLButtonElement>;
   onDeleteItem?: React.MouseEventHandler<HTMLAnchorElement>;
@@ -23,12 +24,13 @@ export default function SoilProductCard({
   photoUrl,
   isSpecial,
   itemInCardQuantity = 0,
+  onCardClicked,
   onAddItem,
   onReduceItem,
   onDeleteItem,
 }: ProductCardProp) {
   return (
-    <div className="max-w-xs rounded-md bg-white shadow-md">
+    <div onClick={onCardClicked} className="max-w-xs rounded-md bg-white shadow-md">
       <div className="relative flex justify-center items-center p-5 bg-gray-50">
         {!isSpecial ? (
           <></>
@@ -55,23 +57,43 @@ export default function SoilProductCard({
         </div>
         <div className="flex-grow flex flex-col space-y-3 items-center justify-end">
           {itemInCardQuantity <= 0 ? (
-            <SoilButton onClick={onAddItem} fullWidth outlined>
+            <SoilButton onClick={(event) => {
+              event.stopPropagation()
+              if (onAddItem) {
+                onAddItem(event)
+              }
+            }} fullWidth outlined>
               Add To Cart
             </SoilButton>
           ) : (
             <div className="flex justify-center items-center space-x-3">
-              <SoilButton outlined onClick={onReduceItem}>
+              <SoilButton outlined onClick={(event) => {
+                event.stopPropagation()
+                if (onReduceItem) {
+                  onReduceItem(event)
+                }
+              }}>
                 -
               </SoilButton>
               <p>{itemInCardQuantity}</p>
-              <SoilButton outlined onClick={onAddItem}>
+              <SoilButton outlined onClick={(event) => {
+                event.stopPropagation()
+                if (onAddItem) {
+                  onAddItem(event)
+                }
+              }}>
                 +
               </SoilButton>
             </div>
           )}
           {itemInCardQuantity > 0 ? (
             <div className="flex w-full justify-center">
-              <Link to={""} onClick={onDeleteItem} className="text-red-600">
+              <Link to={""} onClick={(event) => {
+                event.stopPropagation()
+                if (onDeleteItem) {
+                  onDeleteItem(event)
+                }
+              }} className="text-red-600">
                 Remove
               </Link>
             </div>

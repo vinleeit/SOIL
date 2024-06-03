@@ -56,57 +56,60 @@ export default function Users() {
   };
   return (
     <div className="px-8 py-8 grow flex flex-col items-center ">
-      <div className="flex justify-between w-full">
-        <h1 className="mb-4 text-2xl">User Management</h1>
-        <div></div>
+      <div className="flex mb-4 justify-between w-full flex-col">
+        <h1 className="text-2xl">User Management</h1>
+        <p>Manage user, and prevent suspicious user from posting new reviews</p>
       </div>
-      <table className="table-auto w-full text-left border-collapse">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              ID
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Email
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Username
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              User Status
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.users.map((u: UserData) => (
-            <tr key={u.id} className="hover:bg-gray-100">
-              <td className="px-4 py-2 border border-gray-300">{u.id}</td>
-              <td className="px-4 py-2 border border-gray-300">{u.email}</td>
-              <td className="px-4 py-2 border border-gray-300">{u.username}</td>
-              <td className="px-4 py-2 border border-gray-300">
-                {u.isBlocked ? (
-                  <span className="text-red-500 font-bold">Blocked</span>
-                ) : (
-                  <span className="text-green-500 font-bold">Active</span>
-                )}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                <button
-                  className="px-3 py-1 rounded border-2"
-                  onClick={
-                    !u.isBlocked ? () => block(u.id) : () => unblock(u.id)
-                  }
-                >
-                  {u.isBlocked ? "Unblock" : "Block"}
-                </button>
-              </td>
+      <div className="overflow-x-auto border w-full">
+        <table className="w-full text-sm text-left text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                ID
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Email
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Username
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Status
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.users.map((u: UserData) => (
+              <tr key={u.id}>
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                >
+                  {u.id}
+                </th>
+                <td className="px-6 py-4">{u.email}</td>
+                <td className="px-6 py-4">{u.username}</td>
+                <td className="px-6 py-4">
+                  {u.isBlocked ? "Inactive" : "Active"}
+                </td>
+                <td className="px-6 py-4">
+                  <button
+                    onClick={
+                      u.isBlocked ? () => unblock(u.id) : () => block(u.id)
+                    }
+                    className="font-medium text-white hover:underline px-2 py-1 bg-black "
+                  >
+                    {u.isBlocked ? "Unblock" : "Block"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

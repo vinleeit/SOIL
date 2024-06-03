@@ -52,7 +52,7 @@ export default function Profile() {
           const error = await deleteUser();
           if (error) {
             setError(error);
-
+            failureDialog.current?.showModal();
             return;
           }
           dialogRef.current?.close();

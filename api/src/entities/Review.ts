@@ -31,7 +31,7 @@ export const ReviewFactory = (sequelize: Sequelize) => {
         // The length of around 100 words if each word is 10 characters
         type: DataTypes.STRING(1000),
       },
-
+      // If the review is moderated (deleted) by the admin
       isBlocked: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
