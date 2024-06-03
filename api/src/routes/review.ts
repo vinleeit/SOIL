@@ -63,6 +63,18 @@ router.post("/:productId", validateToken, async (req, res) => {
       return res.status(404).json({ error: "Product not found." });
     }
 
+    const currentUser = await req.models.User.findOne({
+      where: { id: userId },
+    });
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (currentUser.dataValues.isBlocked) {
+      return res
+        .status(403)
+        .json({ message: "Blocked user cannot leave review" });
+    }
     // According to the tutor on the discussoin, a user can leave many reviews
     // Check if the user has already left a review for this product
     // const existingReview = await req.models.Review.findOne({
