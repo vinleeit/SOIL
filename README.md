@@ -63,3 +63,22 @@ The 2 Metrics that we choose to display is as follows:
 
 - Rating distribution (in Pie Chart): We want to be able to see how the products in the website is performing in general, We can see if people are satisfied with the quality of most the product or do we need to improve the overall quality.
 - Product with most review (In grid): We want to to be able to see which product has most review, so that we can check if it is popular or controversial and take steps according to it. (for example increase the stock of popular item, and help customer to resolve problem if it is a controversial one)
+
+## Resources
+
+The following are resource used in the project:
+
+- Icon: https://iconoir.com/
+
+- Organic Food Article: https://www.betterhealth.vic.gov.au/health/healthyliving/organic-food
+
+- Quotes:
+
+  - ABC - tips for growing fruits and veggies at home:
+    [https://www.abc.net.au/everyday/tips-for-growing-fruit-and-vegetables-at-home/10051592]()
+  - ABC - mistakes new garderners make:
+    [https://www.abc.net.au/everyday/mistakes-new-gardeners-make-and-how-to-avoid-them/11224022]()
+  - ABC - signs your plant is struggling:
+    [https://www.abc.net.au/everyday/signs-your-plant-is-struggling-and-how-to-save-them/11324798]()
+
+- Products and images: All of the photos not mentioned, used in the product come from [https://unsplash.com/]()
