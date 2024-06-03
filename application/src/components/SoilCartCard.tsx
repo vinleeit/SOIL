@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { CartItem } from "../types/CartItem";
 import SoilButton from "./SoilButton";
-import { GetProductPrice, Product } from "../types/Product";
 import Trash from "../assets/trash.svg";
+import { GetProductPrice, Product } from "../types/Product";
 
 type SoilCartCardProp = {
   cartItem: CartItem;
   itemInCardQuantity: number;
+  onCardClicked?: React.MouseEventHandler<HTMLDivElement>;
   onAddItem: (product: Product) => void;
   onReduceItem: (product: Product) => void;
   onDeleteItem: (product: Product) => void;
@@ -18,13 +19,14 @@ type SoilCartCardProp = {
 export default function SoilCartCard({
   cartItem,
   itemInCardQuantity,
+  onCardClicked,
   onAddItem,
   onReduceItem,
   onDeleteItem,
 }: SoilCartCardProp) {
   const isProductSpecial = cartItem.product.discountAmount > 0;
   return (
-    <div className="flex shadow-md border-t-2">
+    <div onClick={onCardClicked} className="flex shadow-md border-t-2">
       <img
         src={cartItem.product.imageURL}
         alt=""
@@ -57,11 +59,21 @@ export default function SoilCartCard({
         </div>
         <div className="flex items-center w-full">
           <div className="flex items-center space-x-3 grow">
-            <SoilButton outlined onClick={() => onReduceItem(cartItem.product)}>
+            <SoilButton outlined onClick={(event) => {
+              event.stopPropagation()
+              if (onReduceItem) {
+                onReduceItem(cartItem.product)
+              }
+            }}>
               -
             </SoilButton>
             <p>{itemInCardQuantity}</p>
-            <SoilButton outlined onClick={() => onAddItem(cartItem.product)}>
+            <SoilButton outlined onClick={(event) => {
+              event.stopPropagation()
+              if (onAddItem) {
+                onAddItem(cartItem.product)
+              }
+            }}>
               +
             </SoilButton>
           </div>
@@ -69,7 +81,12 @@ export default function SoilCartCard({
             <div className="">
               <Link
                 to={""}
-                onClick={() => onDeleteItem(cartItem.product)}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  if (onDeleteItem) {
+                    onDeleteItem(cartItem.product)
+                  }
+                }}
                 className="text-red-600"
               >
                 <img src={Trash} alt="" />

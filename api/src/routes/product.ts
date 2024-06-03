@@ -113,6 +113,9 @@ router.get("/:id", async (req, res) => {
       //@ts-ignore
       return threads.map((thread) => ({
         ...thread.toJSON(),
+        content: thread.dataValues.isBlocked
+          ? "[**** This review has been deleted by the admin ***]"
+          : thread.dataValues.content,
         User: thread.User ? thread.User.toJSON() : null,
         ChildThreads: formatThreads(thread.ChildThreads),
       }));
@@ -121,11 +124,16 @@ router.get("/:id", async (req, res) => {
     const formattedProduct = {
       ...product.toJSON(),
       //@ts-ignore
-      Reviews: product.Reviews.map((review) => ({
-        ...review.toJSON(),
-        User: review.User ? review.User.toJSON() : null,
-        Threads: review.Threads ? formatThreads(review.Threads) : [],
-      })),
+      Reviews: product.Reviews.map((review) => {
+        return {
+          ...review.toJSON(),
+          review: review.dataValues.isBlocked
+            ? "[**** This review has been deleted by the admin ***]"
+            : review.dataValues.review,
+          User: review.User ? review.User.toJSON() : null,
+          Threads: review.Threads ? formatThreads(review.Threads) : [],
+        };
+      }),
     };
 
     res.json(formattedProduct);

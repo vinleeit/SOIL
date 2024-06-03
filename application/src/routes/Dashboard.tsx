@@ -6,6 +6,7 @@ import { useShoppingCart } from "../context/ShoppingCartProvider";
 import { GetProductPrice, Product } from "../types/Product";
 import { serviceGetProducts } from "../shared/services/StoreService";
 import SoilAlertDialog from "../components/SoilAlertDialog";
+import { useNavigate } from "react-router-dom";
 
 interface ProductProp {
   products: Product[],
@@ -64,6 +65,7 @@ export default function Dashboard() {
   );
 }
 function ProductsSection({ products }: ProductProp) {
+  const navigate = useNavigate();
   const shoppingCartContext = useShoppingCart();
   return (
     <section className="space-y-6">
@@ -80,6 +82,7 @@ function ProductsSection({ products }: ProductProp) {
                 itemInCardQuantity={shoppingCartContext.getItemQuantity(
                   product,
                 )}
+                onCardClicked={() => { navigate(`/product/${product.id}`) }}
                 onAddItem={() => shoppingCartContext.addItem(product)}
                 onReduceItem={() => shoppingCartContext.reduceItem(product)}
                 onDeleteItem={() => shoppingCartContext.deleteItem(product)}

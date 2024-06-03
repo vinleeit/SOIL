@@ -39,6 +39,7 @@ export default function ShoppingCart() {
                 key={e.product.id}
                 cartItem={e}
                 itemInCardQuantity={itemInCardQuantity}
+                onCardClicked={() => navigate(`/product/${e.product.id}`)}
                 onAddItem={addItem}
                 onReduceItem={reduceItem}
                 onDeleteItem={deleteItem}
