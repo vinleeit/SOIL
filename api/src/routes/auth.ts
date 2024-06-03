@@ -105,10 +105,10 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // If the user is blocked, return an error
-    if (user.dataValues.isBlocked) {
-      return res.status(403).json({ error: "User is blocked" });
-    }
+    // Blocked user can login, but not leave review
+    // if (user.dataValues.isBlocked) {
+    //   return res.status(403).json({ error: "User is blocked" });
+    // }
 
     // Generate a JWT token
     const token = jwt.sign({ user: user.dataValues.id }, JWT_SECRET, {
