@@ -63,6 +63,7 @@ router.post("/:productId", validateToken, async (req, res) => {
       return res.status(404).json({ error: "Product not found." });
     }
 
+    // Check if user that add the product still exists (or abaandoned token)
     const currentUser = await req.models.User.findOne({
       where: { id: userId },
     });
@@ -70,6 +71,7 @@ router.post("/:productId", validateToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Blocked user cannot leave review
     if (currentUser.dataValues.isBlocked) {
       return res
         .status(403)

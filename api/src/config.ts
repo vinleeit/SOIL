@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 
+// Configure dotenv, to allow saving local config in .env file
 dotenv.config();
 
 export const JWT_SECRET = process.env.JWT_SECRET || "default-secret-key";

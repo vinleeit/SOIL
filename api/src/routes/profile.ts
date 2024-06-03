@@ -52,12 +52,14 @@ router.post("/", async (req, res) => {
     const normalizedEmail = normalizeInput(email);
     const normalizedUsername = normalizeInput(username);
 
+    // if the username and the email is the same
     if (
       normalizedUsername == currentUser?.getDataValue("username") &&
       normalizedEmail == currentUser.getDataValue("email")
     ) {
       return res.sendStatus(304);
     }
+    // username too short
     if (normalizedUsername.length < 3) {
       return res
         .status(400)
@@ -135,6 +137,7 @@ router.put("/password", async (req, res) => {
   if (!currentUser) {
     return res.status(404).json({ message: "User not found" });
   }
+  // Check old password
   const isPasswordValid = await bcrypt.compare(
     oldPassword,
     currentUser.dataValues.password,

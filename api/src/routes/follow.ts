@@ -26,7 +26,6 @@ router.get("/", async (req, res) => {
     const followedUsers = await req.models.User.findAll({
       where: { id: followingIds },
       attributes: {
-        // include: ["id", "username", "email"],
         exclude: ["createdAt", "updatedAt", "isBlocked", "password"],
       },
     });
