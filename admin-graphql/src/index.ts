@@ -19,6 +19,7 @@ const { User, Review, Product, Thread } = initModels();
 app.post("/refresh-review", async (req, res) => {
   await publishNewReview();
   await publishNewRating();
+  await publishNewBestReviewed();
   return res.sendStatus(200);
 });
 
