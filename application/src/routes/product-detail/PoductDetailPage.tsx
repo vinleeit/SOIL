@@ -10,12 +10,14 @@ import { serviceAddReview } from "../../shared/services/ReviewService";
 import SoilStarRating from "../../components/SoilStarRating";
 import ReviewItem from "./ReviewItem";
 import { ProductDetail } from "../../types/ProductDetail";
+import { FollowingResponse, serviceGetFollowings } from "../../shared/services/FollowService";
 
 export default function ProductDetailPage() {
   const { id } = useParams()
   const { token } = useContext(AuthContext) as AuthContextValue;
   const failureDialog = useRef<HTMLDialogElement | null>(null);
   const [error, setError] = useState('');
+  const [followings, setFollowings] = useState<FollowingResponse[]>([])
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [profile, setProfile] = useState<ProfileResponse | null>(null);
   const {
@@ -26,6 +28,18 @@ export default function ProductDetailPage() {
   } = useShoppingCart();
 
   useEffect(() => {
+    const fetchGetFollowings = async () => {
+      const [followings, error] = await serviceGetFollowings(token ?? '')
+
+      if (followings) {
+        setFollowings(followings)
+      }
+      if (error) {
+        setError(error);
+        failureDialog.current?.showModal();
+      }
+    }
+
     const fetchProductDetail = async () => {
       if (id) {
         const [product, error] = await serviceGetProductDetail(parseInt(id, 0));
@@ -53,6 +67,7 @@ export default function ProductDetailPage() {
       }
     }
 
+    fetchGetFollowings();
     fetchProfile();
     fetchProductDetail();
   }, [token]);
@@ -131,7 +146,7 @@ export default function ProductDetailPage() {
             product.reviews.find((review) => review.User.username == profile?.username) == undefined
           } />
         {product.reviews.map((review) => {
-          return <ReviewItem key={review.reviewID} username={profile?.username} review={review} />
+          return <ReviewItem key={review.reviewID} profile={profile} followings={followings} review={review} />
         })}
       </div>
     </div >

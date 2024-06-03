@@ -6,15 +6,19 @@ import { Review } from "../../types/ProductDetail"
 import ThreadItem from "./ThreadItem"
 import SoilButton from "../../components/SoilButton"
 import SoilStarRating from "../../components/SoilStarRating"
+import { ProfileResponse } from "../../shared/services/AuthService"
+import { FollowingResponse, serviceFollow, serviceUnfollow } from "../../shared/services/FollowService"
 
 interface ReviewItemProp {
     review: Review,
-    username?: string,
+    profile: ProfileResponse | null,
+    followings: FollowingResponse[],
 }
 
 export default function ReviewItem({
     review,
-    username,
+    profile,
+    followings,
 }: ReviewItemProp) {
     const { token } = useContext(AuthContext) as AuthContextValue
 
@@ -96,7 +100,25 @@ export default function ReviewItem({
         if (error) {
             setError(error)
             failureDialog.current?.showModal()
-            return
+        } else {
+            window.location.reload()
+        }
+    }
+
+    const handleFollow = async () => {
+        const error = await serviceFollow(token!, review.UserId)
+        if (error) {
+            setError(error)
+            failureDialog.current?.showModal()
+        } else {
+            window.location.reload()
+        }
+    }
+    const handleUnfollow = async () => {
+        const error = await serviceUnfollow(token!, review.UserId)
+        if (error) {
+            setError(error)
+            failureDialog.current?.showModal()
         } else {
             window.location.reload()
         }
@@ -114,15 +136,32 @@ export default function ReviewItem({
             />
             <article className="p-6 text-base my-2 bg-white border rounded-lg">
                 <footer className="flex justify-between items-center">
-                    <div className="flex items-center">
-                        <p className="inline-flex items-center mr-3 text-sm text-gray-900  font-semibold">
+                    <div className="flex items-center space-x-3">
+                        <p className="inline-flex items-center text-sm text-gray-900  font-semibold">
                             {review.User.username}</p>
                         <p className="text-sm text-gray-600 ">
                             {dateCreated.toLocaleTimeString()}, {dateCreated.toLocaleDateString()}
                         </p>
+                        {
+                            profile?.username != review.User.username &&
+                            ((followings.find((e) => {
+                                return e.username == review.User.username
+                            }) != null) ?
+                                <button
+                                    onClick={() => { handleUnfollow() }}
+                                    className="rounded-md px-2 py-1 bg-rose-600 hover:bg-rose-400">
+                                    Unfollow
+                                </button>
+                                :
+                                <button
+                                    onClick={() => { handleFollow() }}
+                                    className="rounded-md px-2 py-1 bg-emerald-400 hover:bg-emerald-300">
+                                    Follow
+                                </button>)
+                        }
                     </div>
                     {
-                        username && username == review.User.username &&
+                        profile && profile.username == review.User.username &&
                         <div className="relative">
                             <button id="dropdownComment1Button" data-dropdown-toggle="dropdownComment1"
                                 className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500  bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50"
@@ -268,7 +307,7 @@ export default function ReviewItem({
             </article>
             <div className="flex flex-col ml-4 border-l pl-4">
                 {review.Threads.map((thread) => (
-                    <ThreadItem key={thread.threadID} username={username} thread={thread} />
+                    <ThreadItem key={thread.threadID} profile={profile} thread={thread} />
                 ))}
             </div>
         </div>

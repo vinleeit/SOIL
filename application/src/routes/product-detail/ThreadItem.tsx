@@ -4,15 +4,16 @@ import { AuthContext, AuthContextValue } from "../../context/AuthContext"
 import { serviceAddThread, serviceDeleteThread, serviceUpdateThread } from "../../shared/services/ReviewService"
 import { Thread } from "../../types/ProductDetail"
 import SoilButton from "../../components/SoilButton"
+import { ProfileResponse } from "../../shared/services/AuthService"
 
 interface ThreadItemProp {
     thread: Thread,
-    username?: string
+    profile: ProfileResponse | null,
 }
 
 export default function ThreadItem({
     thread,
-    username,
+    profile,
 }: ThreadItemProp) {
     const { token } = useContext(AuthContext) as AuthContextValue
 
@@ -111,7 +112,7 @@ export default function ThreadItem({
                         </p>
                     </div>
                     {
-                        username && username == thread.User.username &&
+                        profile && profile.username == thread.User.username &&
                         <div className="relative">
                             <button id="dropdownComment1Button" data-dropdown-toggle="dropdownComment1"
                                 className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500  bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50"
@@ -238,7 +239,7 @@ export default function ThreadItem({
             </article>
             <div className="flex flex-col ml-4 border-l pl-4">
                 {thread.ChildThreads.map((thread) => (
-                    <ThreadItem key={thread.threadID} username={username} thread={thread} />
+                    <ThreadItem key={thread.threadID} profile={profile} thread={thread} />
                 ))}
             </div>
         </div>
