@@ -74,6 +74,19 @@ export default function Dashboard() {
     ratingMetric: RatingMetric[];
   }>(RATING_METRIC_SUBSCRIPTION);
 
+  if (
+    productData?.productMetric.length == 0 &&
+    reviewData?.newReviews.length == 0 &&
+    ratingData?.ratingMetric.length == 0
+  ) {
+    return (
+      <div className="grow flex flex-col w-full justify-center items-center text-center">
+        <h1 className="text-2xl mb-2">Dashboard Empty</h1>
+        <p>Metrics and statistics will show when there is more data</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col w-full">
       <div className="w-full flex justify-center">
