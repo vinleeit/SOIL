@@ -133,7 +133,7 @@ export default function ThreadItem({
                             {dateCreated.toLocaleTimeString()}, {dateCreated.toLocaleDateString()}
                         </p>
                         {
-                            profile?.username != thread.User.username &&
+                            token && profile?.username != thread.User.username &&
                             ((followings.find((e) => {
                                 return e.username == thread.User.username
                             }) != null) ?

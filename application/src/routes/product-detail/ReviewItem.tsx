@@ -143,7 +143,7 @@ export default function ReviewItem({
                             {dateCreated.toLocaleTimeString()}, {dateCreated.toLocaleDateString()}
                         </p>
                         {
-                            profile?.username != review.User.username &&
+                            token && profile?.username != review.User.username &&
                             ((followings.find((e) => {
                                 return e.username == review.User.username
                             }) != null) ?
