@@ -17,6 +17,7 @@ import Summary from "./routes/Summary";
 import ChangePassword from "./routes/auth/ChangePassword";
 import Welcome from "./routes/Welcome";
 import ProductDetailPage from "./routes/product-detail/PoductDetailPage";
+import FollowingList from "./routes/Following";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +72,14 @@ const router = createBrowserRouter([
         element: (
           <PageWithAuthorization destination="/login" authorized>
             <ChangePassword />
+          </PageWithAuthorization>
+        ),
+      },
+      {
+        path: "/following",
+        element: (
+          <PageWithAuthorization destination="/login" authorized>
+            <FollowingList />
           </PageWithAuthorization>
         ),
       },
