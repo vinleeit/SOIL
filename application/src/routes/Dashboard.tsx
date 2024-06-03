@@ -77,6 +77,7 @@ function ProductsSection({ products }: ProductProp) {
               <SoilProductCard
                 title={product.name}
                 price={product.price}
+                discountedPrice={product.discountAmount == null ? undefined : GetProductPrice(product)}
                 photoUrl={product.imageURL}
                 isSpecial={product.discountAmount > 0}
                 itemInCardQuantity={shoppingCartContext.getItemQuantity(
@@ -95,6 +96,7 @@ function ProductsSection({ products }: ProductProp) {
 }
 
 function WeeklySpecialDealsSection({ products }: ProductProp) {
+  const navigate = useNavigate();
   const shoppingCartContext = useShoppingCart();
   return (
     <section className="space-y-6">
@@ -102,7 +104,6 @@ function WeeklySpecialDealsSection({ products }: ProductProp) {
       <div className="gap-5 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4">
         {products
           .filter((product) => product.discountAmount > 0)
-          .slice(0, 4)
           .map((product) => (
             <React.Fragment key={product.id}>
               <SoilProductCard
@@ -114,6 +115,7 @@ function WeeklySpecialDealsSection({ products }: ProductProp) {
                 itemInCardQuantity={shoppingCartContext.getItemQuantity(
                   product,
                 )}
+                onCardClicked={() => { navigate(`/product/${product.id}`) }}
                 onAddItem={() => shoppingCartContext.addItem(product)}
                 onReduceItem={() => shoppingCartContext.reduceItem(product)}
                 onDeleteItem={() => shoppingCartContext.deleteItem(product)}

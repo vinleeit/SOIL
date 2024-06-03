@@ -11,6 +11,7 @@ import SoilStarRating from "../../components/SoilStarRating";
 import ReviewItem from "./ReviewItem";
 import { ProductDetail } from "../../types/ProductDetail";
 import { FollowingResponse, serviceGetFollowings } from "../../shared/services/FollowService";
+import { GetProductPrice } from "../../types/Product";
 
 export default function ProductDetailPage() {
   const { id } = useParams()
@@ -78,6 +79,7 @@ export default function ProductDetailPage() {
     return <div>Loading...</div>;
   }
 
+  const isSpecial = product.product.discountAmount > 0
   return (
     product && <div className="container mx-auto py-24 px-8">
       <SoilAlertDialog
@@ -96,12 +98,16 @@ export default function ProductDetailPage() {
           <h1 className="text-3xl font-bold">{product.product.name}</h1>
           <p className="text-gray-600 mt-4">{product.product.description}</p>
           <div className="mt-8">
-            <span className="text-2xl font-bold">${product.product.price}</span>
-            {product.product.discountAmount > 0 && (
-              <span className="text-red-500 ml-2">
-                ({product.product.discountAmount}% off)
-              </span>
-            )}
+            <p className="font-light text-2xl space-x-1">
+              {!isSpecial ? (
+                <></>
+              ) : (
+                <span>{`$${GetProductPrice(product.product)?.toFixed(2)}`}</span>
+              )}
+              <span
+                className={!isSpecial ? "" : "text-base line-through text-red-700"}
+              >{`$${product.product.price.toFixed(2)}`}</span>
+            </p>
           </div>
           <div className="flex-grow flex flex-col space-y-3 items-center justify-end">
             {getItemQuantity(product.product) <= 0 ? (
@@ -141,8 +147,11 @@ export default function ProductDetailPage() {
       </div>
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
-        <AddReviewSection
-          productId={product.product.id} />
+        {
+          token && <AddReviewSection
+            productId={product.product.id} />
+
+        }
         {product.reviews.map((review) => {
           return <ReviewItem key={review.reviewID} profile={profile} followings={followings} review={review} />
         })}

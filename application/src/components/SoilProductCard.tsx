@@ -8,7 +8,7 @@ type ProductCardProp = {
   photoUrl: string;
   isSpecial: boolean;
   itemInCardQuantity?: number;
-  onCardClicked?: React.MouseEventHandler<HTMLDivElement>;
+  onCardClicked?: React.MouseEventHandler<HTMLButtonElement>;
   onAddItem?: React.MouseEventHandler<HTMLButtonElement>;
   onReduceItem?: React.MouseEventHandler<HTMLButtonElement>;
   onDeleteItem?: React.MouseEventHandler<HTMLAnchorElement>;
@@ -30,7 +30,7 @@ export default function SoilProductCard({
   onDeleteItem,
 }: ProductCardProp) {
   return (
-    <div onClick={onCardClicked} className="max-w-xs rounded-md bg-white shadow-md">
+    <button onClick={onCardClicked} className="max-w-xs rounded-md bg-white shadow-md hover:shadow-xl">
       <div className="relative flex justify-center items-center p-5 bg-gray-50">
         {!isSpecial ? (
           <></>
@@ -102,6 +102,6 @@ export default function SoilProductCard({
           )}
         </div>
       </div>
-    </div>
+    </button>
   );
 }
