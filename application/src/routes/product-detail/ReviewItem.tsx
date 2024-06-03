@@ -307,7 +307,7 @@ export default function ReviewItem({
             </article>
             <div className="flex flex-col ml-4 border-l pl-4">
                 {review.Threads.map((thread) => (
-                    <ThreadItem key={thread.threadID} profile={profile} thread={thread} />
+                    <ThreadItem key={thread.threadID} profile={profile} followings={followings} thread={thread} />
                 ))}
             </div>
         </div>

@@ -29,14 +29,16 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     const fetchGetFollowings = async () => {
-      const [followings, error] = await serviceGetFollowings(token ?? '')
+      if (token) {
+        const [followings, error] = await serviceGetFollowings(token ?? '')
 
-      if (followings) {
-        setFollowings(followings)
-      }
-      if (error) {
-        setError(error);
-        failureDialog.current?.showModal();
+        if (followings) {
+          setFollowings(followings)
+        }
+        if (error) {
+          setError(error);
+          failureDialog.current?.showModal();
+        }
       }
     }
 
@@ -67,9 +69,9 @@ export default function ProductDetailPage() {
       }
     }
 
-    fetchGetFollowings();
     fetchProfile();
     fetchProductDetail();
+    fetchGetFollowings();
   }, [token]);
 
   if (!product) {
