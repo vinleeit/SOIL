@@ -5,15 +5,18 @@ import { serviceAddThread, serviceDeleteThread, serviceUpdateThread } from "../.
 import { Thread } from "../../types/ProductDetail"
 import SoilButton from "../../components/SoilButton"
 import { ProfileResponse } from "../../shared/services/AuthService"
+import { FollowingResponse, serviceFollow, serviceUnfollow } from "../../shared/services/FollowService"
 
 interface ThreadItemProp {
     thread: Thread,
     profile: ProfileResponse | null,
+    followings: FollowingResponse[],
 }
 
 export default function ThreadItem({
     thread,
     profile,
+    followings,
 }: ThreadItemProp) {
     const { token } = useContext(AuthContext) as AuthContextValue
 
@@ -92,6 +95,25 @@ export default function ThreadItem({
         }
     }
 
+    const handleFollow = async () => {
+        const error = await serviceFollow(token!, thread.userID)
+        if (error) {
+            setError(error)
+            failureDialog.current?.showModal()
+        } else {
+            window.location.reload()
+        }
+    }
+    const handleUnfollow = async () => {
+        const error = await serviceUnfollow(token!, thread.userID)
+        if (error) {
+            setError(error)
+            failureDialog.current?.showModal()
+        } else {
+            window.location.reload()
+        }
+    }
+
     return (
         <div>
             <SoilAlertDialog
@@ -104,12 +126,29 @@ export default function ThreadItem({
             />
             <article className="p-6 text-base my-2 bg-white border rounded-lg">
                 <footer className="flex justify-between items-center">
-                    <div className="flex items-center">
+                    <div className="flex items-center space-x-3">
                         <p className="inline-flex items-center mr-3 text-sm text-gray-900  font-semibold">
                             {thread.User.username}</p>
                         <p className="text-sm text-gray-600 ">
                             {dateCreated.toLocaleTimeString()}, {dateCreated.toLocaleDateString()}
                         </p>
+                        {
+                            profile?.username != thread.User.username &&
+                            ((followings.find((e) => {
+                                return e.username == thread.User.username
+                            }) != null) ?
+                                <button
+                                    onClick={() => { handleUnfollow() }}
+                                    className="rounded-md px-2 py-1 bg-rose-600 hover:bg-rose-400">
+                                    Unfollow
+                                </button>
+                                :
+                                <button
+                                    onClick={() => { handleFollow() }}
+                                    className="rounded-md px-2 py-1 bg-emerald-400 hover:bg-emerald-300">
+                                    Follow
+                                </button>)
+                        }
                     </div>
                     {
                         profile && profile.username == thread.User.username &&
@@ -239,7 +278,7 @@ export default function ThreadItem({
             </article>
             <div className="flex flex-col ml-4 border-l pl-4">
                 {thread.ChildThreads.map((thread) => (
-                    <ThreadItem key={thread.threadID} profile={profile} thread={thread} />
+                    <ThreadItem key={thread.threadID} profile={profile} followings={followings} thread={thread} />
                 ))}
             </div>
         </div>
