@@ -63,6 +63,14 @@ export default function SoilHeader() {
                 </SoilButton>
               </li>
             )}
+            {
+              token &&
+              <li>
+                <SoilButton outlined onClick={() => navigate("/following")}>
+                  Following
+                </SoilButton>
+              </li>
+            }
             <li>
               <SoilButton colour="secondary" onClick={shoppingCart}>
                 <span className="absolute -right-2 -top-1 bg-red-500 rounded-full h-6 w-6 text-center text-white">
@@ -124,6 +132,14 @@ export default function SoilHeader() {
                   </SoilButton>
                 </li>
               )}
+              {
+                token &&
+                <li>
+                  <SoilButton outlined onClick={() => navigate("/following")}>
+                    Following
+                  </SoilButton>
+                </li>
+              }
               <li>
                 {token ? (
                   <SoilButton fullWidth onClick={doLogout}>

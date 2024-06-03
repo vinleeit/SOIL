@@ -66,7 +66,6 @@ export const serviceUnfollow = async (
     token: string,
     userId: number,
 ): Promise<string | null> => {
-    console.log(token)
     try {
         await axios.delete<void>(
             `${URL}/follow/${userId}`,
