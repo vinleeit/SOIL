@@ -46,71 +46,79 @@ export default function Products() {
     await deleteProduct({ variables: { id: id } });
     refetch();
   };
+
   return (
-    <div className="px-8 py-8 grow flex flex-col items-center ">
-      <div className="flex justify-between w-full items-center">
-        <h1 className="mb-4 text-2xl">Products</h1>
-        <Link to={"/products/add"}>Add Product</Link>
+    <div className="px-8 py-8 grow flex flex-col items-center">
+      <div className="flex mb-4 justify-between w-full">
+        <h1 className="text-2xl">Product Management</h1>
+        <Link
+          to="/products/add"
+          className="font-medium text-white hover:underline px-4 py-2 bg-black"
+        >
+          Add Product
+        </Link>
       </div>
-      <table className="table-auto w-full text-left border-collapse">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              ID
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Name
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Price
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Description
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Product Type
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.products.map((u: ProductData) => (
-            <tr key={u.id} className="hover:bg-gray-100">
-              <td className="px-4 py-2 border border-gray-300">{u.id}</td>
-              <td className="px-4 py-2 border border-gray-300">{u.name}</td>
-              <td className="px-4 py-2 border border-gray-300">{u.price}</td>
-              <td className="px-4 py-2 border border-gray-300">
-                {u.description}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {u.discountAmount > 0 ? (
-                  <span className="text-red-500 font-bold">
-                    Special ({u.discountAmount}% OFF)
-                  </span>
-                ) : (
-                  <span className="text-green-500 font-bold">Standard</span>
-                )}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                <button
-                  className="px-3 py-1 rounded border-2"
-                  onClick={() => deleteProductCallback(u.id)}
-                >
-                  Delete
-                </button>
-                <button
-                  className="px-3 py-1 rounded border-2"
-                  onClick={() => navigate("/products/edit", { state: u })}
-                >
-                  Edit
-                </button>
-              </td>
+      <div className="overflow-x-auto border w-full">
+        <table className="w-full text-sm text-left text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                ID
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Price
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Description
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Product Type
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.products.map((product: ProductData) => (
+              <tr key={product.id}>
+                <td className="px-6 py-4">{product.id}</td>
+                <td className="px-6 py-4">{product.name}</td>
+                <td className="px-6 py-4">{product.price}</td>
+                <td className="px-6 py-4">{product.description}</td>
+                <td className="px-6 py-4">
+                  {product.discountAmount > 0 ? (
+                    <span className="text-red-500 font-bold">
+                      Special ({product.discountAmount}% OFF)
+                    </span>
+                  ) : (
+                    <span className="text-green-500 font-bold">Standard</span>
+                  )}
+                </td>
+                <td className="px-6 py-4">
+                  <button
+                    onClick={() => deleteProductCallback(product.id)}
+                    className="font-medium text-white hover:underline px-2 py-1 bg-black mr-2"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() =>
+                      navigate("/products/edit", { state: product })
+                    }
+                    className="font-medium text-white hover:underline px-2 py-1 bg-black"
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
