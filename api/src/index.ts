@@ -12,11 +12,7 @@ import reviewRouter from "./routes/review.ts";
 import threadRouter from "./routes/thread.ts";
 import cors from "cors";
 
-// TODO: add er digram to repo
-
-// Initialize dotenv file
-dotenv.config();
-
+// Create express server with json middleware and CORS policy (allowed from everywhere)
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -27,13 +23,16 @@ app.use(modelInjectionMiddleware(models));
 
 (async () => {
   try {
+    // Connect to server
     await sequelize.authenticate();
+    // Update database
     await sequelize.sync();
 
     app.get("/ping", (_req, res) => {
       res.send("Soil server");
     });
 
+    // Register all routers
     app.use("/auth", authRouter);
     app.use("/profile", profileRouter);
     app.use("/product", productRouter);

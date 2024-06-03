@@ -1,4 +1,6 @@
 import { gql } from "apollo-server-express";
+
+// Graphql schema for the admin application
 const typeDefs = gql`
   type User {
     id: Int!

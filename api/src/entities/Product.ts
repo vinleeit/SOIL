@@ -39,6 +39,7 @@ export const ProductFactory = (sequelize: Sequelize) => {
       imageURL: {
         type: DataTypes.STRING,
       },
+      // If the product is discounted, it is a special product
       discountAmount: {
         type: DataTypes.DECIMAL,
       },

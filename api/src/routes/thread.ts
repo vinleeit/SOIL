@@ -46,16 +46,19 @@ router.post(
     try {
       await userExists(userID, req);
 
+      // Check if parent thread actually exists
       if (parentThreadID) {
         await threadExists(parentThreadID, req);
       }
 
+      // Create thread
       const thread = await req.models.Thread.create({
         content,
         reviewID: parseInt(reviewId),
         userID: parseInt(userID),
         parentThreadID,
       });
+      // Set the id for the return value
       thread.setDataValue("threadID", thread.threadID);
 
       res.status(201).json(thread);
@@ -86,9 +89,25 @@ router.post(
     const userID = req.user;
 
     try {
-      await userExists(userID, req);
+      // Check if the thread exists
       await threadExists(parseInt(threadId), req);
 
+      // Check if user that add the product still exists (or abaandoned token)
+      const currentUser = await req.models.User.findOne({
+        where: { id: userID },
+      });
+      if (!currentUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Blocked user cannot leave review
+      if (currentUser.dataValues.isBlocked) {
+        return res
+          .status(403)
+          .json({ message: "Blocked user cannot leave review" });
+      }
+
+      // Create thread
       const thread = await req.models.Thread.create({
         content,
         userID: parseInt(userID),
@@ -96,6 +115,7 @@ router.post(
         reviewID: parseInt(reviewId),
       });
 
+      // Set thread id for return value
       thread.setDataValue("threadID", thread.threadID);
 
       res.status(201).json(thread);
@@ -125,9 +145,11 @@ router.put(
     const userID = req.user;
 
     try {
+      // Check if user and thread exits
       await userExists(userID, req);
       await threadExists(parseInt(threadId), req);
 
+      // Find thread
       const thread = await req.models.Thread.findOne({
         where: {
           threadID: threadId,
@@ -135,12 +157,14 @@ router.put(
         },
       });
 
+      // Check if thread exists or if the user own the thread
       if (!thread) {
         return res
           .status(404)
           .json({ error: "Thread not found or unauthorized" });
       }
 
+      // Set content and update
       thread.setDataValue("content", content);
       await thread.save();
 
@@ -167,9 +191,11 @@ router.delete(
     const userID = req.user;
 
     try {
+      // Check if user and thread exits
       await userExists(userID, req);
       await threadExists(parseInt(threadId), req);
 
+      // Get thread
       const thread = await req.models.Thread.findOne({
         where: {
           threadID: threadId,
@@ -177,12 +203,14 @@ router.delete(
         },
       });
 
+      // If the thread does not exists or not owned by user
       if (!thread) {
         return res
           .status(404)
           .json({ error: "Thread not found or unauthorized" });
       }
 
+      // Delete thread
       await thread.destroy();
 
       res.json({
@@ -206,6 +234,7 @@ router.get(
     const { reviewId } = req.params;
 
     try {
+      // Get thread upto 3 levels
       const threads = await req.models.Thread.findAll({
         where: {
           reviewID: reviewId,
@@ -223,7 +252,6 @@ router.get(
                   {
                     model: req.models.Thread,
                     as: "ChildThreads",
-                    // You can add more levels of nesting if needed
                   },
                 ],
               },

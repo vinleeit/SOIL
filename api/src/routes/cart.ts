@@ -48,11 +48,13 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
+    // Find if user  exists
     const user = await req.models.User.findOne({ where: { id: userId } });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // FInd the product
     const product = await req.models.Product.findByPk(productId);
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
@@ -93,11 +95,13 @@ router.put("/:productId", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
+    // find the user
     const user = await req.models.User.findOne({ where: { id: userId } });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // find the product in the cart
     const cartItem = await req.models.CartItem.findOne({
       // @ts-ignore
       where: { UserId: userId, ProductId: productId },

@@ -6,6 +6,7 @@ import { ThreadFactory } from "./Thread";
 import { CartItemFactory } from "./CartItem";
 import { UserFollowFactory } from "./UserFollow";
 
+// Initialize database to the server using mysql2 driver
 const sequelize = new Sequelize(
   "s3937118_fsd_a2",
   "s3937118_fsd_a2",

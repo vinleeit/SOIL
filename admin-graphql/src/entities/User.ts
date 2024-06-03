@@ -36,10 +36,12 @@ export const UserFactory = (sequelize: Sequelize) => {
         unique: true,
         allowNull: false,
       },
+      // User password hashed in bcrypt
       password: {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      // If the user can leave review
       isBlocked: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,

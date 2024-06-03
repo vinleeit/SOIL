@@ -29,9 +29,12 @@ export const ThreadFactory = (sequelize: Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
+      // 100 wrods review (if each words is arround 10 letters)
+      // additional check is done on the endpoint
       content: {
         type: DataTypes.STRING(1000),
       },
+      // Review that this discussion is based on top of
       reviewID: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -40,6 +43,7 @@ export const ThreadFactory = (sequelize: Sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      // parentThreadID if the thread is a subthread
       parentThreadID: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -48,6 +52,7 @@ export const ThreadFactory = (sequelize: Sequelize) => {
           key: "threadID",
         },
         onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       isBlocked: {
         type: DataTypes.BOOLEAN,
