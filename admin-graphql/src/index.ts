@@ -14,6 +14,12 @@ const app = express();
 app.use(cors());
 const { User, Review, Product, Thread } = initModels();
 
+// Endpoint to perform refresh of the information
+app.post("/refresh-review", async (req, res) => {
+  await publishNewReview();
+  return res.sendStatus(200);
+});
+
 const pubsub = new PubSub();
 
 export const publishNewReview = async () => {
