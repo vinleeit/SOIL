@@ -16,6 +16,7 @@
   "dependencies": {
     "@types/cors": "^2.8.17",
     "apollo-server-express": "^3.13.0",
+    "bad-words-next": "^2.3.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
