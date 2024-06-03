@@ -7,27 +7,27 @@ import { typeDefs } from "./schema";
 import { PubSub } from "graphql-subscriptions";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 import { execute, subscribe } from "graphql";
-
 import { makeExecutableSchema } from "@graphql-tools/schema";
+import { Sequelize } from "sequelize";
 
 const app = express();
+const pubsub = new PubSub();
 app.use(cors());
 const { User, Review, Product, Thread } = initModels();
 
 // Endpoint to perform refresh of the information
 app.post("/refresh-review", async (req, res) => {
   await publishNewReview();
+  await publishNewRating();
   return res.sendStatus(200);
 });
 
-const pubsub = new PubSub();
-
-export const publishNewReview = async () => {
+const publishNewReview = async () => {
   const reviews = await Review.findAll({
     order: [["createdAt", "DESC"]],
     limit: 3,
   });
-  const reviewsWithUserAndThreads = await Promise.all(
+  const reviewsWithUser = await Promise.all(
     reviews.map(async (review) => {
       //@ts-ignore
       const user = await User.findOne({ where: { id: review.UserId } });
@@ -40,7 +40,61 @@ export const publishNewReview = async () => {
   // Publish the latest reviews to the subscriber
   setTimeout(() => {
     pubsub.publish("NEW_REVIEW", {
-      newReviews: reviewsWithUserAndThreads,
+      newReviews: reviewsWithUser,
+    });
+  }, 0);
+};
+
+const publishNewBestReviewed = async () => {
+  const result = await Product.findAll({
+    attributes: [
+      "id",
+      "name",
+      "imageURL",
+      [Sequelize.fn("COUNT", Sequelize.col("Reviews.rating")), "reviewCount"],
+    ],
+    include: [
+      {
+        model: Review,
+        attributes: [],
+      },
+    ],
+    group: ["Product.id"],
+    order: [[Sequelize.literal("reviewCount"), "DESC"]],
+    limit: 3,
+    subQuery: false,
+  });
+  // console.log(result);
+  const mapped = result.map((r) => ({
+    ...r.toJSON(),
+  }));
+
+  setTimeout(() => {
+    pubsub.publish("NEW_PRODUCT", {
+      productMetric: mapped,
+    });
+  }, 0);
+};
+
+publishNewBestReviewed();
+
+const publishNewRating = async () => {
+  const result = await Review.findAll({
+    attributes: [
+      "rating",
+      [Sequelize.fn("COUNT", Sequelize.col("rating")), "reviewCount"],
+    ],
+    group: ["rating"],
+  });
+
+  const mapped = result.map((r) => ({
+    rating: r.dataValues.rating,
+    //@ts-ignore
+    count: r.dataValues.reviewCount,
+  }));
+  setTimeout(() => {
+    pubsub.publish("NEW_RATING", {
+      ratingMetric: mapped,
     });
   }, 0);
 };
@@ -210,6 +264,18 @@ const resolvers = {
       subscribe: async () => {
         await publishNewReview();
         return pubsub.asyncIterator(["NEW_REVIEW"]);
+      },
+    },
+    productMetric: {
+      subscribe: async () => {
+        await publishNewBestReviewed();
+        return pubsub.asyncIterator(["NEW_PRODUCT"]);
+      },
+    },
+    ratingMetric: {
+      subscribe: async () => {
+        await publishNewRating();
+        return pubsub.asyncIterator(["NEW_RATING"]);
       },
     },
   },
