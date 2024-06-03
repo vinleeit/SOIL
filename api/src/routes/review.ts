@@ -63,16 +63,17 @@ router.post("/:productId", validateToken, async (req, res) => {
       return res.status(404).json({ error: "Product not found." });
     }
 
+    // According to the tutor on the discussoin, a user can leave many reviews
     // Check if the user has already left a review for this product
-    const existingReview = await req.models.Review.findOne({
-      //@ts-ignore
-      where: { UserId: userId, ProductId: productId },
-    });
-    if (existingReview) {
-      return res
-        .status(400)
-        .json({ error: "User has already left a review for this product." });
-    }
+    // const existingReview = await req.models.Review.findOne({
+    //   //@ts-ignore
+    //   where: { UserId: userId, ProductId: productId },
+    // });
+    // if (existingReview) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "User has already left a review for this product." });
+    // }
 
     // Create a new review
     const newReview = await req.models.Review.create({
