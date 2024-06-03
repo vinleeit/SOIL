@@ -7,6 +7,12 @@ const typeDefs = gql`
     isBlocked: Boolean!
   }
 
+  type ProductMetric {
+    id: Int!
+    name: String!
+    imageURL: String!
+    reviewCount: Int!
+  }
   type Product {
     id: Int!
     name: String!
@@ -30,6 +36,11 @@ const typeDefs = gql`
     content: String!
     isBlocked: Boolean!
     user: User
+  }
+
+  type Rating {
+    rating: Int!
+    count: Int!
   }
 
   type Query {
@@ -65,6 +76,8 @@ const typeDefs = gql`
 
   type Subscription {
     newReviews: [Review!]!
+    ratingMetric: [Rating!]!
+    productMetric: [ProductMetric!]!
   }
 `;
 export { typeDefs };
