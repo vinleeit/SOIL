@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Error from "./pages/Users.tsx";
@@ -11,10 +10,41 @@ import Products from "./pages/Products.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import AddProduct from "./pages/AddProduct.tsx";
 import EditProduct from "./pages/EditProduct.tsx";
+import {
+  ApolloClient,
+  InMemoryCache,
+  split,
+  HttpLink,
+  ApolloProvider,
+} from "@apollo/client";
+import { getMainDefinition } from "@apollo/client/utilities";
+import { WebSocketLink } from "@apollo/client/link/ws";
+
+const httpLink = new HttpLink({
+  uri: "http://localhost:4000/graphql", // Replace with your GraphQL server URL
+});
+
+const wsLink = new WebSocketLink({
+  uri: "ws://localhost:4000/graphql", // Replace with your GraphQL WebSocket URL
+  options: {
+    reconnect: true,
+  },
+});
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  wsLink,
+  httpLink,
+);
 
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
-
+  link: splitLink,
   cache: new InMemoryCache(),
 });
 
