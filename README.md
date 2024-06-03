@@ -30,6 +30,15 @@ The application is structured in the following ways:
 As the whole project is made with Javascript, we can just change into the subproject (there is 4 in total) directory and run:
 
 ```bash
+npm i
+# OR 
+bun i
+```
+
+And then
+
+
+```bash
 npm run dev
 # OR
 bun run dev

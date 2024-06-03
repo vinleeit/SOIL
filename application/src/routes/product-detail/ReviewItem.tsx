@@ -322,7 +322,7 @@ export default function ReviewItem({
 
                     </form>
                 ) : (
-                    <div className="flex items-center mt-4 space-x-4">
+                    token && <div className="flex items-center mt-4 space-x-4">
                         <button type="button"
                             onClick={() => setIsReplyActive(true)}
                             className="flex items-center text-sm text-gray-500 underline hover:text-gray-400">
