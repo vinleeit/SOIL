@@ -28,6 +28,22 @@ export default function ProductDetailPage() {
     deleteItem,
   } = useShoppingCart();
 
+  const fetchProductDetail = async (): Promise<boolean> => {
+    if (id) {
+      const [product, error] = await serviceGetProductDetail(parseInt(id, 0));
+      if (product) {
+        setProduct(product);
+      }
+      if (error) {
+        setError(error);
+        failureDialog.current?.showModal();
+        return false
+      }
+      return true
+    }
+    return false
+  }
+
   useEffect(() => {
     const fetchGetFollowings = async () => {
       if (token) {
@@ -35,19 +51,6 @@ export default function ProductDetailPage() {
 
         if (followings) {
           setFollowings(followings)
-        }
-        if (error) {
-          setError(error);
-          failureDialog.current?.showModal();
-        }
-      }
-    }
-
-    const fetchProductDetail = async () => {
-      if (id) {
-        const [product, error] = await serviceGetProductDetail(parseInt(id, 0));
-        if (product) {
-          setProduct(product);
         }
         if (error) {
           setError(error);
@@ -149,7 +152,8 @@ export default function ProductDetailPage() {
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
         {
           token && <AddReviewSection
-            productId={product.product.id} />
+            productId={product.product.id}
+            refresh={fetchProductDetail} />
 
         }
         {product.reviews.map((review) => {
@@ -158,19 +162,22 @@ export default function ProductDetailPage() {
             profile={profile}
             followings={followings}
             review={review}
-            setFollowings={setFollowings} />
+            setFollowings={setFollowings}
+            refresh={fetchProductDetail} />
         })}
       </div>
     </div >
   );
 }
 
-const AddReviewSection: React.FC<{ productId: number }> = ({
+const AddReviewSection: React.FC<{ productId: number, refresh: () => Promise<boolean> }> = ({
   productId,
+  refresh,
 }) => {
   const { token } = useContext(AuthContext) as AuthContextValue;
 
   const failureDialog = useRef<HTMLDialogElement | null>(null);
+  const successDialog = useRef<HTMLDialogElement | null>(null);
   const [error, setError] = useState('');
   const [rating, setRating] = useState<number>(4)
   const [content, setContent] = useState<string>('')
@@ -186,7 +193,11 @@ const AddReviewSection: React.FC<{ productId: number }> = ({
       setError(error)
       failureDialog.current?.showModal()
     } else {
-      // window.location.reload();
+      if (await refresh()) {
+        setRating(4)
+        setContent('')
+        successDialog.current?.showModal()
+      }
     }
   }
 
@@ -200,6 +211,14 @@ const AddReviewSection: React.FC<{ productId: number }> = ({
         buttonLabel="Ok"
         onClick={() => failureDialog.current?.close()}
       />
+      <SoilAlertDialog
+        id={"successDialog"}
+        ref={successDialog}
+        title={"Submit Review Success"}
+        description="Thank you, your feedback has been submitted."
+        buttonLabel="Close"
+        onClick={() => successDialog.current?.close()}
+      />
       <form onSubmit={handleSubmit} className="flex flex-col mb-6 space-y-3">
         <div className="flex flex-col space-y-2">
           <label htmlFor={"star"} className="text-gray-600" >Rate this product</label>
@@ -209,6 +228,7 @@ const AddReviewSection: React.FC<{ productId: number }> = ({
           <label htmlFor={"comment"} className="text-gray-600" >Leave a comment</label>
           <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200">
             <textarea id={"comment"} rows={6}
+              value={content}
               className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
               placeholder="Write a comment..."
               maxLength={180}

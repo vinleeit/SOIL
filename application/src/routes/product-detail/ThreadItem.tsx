@@ -8,22 +8,25 @@ import { ProfileResponse } from "../../shared/services/AuthService"
 import { FollowingResponse, serviceFollow, serviceUnfollow } from "../../shared/services/FollowService"
 
 interface ThreadItemProp {
-    thread: Thread,
-    profile: ProfileResponse | null,
-    followings: FollowingResponse[],
+    thread: Thread
+    profile: ProfileResponse | null
+    followings: FollowingResponse[]
     setFollowings: React.Dispatch<React.SetStateAction<FollowingResponse[]>>
+    refresh: () => Promise<boolean>
 }
 
 export default function ThreadItem({
     thread,
     profile,
     followings,
-    setFollowings
+    setFollowings,
+    refresh,
 }: ThreadItemProp) {
     const { token } = useContext(AuthContext) as AuthContextValue
 
     const failureDialog = useRef<HTMLDialogElement | null>(null)
     const dropdownRef = useRef<HTMLDivElement>(null)
+    const successDialog = useRef<HTMLDialogElement | null>(null);
 
     const [error, setError] = useState('')
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -58,7 +61,7 @@ export default function ThreadItem({
             setError(error)
             failureDialog.current?.showModal()
         } else {
-            window.location.reload()
+            await refresh()
         }
     }
 
@@ -75,7 +78,11 @@ export default function ThreadItem({
             failureDialog.current?.showModal()
             return
         } else {
-            window.location.reload()
+            if (await refresh()) {
+                setIsEditActive(false)
+                setContent('')
+                successDialog.current?.showModal()
+            }
         }
     }
 
@@ -93,7 +100,10 @@ export default function ThreadItem({
             failureDialog.current?.showModal()
             return
         } else {
-            window.location.reload()
+            if (await refresh()) {
+                setIsReplyActive(false)
+                setReply('')
+            }
         }
     }
 
@@ -135,6 +145,14 @@ export default function ThreadItem({
                 description={error}
                 buttonLabel="Ok"
                 onClick={() => failureDialog.current?.close()}
+            />
+            <SoilAlertDialog
+                id={"successDialog"}
+                ref={successDialog}
+                title={"Success"}
+                description={''}
+                buttonLabel="Close"
+                onClick={() => successDialog.current?.close()}
             />
             <article className="p-6 text-base my-2 bg-white border rounded-lg">
                 <footer className="flex justify-between items-center">
@@ -292,7 +310,8 @@ export default function ThreadItem({
                         profile={profile}
                         followings={followings}
                         thread={thread}
-                        setFollowings={setFollowings} />
+                        setFollowings={setFollowings}
+                        refresh={refresh} />
                 ))}
             </div>
         </div>
