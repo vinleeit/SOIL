@@ -10,8 +10,12 @@ import { execute, subscribe } from "graphql";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { Sequelize } from "sequelize";
 
+import BadWordsNext from "bad-words-next";
+import en from "./en.json";
+
 const app = express();
 const pubsub = new PubSub();
+const badwords = new BadWordsNext({ data: en });
 app.use(cors());
 const { User, Review, Product, Thread } = initModels();
 
@@ -131,9 +135,11 @@ const resolvers = {
     },
     reviews: async () => {
       const reviews = await Review.findAll();
-      console.log(reviews);
+      const filteredReviews = reviews.filter((r) =>
+        badwords.check(r.getDataValue("review")),
+      );
       const reviewsWithUserAndThreads = await Promise.all(
-        reviews.map(async (review) => {
+        filteredReviews.map(async (review) => {
           //@ts-ignore
           const user = await User.findOne({ where: { id: review.UserId } });
           return {
@@ -159,8 +165,11 @@ const resolvers = {
     },
     threads: async () => {
       const threads = await Thread.findAll();
+      const filteredThread = threads.filter((t) =>
+        badwords.check(t.getDataValue("content")),
+      );
       const threadsWithUser = await Promise.all(
-        threads.map(async (thread) => {
+        filteredThread.map(async (thread) => {
           const user = await User.findOne({ where: { id: thread.userID } }); // Update foreign key name
           return {
             ...thread.toJSON(),
