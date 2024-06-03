@@ -8,20 +8,25 @@ import { ProfileResponse } from "../../shared/services/AuthService"
 import { FollowingResponse, serviceFollow, serviceUnfollow } from "../../shared/services/FollowService"
 
 interface ThreadItemProp {
-    thread: Thread,
-    profile: ProfileResponse | null,
-    followings: FollowingResponse[],
+    thread: Thread
+    profile: ProfileResponse | null
+    followings: FollowingResponse[]
+    setFollowings: React.Dispatch<React.SetStateAction<FollowingResponse[]>>
+    refresh: () => Promise<boolean>
 }
 
 export default function ThreadItem({
     thread,
     profile,
     followings,
+    setFollowings,
+    refresh,
 }: ThreadItemProp) {
     const { token } = useContext(AuthContext) as AuthContextValue
 
     const failureDialog = useRef<HTMLDialogElement | null>(null)
     const dropdownRef = useRef<HTMLDivElement>(null)
+    const successDialog = useRef<HTMLDialogElement | null>(null);
 
     const [error, setError] = useState('')
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -56,7 +61,7 @@ export default function ThreadItem({
             setError(error)
             failureDialog.current?.showModal()
         } else {
-            window.location.reload()
+            await refresh()
         }
     }
 
@@ -73,7 +78,11 @@ export default function ThreadItem({
             failureDialog.current?.showModal()
             return
         } else {
-            window.location.reload()
+            if (await refresh()) {
+                setIsEditActive(false)
+                setContent('')
+                successDialog.current?.showModal()
+            }
         }
     }
 
@@ -91,7 +100,10 @@ export default function ThreadItem({
             failureDialog.current?.showModal()
             return
         } else {
-            window.location.reload()
+            if (await refresh()) {
+                setIsReplyActive(false)
+                setReply('')
+            }
         }
     }
 
@@ -101,7 +113,15 @@ export default function ThreadItem({
             setError(error)
             failureDialog.current?.showModal()
         } else {
-            window.location.reload()
+            setFollowings((prevFollowings) => {
+                const tempFollowings = [...prevFollowings]
+                tempFollowings.push({
+                    id: thread.userID.toFixed(0),
+                    username: thread.User.username,
+                    email: '',
+                })
+                return tempFollowings
+            })
         }
     }
     const handleUnfollow = async () => {
@@ -110,7 +130,9 @@ export default function ThreadItem({
             setError(error)
             failureDialog.current?.showModal()
         } else {
-            window.location.reload()
+            setFollowings((prevFollowings) => {
+                return [...prevFollowings.filter((v) => thread.userID != parseInt(v.id))]
+            })
         }
     }
 
@@ -123,6 +145,14 @@ export default function ThreadItem({
                 description={error}
                 buttonLabel="Ok"
                 onClick={() => failureDialog.current?.close()}
+            />
+            <SoilAlertDialog
+                id={"successDialog"}
+                ref={successDialog}
+                title={"Success"}
+                description={''}
+                buttonLabel="Close"
+                onClick={() => successDialog.current?.close()}
             />
             <article className="p-6 text-base my-2 bg-white border rounded-lg">
                 <footer className="flex justify-between items-center">
@@ -139,7 +169,7 @@ export default function ThreadItem({
                             }) != null) ?
                                 <button
                                     onClick={() => { handleUnfollow() }}
-                                    className="rounded-md px-2 py-1 bg-rose-600 hover:bg-rose-400">
+                                    className="rounded-md px-2 py-1 text-white bg-rose-600 hover:bg-rose-500">
                                     Unfollow
                                 </button>
                                 :
@@ -266,10 +296,7 @@ export default function ThreadItem({
                     <div className="flex items-center mt-4 space-x-4">
                         <button type="button"
                             onClick={() => setIsReplyActive(true)}
-                            className="flex items-center text-sm text-gray-500 hover:underline">
-                            <svg className="mr-1.5 w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z" />
-                            </svg>
+                            className="flex items-center text-sm text-gray-500 underline hover:text-gray-400">
                             Reply
                         </button>
                     </div>
@@ -278,7 +305,13 @@ export default function ThreadItem({
             </article>
             <div className="flex flex-col ml-4 border-l pl-4">
                 {thread.ChildThreads.map((thread) => (
-                    <ThreadItem key={thread.threadID} profile={profile} followings={followings} thread={thread} />
+                    <ThreadItem
+                        key={thread.threadID}
+                        profile={profile}
+                        followings={followings}
+                        thread={thread}
+                        setFollowings={setFollowings}
+                        refresh={refresh} />
                 ))}
             </div>
         </div>
