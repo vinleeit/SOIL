@@ -153,14 +153,19 @@ export default function ProductDetailPage() {
 
         }
         {product.reviews.map((review) => {
-          return <ReviewItem key={review.reviewID} profile={profile} followings={followings} review={review} />
+          return <ReviewItem
+            key={review.reviewID}
+            profile={profile}
+            followings={followings}
+            review={review}
+            setFollowings={setFollowings} />
         })}
       </div>
     </div >
   );
 }
 
-const AddReviewSection: React.FC<{ productId: number, isShow?: boolean }> = ({
+const AddReviewSection: React.FC<{ productId: number }> = ({
   productId,
 }) => {
   const { token } = useContext(AuthContext) as AuthContextValue;

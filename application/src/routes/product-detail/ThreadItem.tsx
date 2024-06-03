@@ -11,12 +11,14 @@ interface ThreadItemProp {
     thread: Thread,
     profile: ProfileResponse | null,
     followings: FollowingResponse[],
+    setFollowings: React.Dispatch<React.SetStateAction<FollowingResponse[]>>
 }
 
 export default function ThreadItem({
     thread,
     profile,
     followings,
+    setFollowings
 }: ThreadItemProp) {
     const { token } = useContext(AuthContext) as AuthContextValue
 
@@ -101,7 +103,15 @@ export default function ThreadItem({
             setError(error)
             failureDialog.current?.showModal()
         } else {
-            window.location.reload()
+            setFollowings((prevFollowings) => {
+                const tempFollowings = [...prevFollowings]
+                tempFollowings.push({
+                    id: thread.userID.toFixed(0),
+                    username: thread.User.username,
+                    email: '',
+                })
+                return tempFollowings
+            })
         }
     }
     const handleUnfollow = async () => {
@@ -110,7 +120,9 @@ export default function ThreadItem({
             setError(error)
             failureDialog.current?.showModal()
         } else {
-            window.location.reload()
+            setFollowings((prevFollowings) => {
+                return [...prevFollowings.filter((v) => thread.userID != parseInt(v.id))]
+            })
         }
     }
 
@@ -275,7 +287,12 @@ export default function ThreadItem({
             </article>
             <div className="flex flex-col ml-4 border-l pl-4">
                 {thread.ChildThreads.map((thread) => (
-                    <ThreadItem key={thread.threadID} profile={profile} followings={followings} thread={thread} />
+                    <ThreadItem
+                        key={thread.threadID}
+                        profile={profile}
+                        followings={followings}
+                        thread={thread}
+                        setFollowings={setFollowings} />
                 ))}
             </div>
         </div>

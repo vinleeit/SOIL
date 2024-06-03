@@ -13,12 +13,14 @@ interface ReviewItemProp {
     review: Review,
     profile: ProfileResponse | null,
     followings: FollowingResponse[],
+    setFollowings: React.Dispatch<React.SetStateAction<FollowingResponse[]>>
 }
 
 export default function ReviewItem({
     review,
     profile,
     followings,
+    setFollowings,
 }: ReviewItemProp) {
     const { token } = useContext(AuthContext) as AuthContextValue
 
@@ -111,7 +113,15 @@ export default function ReviewItem({
             setError(error)
             failureDialog.current?.showModal()
         } else {
-            window.location.reload()
+            setFollowings((prevFollowings) => {
+                const tempFollowings = [...prevFollowings]
+                tempFollowings.push({
+                    id: review.UserId.toFixed(0),
+                    username: review.User.username,
+                    email: '',
+                })
+                return tempFollowings
+            })
         }
     }
     const handleUnfollow = async () => {
@@ -120,7 +130,9 @@ export default function ReviewItem({
             setError(error)
             failureDialog.current?.showModal()
         } else {
-            window.location.reload()
+            setFollowings((prevFollowings) => {
+                return [...prevFollowings.filter((v) => review.UserId != parseInt(v.id))]
+            })
         }
     }
 
@@ -304,7 +316,12 @@ export default function ReviewItem({
             </article>
             <div className="flex flex-col ml-4 border-l pl-4">
                 {review.Threads.map((thread) => (
-                    <ThreadItem key={thread.threadID} profile={profile} followings={followings} thread={thread} />
+                    <ThreadItem
+                        key={thread.threadID}
+                        profile={profile}
+                        followings={followings}
+                        thread={thread}
+                        setFollowings={setFollowings} />
                 ))}
             </div>
         </div>
