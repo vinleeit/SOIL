@@ -9,14 +9,18 @@ import { SubscriptionServer } from "subscriptions-transport-ws";
 import { execute, subscribe } from "graphql";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { Sequelize } from "sequelize";
-
 import BadWordsNext from "bad-words-next";
 import en from "./en.json";
 
+// Create new express js server instance
 const app = express();
+// Create new pubsub instance to refresh graphql subscribe
 const pubsub = new PubSub();
+// Generate new intance of badword detector based on the english dictionary
 const badwords = new BadWordsNext({ data: en });
+// Allows requests from all oriign
 app.use(cors());
+// Initialize database models
 const { User, Review, Product, Thread } = initModels();
 
 // Endpoint to perform refresh of the information
@@ -27,11 +31,14 @@ app.post("/refresh-review", async (req, res) => {
   return res.sendStatus(200);
 });
 
+// Get and publish newest reviews to graphql Subscription
 const publishNewReview = async () => {
+  // Get 3 latest reviews
   const reviews = await Review.findAll({
     order: [["createdAt", "DESC"]],
     limit: 3,
   });
+  // Inject user instance to the reivew
   const reviewsWithUser = await Promise.all(
     reviews.map(async (review) => {
       //@ts-ignore
@@ -50,7 +57,9 @@ const publishNewReview = async () => {
   }, 0);
 };
 
+// Get and publish newest best reviewed items to graphql Subscription
 const publishNewBestReviewed = async () => {
+  // Get 3 items based on the number of review
   const result = await Product.findAll({
     attributes: [
       "id",
@@ -69,7 +78,6 @@ const publishNewBestReviewed = async () => {
     limit: 3,
     subQuery: false,
   });
-  // console.log(result);
   const mapped = result.map((r) => ({
     ...r.toJSON(),
   }));
@@ -81,9 +89,9 @@ const publishNewBestReviewed = async () => {
   }, 0);
 };
 
-publishNewBestReviewed();
-
+// Get and publish newest rating statistics to graphql Subscription
 const publishNewRating = async () => {
+  // Get the number of review for each rating (ex: 24, 5 rating items,)
   const result = await Review.findAll({
     attributes: [
       "rating",
@@ -106,15 +114,20 @@ const publishNewRating = async () => {
 
 const resolvers = {
   Query: {
+    // Get all users
     users: () => User.findAll(),
+
+    // Get all products
     products: async () => {
       const products = await Product.findAll();
       const productsWithReviews = await Promise.all(
         products.map(async (product) => {
+          // Find review for specific product id
           const reviews = await Review.findAll({
             //@ts-ignore
             where: { ProductId: product.id },
           });
+          // Embed user to the review
           const reviewsWithUser = await Promise.all(
             reviews.map(async (review) => {
               //@ts-ignore
@@ -133,11 +146,16 @@ const resolvers = {
       );
       return productsWithReviews;
     },
+    // Get all reviews that needs to be moderated
     reviews: async () => {
       const reviews = await Review.findAll();
+
+      // Get reviews that is containing bad words
       const filteredReviews = reviews.filter((r) =>
         badwords.check(r.getDataValue("review")),
       );
+
+      // Inject the user
       const reviewsWithUserAndThreads = await Promise.all(
         filteredReviews.map(async (review) => {
           //@ts-ignore
@@ -150,6 +168,8 @@ const resolvers = {
       );
       return reviewsWithUserAndThreads;
     },
+
+    // Get thread of a review based on review id
     ReviewThread: async (_: any, { reviewID }: { reviewID: number }) => {
       const threads = await Thread.findAll({ where: { reviewID } });
       const threadsWithUser = await Promise.all(
@@ -163,11 +183,15 @@ const resolvers = {
       );
       return threadsWithUser;
     },
+
+    // Get all threads that needs to be moderated
     threads: async () => {
       const threads = await Thread.findAll();
+      // Get thread that only contains bad words
       const filteredThread = threads.filter((t) =>
         badwords.check(t.getDataValue("content")),
       );
+      // Inject user into thread
       const threadsWithUser = await Promise.all(
         filteredThread.map(async (thread) => {
           const user = await User.findOne({ where: { id: thread.userID } }); // Update foreign key name
@@ -181,6 +205,7 @@ const resolvers = {
     },
   },
   Mutation: {
+    // Prevent user from leaving review
     blockUser: async (_: any, { id }: { id: number }) => {
       const user = await User.findByPk(id);
       if (!user) throw new Error("User not found");
@@ -270,18 +295,21 @@ const resolvers = {
     },
   },
   Subscription: {
+    // Subscription to get the newest reviews that is posted on the site
     newReviews: {
       subscribe: async () => {
         await publishNewReview();
         return pubsub.asyncIterator(["NEW_REVIEW"]);
       },
     },
+    // Subscription to get the most commented proudct
     productMetric: {
       subscribe: async () => {
         await publishNewBestReviewed();
         return pubsub.asyncIterator(["NEW_PRODUCT"]);
       },
     },
+    // Subscription to the statistics for each of the ratings
     ratingMetric: {
       subscribe: async () => {
         await publishNewRating();
@@ -291,7 +319,9 @@ const resolvers = {
   },
 };
 
+// Create schema from resolver and gql schema
 const schema = makeExecutableSchema({ typeDefs, resolvers });
+// Create apollo servre
 const server = new ApolloServer({ schema });
 
 async function startServer() {
@@ -300,6 +330,7 @@ async function startServer() {
   server.applyMiddleware({ app });
   const httpServer = http.createServer(app);
 
+  // Server to handle graphql Subscription
   SubscriptionServer.create(
     {
       //@ts-ignore
