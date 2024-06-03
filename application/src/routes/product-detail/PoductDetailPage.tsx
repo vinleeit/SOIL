@@ -140,11 +140,7 @@ export default function ProductDetailPage() {
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
         <AddReviewSection
-          productId={product.product.id}
-          isShow={
-            token != null &&
-            product.reviews.find((review) => review.User.username == profile?.username) == undefined
-          } />
+          productId={product.product.id} />
         {product.reviews.map((review) => {
           return <ReviewItem key={review.reviewID} profile={profile} followings={followings} review={review} />
         })}
@@ -155,7 +151,6 @@ export default function ProductDetailPage() {
 
 const AddReviewSection: React.FC<{ productId: number, isShow?: boolean }> = ({
   productId,
-  isShow = false,
 }) => {
   const { token } = useContext(AuthContext) as AuthContextValue;
 
@@ -175,7 +170,7 @@ const AddReviewSection: React.FC<{ productId: number, isShow?: boolean }> = ({
       setError(error)
       failureDialog.current?.showModal()
     } else {
-      window.location.reload();
+      // window.location.reload();
     }
   }
 
@@ -189,33 +184,32 @@ const AddReviewSection: React.FC<{ productId: number, isShow?: boolean }> = ({
         buttonLabel="Ok"
         onClick={() => failureDialog.current?.close()}
       />
-      {
-        isShow && <form onSubmit={handleSubmit} className="flex flex-col mb-6 space-y-3">
-          <div className="flex flex-col space-y-2">
-            <label htmlFor={"star"} className="text-gray-600" >Rate this product</label>
-            <SoilStarRating id={"star"} rating={rating} onRatingChange={(rating) => { setRating(rating) }}></SoilStarRating>
+      <form onSubmit={handleSubmit} className="flex flex-col mb-6 space-y-3">
+        <div className="flex flex-col space-y-2">
+          <label htmlFor={"star"} className="text-gray-600" >Rate this product</label>
+          <SoilStarRating id={"star"} rating={rating} onRatingChange={(rating) => { setRating(rating) }}></SoilStarRating>
+        </div>
+        <div className="flex flex-col space-y-2">
+          <label htmlFor={"comment"} className="text-gray-600" >Leave a comment</label>
+          <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200">
+            <textarea id={"comment"} rows={6}
+              className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
+              placeholder="Write a comment..."
+              maxLength={180}
+              onChange={(e) => setContent(e.target.value)} >
+            </textarea>
+            <span className={`text-sm ${content.length < 180 ? 'text-gray-500' : 'text-red-400'}`}>
+              {content.length}/180
+            </span>
           </div>
-          <div className="flex flex-col space-y-2">
-            <label htmlFor={"comment"} className="text-gray-600" >Leave a comment</label>
-            <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200">
-              <textarea id={"comment"} rows={6}
-                className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none"
-                placeholder="Write a comment..."
-                maxLength={180}
-                onChange={(e) => setContent(e.target.value)} >
-              </textarea>
-              <span className={`text-sm ${content.length < 180 ? 'text-gray-500' : 'text-red-400'}`}>
-                {content.length}/180
-              </span>
-            </div>
-          </div>
-          <div className="flex w-full justify-end">
-            <SoilButton>
-              Post comment
-            </SoilButton>
-          </div>
-        </form>
-      }
+        </div>
+        <div className="flex w-full justify-end">
+          <SoilButton>
+            Post comment
+          </SoilButton>
+        </div>
+      </form>
+
     </>
   )
 }

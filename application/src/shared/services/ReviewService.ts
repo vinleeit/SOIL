@@ -3,7 +3,7 @@ import axios from "axios";
 const URL = "http://localhost:8080";
 
 interface ErrorResponse {
-    error: string;
+    message: string;
 }
 
 interface AddReviewData {
@@ -34,7 +34,7 @@ export const serviceAddReview = async (
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             const errorData: ErrorResponse = error.response.data;
-            return errorData.error;
+            return errorData.message;
         } else {
             console.log(error);
             return 'An unexpected error occurred';
@@ -61,7 +61,7 @@ export const serviceUpdateReview = async (
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             const errorData: ErrorResponse = error.response.data;
-            return errorData.error;
+            return errorData.message;
         } else {
             console.log(error);
             return 'An unexpected error occurred';
@@ -86,7 +86,7 @@ export const serviceDeleteReview = async (
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             const errorData: ErrorResponse = error.response.data;
-            return errorData.error;
+            return errorData.message;
         } else {
             console.log(error);
             return 'An unexpected error occurred';
@@ -114,7 +114,7 @@ export const serviceAddThread = async (
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             const errorData: ErrorResponse = error.response.data;
-            return errorData.error;
+            return errorData.message;
         } else {
             console.log(error);
             return 'An unexpected error occurred';
@@ -141,7 +141,7 @@ export const serviceUpdateThread = async (
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             const errorData: ErrorResponse = error.response.data;
-            return errorData.error;
+            return errorData.message;
         } else {
             console.log(error);
             return 'An unexpected error occurred';
@@ -166,7 +166,7 @@ export const serviceDeleteThread = async (
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             const errorData: ErrorResponse = error.response.data;
-            return errorData.error;
+            return errorData.message;
         } else {
             console.log(error);
             return 'An unexpected error occurred';
