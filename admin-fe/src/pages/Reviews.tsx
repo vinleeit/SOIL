@@ -75,128 +75,124 @@ export default function Reviews() {
     await deleteThread({ variables: { id: id } });
     refetch();
   };
+
   return (
-    <div className="px-8 pt-8 pb-3 grow flex flex-col items-center ">
-      <div className="flex justify-between w-full">
-        <h1 className="mb-2 text-2xl">Review Moderation</h1>
-        <div></div>
-      </div>
-      <div className="w-full text-left my-2">
-        <h2 className="text-xl">Rating</h2>
-        <p className="">Rating is the score given by a user to a product</p>
-      </div>
-      <table className="table-auto w-full text-left border-collapse">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              ID
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Rating
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Review
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              User
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Status
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.reviews.map((u: ReviewData) => (
-            <tr key={u.reviewID} className="hover:bg-gray-100">
-              <td className="px-4 py-2 border border-gray-300">{u.reviewID}</td>
-              <td className="px-4 py-2 border border-gray-300">{u.rating}</td>
-              <td className="px-4 py-2 border border-gray-300">{u.review}</td>
-              <td className="px-4 py-2 border border-gray-300">
-                {u.user.username}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {u.isBlocked ? (
-                  <span className="text-red-500 font-bold">Removed</span>
-                ) : (
-                  <span className="text-green-500 font-bold">Active</span>
-                )}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {u.isBlocked ? (
-                  <div></div>
-                ) : (
-                  <button
-                    className="px-3 py-1 rounded border-2"
-                    onClick={() => deleteReviewCallback(u.reviewID)}
-                  >
-                    REMOVE
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div className="w-full text-left my-2">
-        <h2 className="text-xl">Discussion (Thread)</h2>
-        <p className="">Discussion about a rating given by a user</p>
+    <div className="px-8 py-8 grow flex flex-col items-center">
+      <div className="flex mb-4 justify-between w-full flex-col">
+        <h1 className="text-2xl">Review Moderation</h1>
+        <p>
+          Manage reviews and threads, and prevent suspicious content, using
+          badwords detection system.
+        </p>
       </div>
 
-      <table className="table-auto w-full text-left border-collapse">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              ID
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Content
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              User
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Status
-            </th>
-            <th className="px-4 py-2 font-bold uppercase border border-gray-300">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.threads.map((u: ThreadData) => (
-            <tr key={u.threadID} className="hover:bg-gray-100">
-              <td className="px-4 py-2 border border-gray-300">{u.threadID}</td>
-              <td className="px-4 py-2 border border-gray-300">{u.content}</td>
-              <td className="px-4 py-2 border border-gray-300">
-                {u.user.username}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {u.isBlocked ? (
-                  <span className="text-red-500 font-bold">Removed</span>
-                ) : (
-                  <span className="text-green-500 font-bold">Active</span>
-                )}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {u.isBlocked ? (
-                  <div></div>
-                ) : (
-                  <button
-                    className="px-3 py-1 rounded border-2"
-                    onClick={() => deleteThreadCallback(u.threadID)}
-                  >
-                    REMOVE
-                  </button>
-                )}
-              </td>
+      <div className="mb-2 flex flex-col justify-left w-full">
+        <h2 className="text-xl">Reviews</h2>
+        <p>Delete inappropriate review</p>
+      </div>
+      <div className="overflow-x-auto border w-full mb-8">
+        <table className="w-full text-sm text-left text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                ID
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Rating
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Review
+              </th>
+              <th scope="col" className="px-6 py-3">
+                User
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Status
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.reviews.map((review: ReviewData) => (
+              <tr key={review.reviewID}>
+                <td className="px-6 py-4">{review.reviewID}</td>
+                <td className="px-6 py-4">{review.rating}</td>
+                <td className="px-6 py-4">{review.review}</td>
+                <td className="px-6 py-4">{review.user.username}</td>
+                <td className="px-6 py-4">
+                  {review.isBlocked ? "Removed" : "Active"}
+                </td>
+                <td className="px-6 py-4">
+                  {review.isBlocked ? (
+                    <div></div>
+                  ) : (
+                    <button
+                      onClick={() => deleteReviewCallback(review.reviewID)}
+                      className="font-medium text-white hover:underline px-2 py-1 bg-black"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="mb-2 flex flex-col justify-left w-full">
+        <h2 className="text-xl">Reviews</h2>
+        <p>Delete inappropriate discussion a review</p>
+      </div>
+      <div className="overflow-x-auto border w-full">
+        <table className="w-full text-sm text-left text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                ID
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Content
+              </th>
+              <th scope="col" className="px-6 py-3">
+                User
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Status
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.threads.map((thread: ThreadData) => (
+              <tr key={thread.threadID}>
+                <td className="px-6 py-4">{thread.threadID}</td>
+                <td className="px-6 py-4">{thread.content}</td>
+                <td className="px-6 py-4">{thread.user.username}</td>
+                <td className="px-6 py-4">
+                  {thread.isBlocked ? "Removed" : "Active"}
+                </td>
+                <td className="px-6 py-4">
+                  {thread.isBlocked ? (
+                    <div></div>
+                  ) : (
+                    <button
+                      onClick={() => deleteThreadCallback(thread.threadID)}
+                      className="font-medium text-white hover:underline px-2 py-1 bg-black"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
