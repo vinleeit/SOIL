@@ -1,6 +1,7 @@
 import express from "express";
 import { validateToken } from "../middleware/authMiddleware";
 import { User } from "../entities/User";
+import axios from "axios";
 
 const router = express.Router();
 
@@ -81,8 +82,8 @@ router.post("/:productId", validateToken, async (req, res) => {
       UserId: userId,
       ProductId: productId,
     });
-
     newReview.setDataValue("reviewID", newReview.reviewID);
+    await axios.post("http://localhost:4000/refresh-review");
     res.status(201).json(newReview.dataValues);
   } catch (error) {
     console.error("Error adding review:", error);
