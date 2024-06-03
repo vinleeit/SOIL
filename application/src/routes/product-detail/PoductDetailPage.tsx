@@ -62,7 +62,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    product && <div className="container mx-auto">
+    product && <div className="container mx-auto py-24 px-8">
       <SoilAlertDialog
         id={"failureDialog"}
         ref={failureDialog}
@@ -72,46 +72,46 @@ export default function ProductDetailPage() {
         onClick={() => failureDialog.current?.close()}
       />
       <div className="flex">
-        <div className="w-1/2">
-          <img src={product.imageURL} alt={product.name} className="w-full rounded-lg shadow-lg" />
+        <div className="w-1/2 flex justify-center items-center">
+          <img src={product.product.imageURL} className="max-w-full max-h-96 rounded-lg shadow-lg" />
         </div>
         <div className="w-1/2 pl-8">
-          <h1 className="text-3xl font-bold">{product.name}</h1>
-          <p className="text-gray-600 mt-4">{product.description}</p>
+          <h1 className="text-3xl font-bold">{product.product.name}</h1>
+          <p className="text-gray-600 mt-4">{product.product.description}</p>
           <div className="mt-8">
-            <span className="text-2xl font-bold">${product.price}</span>
-            {product.discountAmount > 0 && (
+            <span className="text-2xl font-bold">${product.product.price}</span>
+            {product.product.discountAmount > 0 && (
               <span className="text-red-500 ml-2">
-                ({product.discountAmount}% off)
+                ({product.product.discountAmount}% off)
               </span>
             )}
           </div>
           <div className="flex-grow flex flex-col space-y-3 items-center justify-end">
-            {getItemQuantity(product) <= 0 ? (
+            {getItemQuantity(product.product) <= 0 ? (
               <SoilButton onClick={() => {
-                addItem(product)
+                addItem(product.product)
               }} fullWidth outlined>
                 Add To Cart
               </SoilButton>
             ) : (
               <div className="flex justify-center items-center space-x-3">
                 <SoilButton outlined onClick={() => {
-                  reduceItem(product)
+                  reduceItem(product.product)
                 }}>
                   -
                 </SoilButton>
-                <p>{getItemQuantity(product)}</p>
+                <p>{getItemQuantity(product.product)}</p>
                 <SoilButton outlined onClick={() => {
-                  addItem(product)
+                  addItem(product.product)
                 }}>
                   +
                 </SoilButton>
               </div>
             )}
-            {getItemQuantity(product) > 0 ? (
+            {getItemQuantity(product.product) > 0 ? (
               <div className="flex w-full justify-center">
                 <Link to={""} onClick={() => {
-                  deleteItem(product)
+                  deleteItem(product.product)
                 }} className="text-red-600">
                   Remove
                 </Link>
@@ -124,18 +124,14 @@ export default function ProductDetailPage() {
       </div>
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
-        {/* {
-          token &&
-          !product.Reviews.find((review) => review.User.username == profile?.username) &&
-        } */}
         <AddReviewSection
-          productId={product.id}
+          productId={product.product.id}
           isShow={
             token != null &&
-            product.Reviews.find((review) => review.User.username == profile?.username) == undefined
+            product.reviews.find((review) => review.User.username == profile?.username) == undefined
           } />
-        {product.Reviews.map((review) => {
-          return <ReviewItem username={profile?.username} review={review} />
+        {product.reviews.map((review) => {
+          return <ReviewItem key={review.reviewID} username={profile?.username} review={review} />
         })}
       </div>
     </div >

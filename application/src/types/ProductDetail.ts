@@ -1,13 +1,8 @@
+import { Product } from "./Product";
+
 export type ProductDetail = {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    imageURL: string;
-    discountAmount: number;
-    createdAt: string;
-    updatedAt: string;
-    Reviews: Review[];
+    product: Product;
+    reviews: Review[];
 }
 
 export type Review = {
