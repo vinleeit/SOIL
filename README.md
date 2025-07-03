@@ -1,20 +1,12 @@
-<!--toc:start-->
+# SOIL
 
-- [Assignment 2](#assignment-2)
-- [Structure](#structure)
-  - [Starting the application server](#starting-the-application-server)
-  - [Implementation Detail](#implementation-detail) - [Delete Review (HD - Part I)](#delete-review-hd-part-i) - [Live Dashboard](#live-dashboard)
-  <!--toc:end-->
+## Members
 
-# Assignment 2
+- Ravel Tanjaya
 
-Github Link: https://github.com/rmit-fsd-2024-s1/s3937118-s3937114-a2
+- Arvin Lee
 
-Member 1: Ravel Tanjaya S3937118
-
-Member 2: Arvin Lee S3937114
-
-# Structure
+## Structure
 
 The application is structured in the following ways:
 
@@ -22,8 +14,6 @@ The application is structured in the following ways:
 - /api: the rest api for the react frontend (Express + Sequelize)
 - /admin-fe: the admin frontend (graphql) - HD
 - /admin-graphql: the admin graphql backend - HD
-- README.md: this readme.md
-- ER Diagram.png: ER diagram for the database structure
 
 ## Starting the application server
 
@@ -37,7 +27,6 @@ bun i
 
 And then
 
-
 ```bash
 npm run dev
 # OR
@@ -46,13 +35,19 @@ bun run dev
 
 > In the case where the application database is cleared (emptied), /api should be run first to propagate the database and run migrations
 
+## Design
+
+### ER
+
+![](assets/er_diagram.png)
+
 ## Implementation Detail
 
 - Password hasing is done using bcrypt algorithm (which is one of the standard used to secure password).
 - To make sure that there is no redundant data or unnormalized data in the database, Standard and Special Product is stored on the same database table (Product table), the difference is special product will have the discount value of more than 0.
 - The review system is separated into review and thread. Review represent a review and rating that is being given by a user. Thread is the reply (or discussion) that is attached on the review.
 
-### Delete Review (HD - Part I)
+### Delete Review
 
 In our opinion in today's world there is a lot of people that will use badwords to show their opinion, which is very inappropriate to be displayed in public website.
 
@@ -68,7 +63,7 @@ Here are a few sample scenario:
 
 ### Live Dashboard
 
-The 2 Metrics that we choose to display is as follows:
+The 2 Metrics that we choose to displsay is as follows:
 
 - Rating distribution (in Pie Chart): We want to be able to see how the products in the website is performing in general, We can see if people are satisfied with the quality of most the product or do we need to improve the overall quality.
 - Product with most review (In grid): We want to to be able to see which product has most review, so that we can check if it is popular or controversial and take steps according to it. (for example increase the stock of popular item, and help customer to resolve problem if it is a controversial one)
@@ -82,7 +77,7 @@ The following are resource used in the project:
 - Organic Food Article: https://www.betterhealth.vic.gov.au/health/healthyliving/organic-food
 
 - Quotes:
-
+  
   - ABC - tips for growing fruits and veggies at home:
     [https://www.abc.net.au/everyday/tips-for-growing-fruit-and-vegetables-at-home/10051592]()
   - ABC - mistakes new garderners make:

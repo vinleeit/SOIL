@@ -20,7 +20,7 @@ The following are resource used in the project:
 - Organic Food Article: https://www.betterhealth.vic.gov.au/health/healthyliving/organic-food
 
 - Quotes:
-
+  
   - ABC - tips for growing fruits and veggies at home:
     [https://www.abc.net.au/everyday/tips-for-growing-fruit-and-vegetables-at-home/10051592]()
   - ABC - mistakes new garderners make:
@@ -29,7 +29,7 @@ The following are resource used in the project:
     [https://www.abc.net.au/everyday/signs-your-plant-is-struggling-and-how-to-save-them/11324798]()
 
 - Products and images:
-
+  
   - Barley Cup - Organic Instant Barley Beverage 100g:
     [https://mosesandco.com.au/barley-cup-organic-instant-barley-beverage-100g/]()
   - GF Precinct - Buckwheat & Chia 600g:
